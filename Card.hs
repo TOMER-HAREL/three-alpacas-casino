@@ -1,34 +1,69 @@
 {-use this as a base class for BJCard, PokerCard etc. -}
-module Card (PlayingCard(Card), Suit(..), Value(..), cardValue) where
+module Card (PlayingCard(Card)) where
 
+  import Game
+
+  {-
+    PURPOSE: to remove the hardcoded values of a card as we're designing for
+             multiple card games. Creating a class let's us design our own
+             functions for a certain card.
+  -}
+  class Card a where
+    value :: a -> Int
+
+  {-
+    PURPOSE: Make the card more generic, that would be different values for
+      different games.
+    EXAMPLES:
+      value (Card Diamonds A None) == 13
+      value (Card Diamonds A BJ) == 11
+  -}
+  instance Card PlayingCard where
+    -- Black Jack
+    value (Card _ (Other value) BJ) = value
+    value (Card _ A BJ) = 11
+    value (Card _ _ BJ) = 10 --the rest of the cards
+    -- Default
+    value (Card _ (Other value) _) = value
+    value (Card _ J _) = 10
+    value (Card _ Q _) = 11
+    value (Card _ K _) = 12
+    value (Card _ A _) = 13 --or 1?
+
+  -- Show
   instance Show Suit where
-      show Clubs = "♣︎"
-      show Diamonds = "♦︎"
-      show Hearts = "❤︎"
-      show Spades = "♠︎"
+    show Clubs = "♣︎"
+    show Diamonds = "♦︎"
+    show Hearts = "❤︎"
+    show Spades = "♠︎"
 
   instance Show Value where
-      show (Other value) = show(value)
-      show J = "Jack"
-      show Q = "Queen"
-      show K = "King"
-      show A = "Ace"
+    show (Other value) = show(value)
+    show J = "Jack"
+    show Q = "Queen"
+    show K = "King"
+    show A = "Ace"
 
   instance Show PlayingCard where
-      show (Card suit value) = "[" ++ show(suit) ++ show(value) ++ "]"
+    show (Card suit value None) = "[" ++ show(suit) ++ show(value) ++ "]"
+    show (Card suit value BJ) = "[BJ:" ++ show(suit) ++ show(value) ++ "]"
+
+  -- Eq
+  instance Eq Suit where
+    (==) J J = True
+    (==) Q Q = True
+    (==) K K = True
+    (==) A A = True
+    (==) (Other v) (Other v2) = (v == v2)
+    (==) _ _ = False
 
   instance Eq PlayingCard where
-      (==) (Card _ (Other value)) (Card _ (Other value2)) = (value == value2)
-      (==) (Card _ A) (Card _ A) = True
-      (==) (Card _ K) (Card _ K) = True
-      (==) (Card _ Q) (Card _ Q) = True
-      (==) (Card _ J) (Card _ J) = True
-      (==) (Card _ _) (Card _ _) = False
+    (==) c1@(Card s1 _ _) c2@(Card s2 _ _) = (value c1 == value c2) && (s1 == s2)
 
   instance Ord PlayingCard where
-      (<=) (Card _ (Other value)) (Card _ (Other value2)) = (value <= value2)
+    (<=) c1 c2 = (value c1 <= value c2)
 
-
+  -- data
   data Suit = Clubs
             | Spades
             | Hearts
@@ -40,22 +75,4 @@ module Card (PlayingCard(Card), Suit(..), Value(..), cardValue) where
              | K
              | A
 
-  data PlayingCard = Card Suit Value
-
-  {-
-    cardValue card
-    PURPOSE: return the value of the card
-    PRE: true
-    POST: If (-1) is returned it's an invalid card value, otherwise it'll return
-          a number that denotes the value of the card supplied.
-    EXAMPLES:
-          cardValue (Card Clubs (Other 10)) == 10
-          cardValue (Card Clubs (Other 1337)) == (-1)
-          cardValue (Card Clubs A) == 11
-  -}
-  cardValue :: PlayingCard -> Int
-  cardValue (Card _ (Other value))
-    | (value >= 1 && value <= 10) = value
-    | otherwise = (-1)
-  cardValue (Card _ A) = 11
-  cardValue (Card _ value) = 10
+  data PlayingCard = Card Suit Value Game
