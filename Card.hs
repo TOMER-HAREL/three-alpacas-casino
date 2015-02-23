@@ -1,3 +1,4 @@
+{-use this as a base class for BJCard, PokerCard etc. -}
 module Card (PlayingCard(Card), Suit(..), Value(..), cardValue) where
 
   instance Show Suit where
@@ -23,6 +24,9 @@ module Card (PlayingCard(Card), Suit(..), Value(..), cardValue) where
       (==) (Card _ Q) (Card _ Q) = True
       (==) (Card _ J) (Card _ J) = True
       (==) (Card _ _) (Card _ _) = False
+
+  instance Ord PlayingCard where
+      (<=) (Card _ (Other value)) (Card _ (Other value2)) = (value <= value2)
 
 
   data Suit = Clubs
