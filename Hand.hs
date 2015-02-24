@@ -9,7 +9,7 @@ module Hand where
   class HandValue a where
     sumOfHand :: a -> Int
     numberOfCards :: a -> Int
-    maximumNumberOfCards :: a -> Int
+    maximumNumberOfCards :: a -> CardCount
 
   {- DATA -}
 
