@@ -2,15 +2,19 @@ module GBlackJack where
 
   import Game
   import Card
+  import Hand
 
   bjCardValue :: PlayingCard -> Int
   bjCardValue (Card _ (Other value)) = value
   bjCardValue (Card _ A) = 11
   bjCardValue (Card _ _) = 10
 
-  bjCalculateHand :: Hand -> Int
-  bjCalculateHand (Hand []) = 0
-  bjCalculateHand (Hand ((Card _ value):rest)) = (BJCardValue value) + BJCalculateHand rest
+  bjCalculateHand :: PlayingHand -> Int
+  bjCalculateHand (Hand cards) = bjCalculateHand_aux cards
+
+  bjCalculateHand_aux :: [PlayingCard] -> Int
+  bjCalculateHand_aux [] = 0
+  bjCalculateHand_aux (card:rest) = (bjCardValue card) + bjCalculateHand_aux rest
 
   -- {-
   --   PURPOSE: Make the card more generic, that would be different values for
