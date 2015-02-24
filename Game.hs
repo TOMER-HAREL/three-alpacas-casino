@@ -1,15 +1,13 @@
 module Game where
 
-  {-
-    DATA
-  -}
+  {- DATA -}
+
   data Game = None
             | BJ
             | GF
 
-  {-
-    INSTANCES
-  -}
+  {- INSTANCES -}
+  
   instance Show Game where
     show BJ = "Black Jack"
     show GF = "Go Fish"

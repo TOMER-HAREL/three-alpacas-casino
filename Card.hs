@@ -2,15 +2,13 @@ module Card where
 
   import Game
 
-  {-
-    CLASSES
-  -}
+  {- CLASSES -}
+  
   class CardValue a where
     valueOf :: a -> Int
 
-  {-
-    DATA
-  -}
+  {- DATA -}
+
   data Suit = Clubs
             | Spades
             | Hearts
@@ -24,10 +22,9 @@ module Card where
              | A
 
   data PlayingCard = Card Suit Value Game
+                   | InvisibleCard
 
-  {-
-    INSTANCES
-  -}
+  {- INSTANCES -}
 
   instance CardValue PlayingCard where
     --BLACK JACK

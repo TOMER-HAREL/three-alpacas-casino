@@ -4,6 +4,7 @@ import qualified GGoFish as GF
 import Card
 import Hand
 import Game
+import Deck
 
 main :: IO ()
 main = do
