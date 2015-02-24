@@ -33,9 +33,12 @@ module Hand where
     PURPOSE: Return the card at the supplied position
     HINT: !!
   -}
-  cardAtPosition :: Int -> PlayingHand -> PlayingCard
-  cardAtPosition position hand = undefined
-
+  cardAtPosition :: PlayingHand -> Int -> PlayingCard
+  cardAtPosition (Hand cards) position = cards !! position
+  
+  -- snyggast så ? fåååår jag puuusha :D:D:D:D:D:D:D:D:D:D:DD:D:D:D:D:D:D
+  --
+  -- NAJS, yep! cleaaant! heheheh jaaaaaa, gärna med vår text :D ;;DD 8=====================D~<------ 0:heheheheh hahahaha PUSHA NU TOM! WOWOWOWO VÅÅÅÅGAR INTE m
   {-
     TODO
     PURPOSE: Remove the card and return the new hand.
