@@ -1,4 +1,4 @@
-module GGoFish where
+module Games.GoFish where
 
   import Game
   import Card

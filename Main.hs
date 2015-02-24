@@ -1,5 +1,5 @@
-import qualified GBlackJack as BJ
-import qualified GGoFish as GF
+import qualified Games.BlackJack as BJ
+import qualified Games.GoFish as GF
 
 import Card
 import Hand

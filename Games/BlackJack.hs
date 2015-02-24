@@ -1,4 +1,4 @@
-module GBlackJack where
+module Games.BlackJack where
 
   import Game
   import Card
