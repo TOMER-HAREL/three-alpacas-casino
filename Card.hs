@@ -58,6 +58,11 @@ module Card where
     (==) Hearts Hearts = True
     (==) _ _ = False
 
+  {-
+    TODO: Match every card in every card game, different rules for each Game
+      when matching cards for example. The game Black Jack doesn't mind the
+      suits.
+  -}
   instance Eq PlayingCard where
     (==) (Card suitA (Other valueA) None) (Card suitB (Other valueB) None) = (valueA == valueB) && (suitA == suitB)
     (==) (Card suitA J None) (Card suitB J None) = (suitA == suitB)
@@ -66,5 +71,4 @@ module Card where
     (==) (Card suitA A None) (Card suitB A None) = (suitA == suitB)
     (==) (Card _ _ None) (Card _ _ None) = False
 
-  instance Ord PlayingCard where
-    
+  -- instance Ord PlayingCard where

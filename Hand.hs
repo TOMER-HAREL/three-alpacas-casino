@@ -12,7 +12,7 @@ module Hand where
   data PlayingHand = Hand [PlayingCard]
 
   {- INSTANCES -}
-  
+
   instance Show PlayingHand where
     show (Hand []) = []
     show (Hand (card:xs)) = show(card) ++ " " ++ show(Hand xs)
@@ -22,7 +22,7 @@ module Hand where
     sumOfHand (Hand (card:rest)) = (valueOf card) + (sumOfHand (Hand rest))
 
   -- TODO:
-  instance Ord PlayingHand where
+  -- instance Ord PlayingHand where
 
   {- FUNCTIONS -}
 
