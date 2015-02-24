@@ -22,3 +22,13 @@ module Game where
   -}
   everyGame :: [Game]
   everyGame = undefined
+
+  {-
+    TODO
+    PURPOSE: Return the number of players you're required to be to play a certain
+      game.
+  -}
+  minimumOfPlayers :: Game -> Int
+  minimumOfPlayers None = 0
+  minimumOfPlayers BJ = undefined
+  minimumOfPlayers GF = undefined
