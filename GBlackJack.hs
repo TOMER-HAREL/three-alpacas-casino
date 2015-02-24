@@ -3,14 +3,14 @@ module GBlackJack where
   import Game
   import Card
 
-  BJCardValue :: PlayingCard -> Int
-  BJCardValue (Card _ (Other value)) = value
-  BJCardValue (Card _ A) = 11
-  BJCardValue (Card _ _) = 10
+  bjCardValue :: PlayingCard -> Int
+  bjCardValue (Card _ (Other value)) = value
+  bjCardValue (Card _ A) = 11
+  bjCardValue (Card _ _) = 10
 
-  BJCalculateHand :: Hand -> Int
-  BJCalculateHand (Hand []) = 0
-  BJCalculateHand (Hand ((Card _ value):rest)) = (BJCardValue value) + BJCalculateHand rest
+  bjCalculateHand :: Hand -> Int
+  bjCalculateHand (Hand []) = 0
+  bjCalculateHand (Hand ((Card _ value):rest)) = (BJCardValue value) + BJCalculateHand rest
 
   -- {-
   --   PURPOSE: Make the card more generic, that would be different values for
