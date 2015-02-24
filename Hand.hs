@@ -1,6 +1,7 @@
 module Hand where
 
   import Card
+  import Game
 
   {- CLASSES -}
 
@@ -11,17 +12,17 @@ module Hand where
 
   {- DATA -}
 
-  data PlayingHand = Hand [PlayingCard]
+  data PlayingHand = Hand [PlayingCard] Game
 
   {- INSTANCES -}
 
   instance Show PlayingHand where
-    show (Hand []) = []
-    show (Hand (card:xs)) = show(card) ++ " " ++ show(Hand xs)
+    show (Hand [] _) = []
+    show (Hand (card:xs) game) = show(card) ++ " " ++ show(Hand xs game)
 
   instance HandValue PlayingHand where
-    sumOfHand (Hand []) = 0
-    sumOfHand (Hand (card:rest)) = (valueOf card) + (sumOfHand (Hand rest))
+    sumOfHand (Hand [] _) = 0
+    sumOfHand (Hand (card:rest) game) = (valueOf card) + (sumOfHand (Hand rest game))
 
   -- TODO:
   -- instance Ord PlayingHand where
@@ -34,8 +35,8 @@ module Hand where
     HINT: !!
   -}
   cardAtPosition :: PlayingHand -> Int -> PlayingCard
-  cardAtPosition (Hand cards) position = cards !! position
-  
+  cardAtPosition (Hand cards _) position = cards !! position
+
   -- snyggast så ? fåååår jag puuusha :D:D:D:D:D:D:D:D:D:D:DD:D:D:D:D:D:D
   --
   -- NAJS, yep! cleaaant! heheheh jaaaaaa, gärna med vår text :D ;;DD 8=====================D~<------ 0:heheheheh hahahaha PUSHA NU TOM! WOWOWOWO VÅÅÅÅGAR INTE m

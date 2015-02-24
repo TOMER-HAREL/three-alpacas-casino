@@ -12,4 +12,4 @@ main = do
   putStrLn $ show (Hand [(Card Diamonds A BJ),
                          (Card Spades (Other 5) BJ),
                          (Card Clubs K BJ),
-                         (Card Diamonds (Other 2) BJ)])
+                         (Card Diamonds (Other 2) BJ)] BJ)
