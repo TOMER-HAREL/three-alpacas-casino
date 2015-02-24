@@ -27,6 +27,7 @@ module Card where
   {- INSTANCES -}
 
   instance CardValue PlayingCard where
+    valueOf InvisibleCard = (-1)
     --BLACK JACK
     valueOf (Card _ (Other value) BJ) = value
     valueOf (Card _ A BJ) = 11
@@ -50,6 +51,7 @@ module Card where
   instance Show PlayingCard where
     show (Card suit value None) = "U:[" ++ show(value) ++ show(suit) ++ "]"
     show (Card suit value _) = "[" ++ show(value) ++ show(suit) ++ "]"
+    show InvisibleCard = "[]"
 
   instance Eq Suit where
     (==) Diamonds Diamonds = True
@@ -64,11 +66,17 @@ module Card where
       suits.
   -}
   instance Eq PlayingCard where
+    (==) InvisibleCard InvisibleCard = True
+    --UNDEFINED GAME
     (==) (Card suitA (Other valueA) None) (Card suitB (Other valueB) None) = (valueA == valueB) && (suitA == suitB)
     (==) (Card suitA J None) (Card suitB J None) = (suitA == suitB)
     (==) (Card suitA Q None) (Card suitB Q None) = (suitA == suitB)
     (==) (Card suitA K None) (Card suitB K None) = (suitA == suitB)
     (==) (Card suitA A None) (Card suitB A None) = (suitA == suitB)
     (==) (Card _ _ None) (Card _ _ None) = False
+    -- BLACK JACK
+    (==) cardA cardB = valueOf cardA == valueOf cardB
 
-  -- instance Ord PlayingCard where
+  instance Ord PlayingCard where
+    (<=) InvisibleCard InvisibleCard = True
+    (<=) cardA cardB = valueOf cardA <= valueOf cardB
