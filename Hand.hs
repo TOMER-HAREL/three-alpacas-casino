@@ -14,6 +14,11 @@ module Hand where
 
   data PlayingHand = Hand [PlayingCard] Game
 
+  data CardCount = MinimumCards Int
+                 | MaximumCards Int
+                 | NoLimit
+
+
   {- INSTANCES -}
 
   instance Show PlayingHand where
@@ -23,6 +28,9 @@ module Hand where
   instance HandValue PlayingHand where
     sumOfHand (Hand [] _) = 0
     sumOfHand (Hand (card:rest) game) = (valueOf card) + (sumOfHand (Hand rest game))
+
+    numberOfCards (Hand cards BJ) = undefined
+    maximumNumberOfCards (Hand cards BJ) = NoLimit
 
   -- TODO:
   -- instance Ord PlayingHand where
