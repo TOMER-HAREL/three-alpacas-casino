@@ -3,7 +3,7 @@ module Card where
   import Game
 
   {- CLASSES -}
-  
+
   class CardValue a where
     valueOf :: a -> Int
 
@@ -49,7 +49,7 @@ module Card where
 
   instance Show PlayingCard where
     show (Card suit value None) = "U:[" ++ show(value) ++ show(suit) ++ "]"
-    show (Card suit value BJ) = "[" ++ show(value) ++ show(suit) ++ "]"
+    show (Card suit value _) = "[" ++ show(value) ++ show(suit) ++ "]"
 
   instance Eq Suit where
     (==) Diamonds Diamonds = True
@@ -64,4 +64,7 @@ module Card where
     (==) (Card suitA Q None) (Card suitB Q None) = (suitA == suitB)
     (==) (Card suitA K None) (Card suitB K None) = (suitA == suitB)
     (==) (Card suitA A None) (Card suitB A None) = (suitA == suitB)
-    (==) _ _ = False
+    (==) (Card _ _ None) (Card _ _ None) = False
+
+  instance Ord PlayingCard where
+    

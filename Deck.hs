@@ -9,12 +9,12 @@ module Deck where
                    | Empty
 
   {- FUNCTIONS -}
-  
+
   {-
     PURPOSE: Create a playingCard deck with 52 cards, unshuffled.
   -}
   createEmptyDeck :: PlayingDeck
-  createEmptyDeck = Deck []
+  createEmptyDeck = undefined
 
   {-
     PURPOSE: Shuffle the supplied deck
