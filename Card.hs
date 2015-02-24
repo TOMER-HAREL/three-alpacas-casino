@@ -1,5 +1,5 @@
 {-use this as a base class for BJCard, PokerCard etc. -}
-module Card (PlayingCard(Card)) where
+module Card (PlayingCard(..)) where
 
   import Game
 
@@ -50,11 +50,10 @@ module Card (PlayingCard(Card)) where
 
   -- Eq
   instance Eq Suit where
-    (==) J J = True
-    (==) Q Q = True
-    (==) K K = True
-    (==) A A = True
-    (==) (Other v) (Other v2) = (v == v2)
+    (==) Diamonds Diamonds = True
+    (==) Clubs Clubs = True
+    (==) Spades Spades = True
+    (==) Hearts Hearts = True
     (==) _ _ = False
 
   instance Eq PlayingCard where
