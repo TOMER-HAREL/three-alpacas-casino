@@ -7,6 +7,7 @@ module Card where
             | Diamonds
 
   data Value = Other Int
+             | LowHigh (Value, Value)
              | J
              | Q
              | K
