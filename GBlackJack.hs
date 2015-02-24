@@ -10,7 +10,7 @@ module GBlackJack where
 
   bjCalculateHand :: Hand -> Int
   bjCalculateHand (Hand []) = 0
-  bjCalculateHand (Hand ((Card _ value):rest)) = (BJCardValue value) + BJCalculateHand rest
+  bjCalculateHand (Hand ((Card _ value):rest)) = (bjCardValue value) + bjCalculateHand rest
 
   -- {-
   --   PURPOSE: Make the card more generic, that would be different values for
