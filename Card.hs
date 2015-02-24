@@ -1,6 +1,16 @@
 module Card where
 
-  -- data
+  import Game
+
+  {-
+    CLASSES
+  -}
+  class CardValue a where
+    valueOf :: a -> Int
+
+  {-
+    DATA
+  -}
   data Suit = Clubs
             | Spades
             | Hearts
@@ -13,9 +23,20 @@ module Card where
              | K
              | A
 
-  data PlayingCard = Card Suit Value
+  data PlayingCard = Card Suit Value Game
 
-  --instance
+  {-
+    INSTANCES
+  -}
+
+  instance CardValue PlayingCard where
+    --BLACK JACK
+    valueOf (Card _ (Other value) BJ) = value
+    valueOf (Card _ A BJ) = 11
+    valueOf (Card _ _ BJ) = 10
+    --GO FISH
+    valueOf (Card _ _ GF) = 0
+
   instance Show Suit where
     show Clubs = "♣︎"
     show Diamonds = "♦︎"
@@ -23,25 +44,16 @@ module Card where
     show Spades = "♠︎"
 
   instance Show Value where
-    show J = "Jack"
-    show Q = "Queen"
-    show K = "King"
-    show A = "Ace"
+    show J = "J"
+    show Q = "Q"
+    show K = "K"
+    show A = "A"
     show (Other value) = show(value)
 
   instance Show PlayingCard where
-    show (Card suit value) = "[" ++ show(suit) ++ show(value) ++ "]"
+    show (Card suit value None) = "U:[" ++ show(value) ++ show(suit) ++ "]"
+    show (Card suit value BJ) = "[" ++ show(value) ++ show(suit) ++ "]"
 
-
-  {-
-    PURPOSE: to remove the hardcoded values of a card as we're designing for
-             multiple card games. Creating a class let's us design our own
-             functions for a certain card.
-  -}
-  class Card a where
-    value :: a -> Int
-
-  -- Eq
   instance Eq Suit where
     (==) Diamonds Diamonds = True
     (==) Clubs Clubs = True
@@ -49,8 +61,10 @@ module Card where
     (==) Hearts Hearts = True
     (==) _ _ = False
 
-  -- instance Eq PlayingCard where
-  --   (==) c1@(Card s1 _) c2@(Card s2 _) = (value c1 == value c2) && (s1 == s2)
-
-  -- instance Ord PlayingCard where
-  --   (<=) c1 c2 = (value c1 <= value c2)
+  instance Eq PlayingCard where
+    (==) (Card suitA (Other valueA) None) (Card suitB (Other valueB) None) = (valueA == valueB) && (suitA == suitB)
+    (==) (Card suitA J None) (Card suitB J None) = (suitA == suitB)
+    (==) (Card suitA Q None) (Card suitB Q None) = (suitA == suitB)
+    (==) (Card suitA K None) (Card suitB K None) = (suitA == suitB)
+    (==) (Card suitA A None) (Card suitB A None) = (suitA == suitB)
+    (==) _ _ = False

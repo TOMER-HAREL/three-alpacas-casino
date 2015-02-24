@@ -4,10 +4,16 @@ module GBlackJack where
   import Card
   import Hand
 
-  class BJCard a where
-    value :: a -> Int
+  -- FOR THE Q&A TOMORROW
+  -- class BJHand a where
+  --   value :: a -> Int
 
-  instance BJCard PlayingCard where
-    value (Card _ (Other value)) = value
-    value (Card _ A) = 11
-    value (Card _ _) = 10
+  -- data BJCard = PlayingCard
+  --
+  --
+  -- instance CardValue PlayingHand where
+  --   value (Hand []) = 0
+  --   value (Hand (card:rest)) = (value card) + value (Hand rest)
+
+  -- valueOfCard :: (BJCard a) => a -> Int
+  -- valueOfCard card = GBlackJack.value card
