@@ -9,13 +9,12 @@ module Card where
 
   {- DATA -}
 
-  data Suit = Clubs
-            | Spades
-            | Hearts
+  data Suit = Spades
+            | Clubs
             | Diamonds
+            | Hearts deriving(Enum)
 
   data Value = Other Int
-             | LowHigh (Value, Value)
              | J
              | Q
              | K
@@ -47,6 +46,19 @@ module Card where
     show K = "K"
     show A = "A"
     show (Other value) = show(value)
+
+  instance Enum Value where
+    fromEnum A = 1
+    fromEnum (Other value) = value
+    fromEnum J = 11
+    fromEnum Q = 12
+    fromEnum K = 13
+
+    toEnum 1 = A
+    toEnum 11 = J
+    toEnum 12 = Q
+    toEnum 13 = K
+    toEnum value = (Other value)
 
   instance Show PlayingCard where
     show (Card suit value None) = "U:[" ++ show(value) ++ show(suit) ++ "]"

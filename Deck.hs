@@ -25,8 +25,9 @@ module Deck where
     TODO
     PURPOSE: Create a playingCard deck with 52 cards, unshuffled.
   -}
-  createEmptyDeck :: PlayingDeck
+  createEmptyDeck :: Game -> PlayingDeck
   createEmptyDeck = undefined
+  -- createEmptyDeck game = (Deck (map (\suit -> (map (\value -> (Card suit value game)) [A .. K])) [Spades ..]) game)
 
   {-
     TODO
