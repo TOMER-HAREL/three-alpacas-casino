@@ -4,7 +4,7 @@ module Game where
 
   data Game = None
             | BJ
-            | GF
+            | GF deriving(Enum)
 
   {- INSTANCES -}
 
@@ -16,12 +16,11 @@ module Game where
   {- FUNCTIONS -}
 
   {-
-    TODO
     PURPOSE: Return every game that we're adding, may use it in a list
       at the Playboy Casino home screen.
   -}
   everyGame :: [Game]
-  everyGame = undefined
+  everyGame = [BJ ..] --thanks to deriving(Enum) we can do this.
 
   {-
     TODO

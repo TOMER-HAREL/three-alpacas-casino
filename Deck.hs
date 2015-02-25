@@ -15,7 +15,7 @@ module Deck where
   -}
   instance Show PlayingDeck where
     show (Deck []) = ""
-    show (Deck (card:rest)) = show card ++ ":" ++ show (Deck rest)
+    show (Deck (card:rest)) = show card ++ show (Deck rest)
 
   {- FUNCTIONS -}
 
@@ -33,10 +33,8 @@ module Deck where
   shuffleDeck deck = undefined
 
   {-
-    TODO
     PURPOSE: Draw one card from the top of the deck, if there's no more cards
       return InvisibleCard
-    HINT: head
   -}
   drawCardFromDeck :: PlayingDeck -> PlayingCard
   drawCardFromDeck Empty = InvisibleCard

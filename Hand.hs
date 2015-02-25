@@ -27,16 +27,37 @@ module Hand where
     sumOfHand (Hand [] _) = 0
     sumOfHand (Hand (card:rest) game) = (valueOf card) + (sumOfHand (Hand rest game))
 
+    {-
+      TODO
+      PURPOSE: Count the cards in hand
+      HINT: length
+    -}
     numberOfCards (Hand cards BJ) = undefined
+    {-
+      TODO
+      PURPOSE: Return the maximum number of cards you're allowed to have in a hand
+    -}
     maximumNumberOfCards (Hand cards BJ) = undefined
 
   instance Eq PlayingHand where
     (==) (Hand cardsA _) (Hand cardsB _) = cardsA == cardsB
 
-  -- TODO:
-  -- instance Ord PlayingHand where
+  {-
+    TODO
+    PURPOSE: to order cards in a playingHand
+    HINT: 
+  -}
+  instance Ord PlayingHand where
+    (<=) (Hand cardsA _) (Hand cardsB _) = undefined
 
   {- FUNCTIONS -}
+
+  {-
+    PURPOSE: add a provided card to the hand in question, return the hand with
+      the new card added.
+  -}
+  addCardToHand :: PlayingHand -> PlayingCard -> PlayingHand
+  addCardToHand hand card = undefined
 
   {-
     PURPOSE: Return the card at the supplied position

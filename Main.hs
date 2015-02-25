@@ -2,6 +2,7 @@ import Test.HUnit
 import qualified Games.BlackJack as BJ
 import qualified Games.GoFish as GF
 
+import Engine
 import Card
 import Hand
 import Game
