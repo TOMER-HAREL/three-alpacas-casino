@@ -39,9 +39,7 @@ module Hand where
   {- FUNCTIONS -}
 
   {-
-    TODO
     PURPOSE: Return the card at the supplied position
-    HINT: !!
   -}
   cardAtPosition :: PlayingHand -> Int -> PlayingCard
   cardAtPosition (Hand cards _) position = cards !! position

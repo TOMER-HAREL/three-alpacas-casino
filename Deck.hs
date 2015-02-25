@@ -11,24 +11,20 @@ module Deck where
   {- INSTANCES -}
 
   {-
-    TODO
     PURPOSE: convert every card in a deck into a string and show i nicely.
-    HINT: PlayingCard already has functionality for show(PlayingCard), just
-      implement a loop to iterate through all of the cards.
   -}
   instance Show PlayingDeck where
-    show (Deck (card:rest)) = undefined
+    show (Deck []) = ""
+    show (Deck (card:rest)) = show card ++ ":" ++ show (Deck rest)
 
   {- FUNCTIONS -}
 
   {-
-    TODO
     PURPOSE: Create a playingCard deck with 52 cards, unshuffled.
   -}
   createEmptyDeck :: Game -> PlayingDeck
-  createEmptyDeck = undefined
-  -- createEmptyDeck game = (Deck (map (\suit -> (map (\value -> (Card suit value game)) [A .. K])) [Spades ..]) game)
-  
+  createEmptyDeck game = (Deck (concat $ map (\suit -> (map (\value -> (Card suit value game)) [A .. K])) [Spades ..]))
+
   {-
     TODO
     PURPOSE: Shuffle the supplied deck
