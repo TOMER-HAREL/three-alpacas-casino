@@ -43,4 +43,3 @@ module Hand where
   -}
   removeCardAtPosition :: Int -> PlayingHand -> PlayingHand
   removeCardAtPosition position hand = undefined
-  removeCardAtPosition (Some position hand) n | n == 1 =
