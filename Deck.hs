@@ -27,7 +27,10 @@ module Deck where
   -}
   createEmptyDeck :: PlayingDeck
   createEmptyDeck = undefined
-
+--  createEmptyDeck = do
+--      suit <- [Clubs ..]
+--      value <- [..]
+--      return (suit, value)
   {-
     TODO
     PURPOSE: Shuffle the supplied deck
@@ -42,5 +45,5 @@ module Deck where
     HINT: head
   -}
   drawCardFromDeck :: PlayingDeck -> PlayingCard
-  drawCardFromDeck Empty = undefined
-  drawCardFromDeck deck = undefined
+  drawCardFromDeck Empty = InvisibleCard
+  drawCardFromDeck (Deck (card:_)) = card
