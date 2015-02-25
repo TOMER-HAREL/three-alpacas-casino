@@ -28,7 +28,7 @@ module Deck where
   createEmptyDeck :: Game -> PlayingDeck
   createEmptyDeck = undefined
   -- createEmptyDeck game = (Deck (map (\suit -> (map (\value -> (Card suit value game)) [A .. K])) [Spades ..]) game)
-
+  
   {-
     TODO
     PURPOSE: Shuffle the supplied deck
@@ -43,5 +43,5 @@ module Deck where
     HINT: head
   -}
   drawCardFromDeck :: PlayingDeck -> PlayingCard
-  drawCardFromDeck Empty = undefined
-  drawCardFromDeck deck = undefined
+  drawCardFromDeck Empty = InvisibleCard
+  drawCardFromDeck (Deck (card:_)) = card
