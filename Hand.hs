@@ -1,10 +1,8 @@
 module Hand where
 
-<<<<<<< HEAD
   import Test.HUnit
   import Data.List
-=======
->>>>>>> 5e8ec186dacffa6749fc99bb35961aaa563e6ad4
+
   import Card
   import Game
 
@@ -29,15 +27,12 @@ module Hand where
     sumOfHand (Hand [] _) = 0
     sumOfHand (Hand (card:rest) game) = (valueOf card) + (sumOfHand (Hand rest game))
 
-<<<<<<< HEAD
     numberOfCards (Hand cards BJ) = undefined
-    maximumNumberOfCards (Hand cards BJ) = NoLimit
+    maximumNumberOfCards (Hand cards BJ) = undefined
 
   instance Eq PlayingHand where
     (==) (Hand cardsA _) (Hand cardsB _) = cardsA == cardsB
 
-=======
->>>>>>> 5e8ec186dacffa6749fc99bb35961aaa563e6ad4
   -- TODO:
   -- instance Ord PlayingHand where
 
@@ -54,7 +49,6 @@ module Hand where
   {-
     PURPOSE: Remove the card and return the new hand.
   -}
-<<<<<<< HEAD
   removeCardAtPosition :: PlayingHand -> Int -> PlayingHand
   removeCardAtPosition hand@(Hand cards game) position  = (Hand (delete (cardAtPosition hand position) cards) game)
 
@@ -66,7 +60,3 @@ module Hand where
   testRemoveCardAtPosition = TestCase $ assertBool "RemoveCardAtPosition" ((removeCardAtPosition testHand 1) == (Hand [(Card Diamonds A BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ))
 
   testListHand = TestList [testCardAtPosition, testRemoveCardAtPosition]
-=======
-  removeCardAtPosition :: Int -> PlayingHand -> PlayingHand
-  removeCardAtPosition position hand = undefined
->>>>>>> 5e8ec186dacffa6749fc99bb35961aaa563e6ad4
