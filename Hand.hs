@@ -11,7 +11,10 @@ module Hand where
   class HandValue a where
     sumOfHand :: a -> Int
     numberOfCards :: a -> Int
-    maximumNumberOfCards :: a -> Int
+    maximumNumberOfCards :: a -> NumberOfCards
+
+
+  data NumberOfCards = Limit Int | NoLimit
 
   {- DATA -}
 
@@ -39,10 +42,17 @@ module Hand where
     numberOfCards (Hand cards BJ) = length cards
 
     {-
-      TODO
+      maximumNumberOfCards hand
       PURPOSE: Return the maximum number of cards you're allowed to have in a hand
+      PRE:  ... pre-condition on the arguments ...
+      POST: ... post-condition on the result, in terms of the arguments ...
+      SIDE EFFECTS: ... if any, including exceptions ...
+      EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
     -}
-    maximumNumberOfCards (Hand cards BJ) = undefined
+
+    maximumNumberOfCards (Hand cards BJ) = NoLimit
+    maximumNumberOfCards (Hand cards GF) = NoLimit
+    maximumNumberOfCards (Hand cards TX) = Limit 5
 
   instance Eq PlayingHand where
     (==) (Hand cardsA _) (Hand cardsB _) = cardsA == cardsB
