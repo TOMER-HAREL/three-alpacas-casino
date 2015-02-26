@@ -2,6 +2,7 @@ module Deck where
 
   import Card
   import Game
+  import System.Random
   import Test.HUnit
 
   {- DATA -}
@@ -21,7 +22,7 @@ module Deck where
   instance Eq PlayingDeck where
     (==) (Deck []) (Deck []) = True
     (==) (Deck (card:deck)) (Deck (cardb:deckb)) = card == cardb && (Deck deck) == (Deck deckb)
-    (==) _ _ = False 
+    (==) _ _ = False
 
   {- FUNCTIONS -}
 
@@ -32,12 +33,15 @@ module Deck where
   createEmptyDeck game = (Deck (concat $ map (\suit -> (map (\value -> (Card suit value game)) [A .. K])) [Spades ..]))
 
   {-
-    TODO
     PURPOSE: Shuffle the supplied deck
   -}
-  shuffleDeck :: PlayingDeck -> PlayingDeck
-  shuffleDeck deck = undefined
-
+  {- CRED suffleDeck function is taken from
+  http://stackoverflow.com/questions/9877969/haskell-functions-to-randomly-order-a-list-not-working-properly-homework-begin -}
+  shuffleDeck :: StdGen -> [PlayinCard] -> [PlayingCard]
+  shuffleDeck _ []   = []
+  shuffleDeck gen xs = let (n,newGen) = randomR (0,length xs -1) gen
+                        front = xs !! n
+                    in  front : shuffleDeck newGen (take n xs ++ drop (n+1) xs)
   {-
     PURPOSE: Draw one card from the top of the deck, if there's no more cards
       return InvisibleCard
