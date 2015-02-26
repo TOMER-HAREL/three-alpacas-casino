@@ -73,7 +73,7 @@ module Hand where
       the new card added.
   -}
   addCardToHand :: PlayingHand -> PlayingCard -> PlayingHand
-  addCardToHand hand card = undefined
+  addCardToHand (Hand cards game) card = (Hand (card:cards) game ) 
 
   {-
    cardAtPosition hand position
