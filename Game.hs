@@ -24,6 +24,12 @@ module Game where
   everyGame :: [Game]
   everyGame = [BJ ..] --thanks to deriving(Enum) we can do this.
 
+
+  printGameTable :: [Game] -> IO ()
+  printGameTable (game:rest) = undefined
+
+
+
   {-
     TODO
     PURPOSE: Return the number of players you're required to be to play a certain
@@ -31,5 +37,6 @@ module Game where
   -}
   minimumOfPlayers :: Game -> Int
   minimumOfPlayers None = 0
-  minimumOfPlayers BJ = undefined
-  minimumOfPlayers GF = undefined
+  minimumOfPlayers BJ = 1
+  minimumOfPlayers GF = 2
+  minimumOfPlayers TX = 2

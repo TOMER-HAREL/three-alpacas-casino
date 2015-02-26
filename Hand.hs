@@ -10,12 +10,21 @@ module Hand where
 
   class HandValue a where
     sumOfHand :: a -> Int
+    numberOfCards :: a -> Int
     maximumNumberOfCards :: a -> NumberOfCards
+  {- DATA -}
 
+
+  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+     -}
 
   data NumberOfCards = Limit Int | NoLimit
 
-  {- DATA -}
+
+  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+   -}
 
   data PlayingHand = Hand [PlayingCard] Game
                    | EmptyHand
@@ -29,6 +38,16 @@ module Hand where
   instance HandValue PlayingHand where
     sumOfHand (Hand [] _) = 0
     sumOfHand (Hand (card:rest) game) = (valueOf card) + (sumOfHand (Hand rest game))
+
+  {- numberOfCards hand
+     PURPOSE:  count the cards in hand
+     PRE:  ... pre-condition on the arguments ...
+     POST: ... post-condition on the result, in terms of the arguments ...
+     SIDE EFFECTS: ... if any, including exceptions ...
+     EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
+   -}
+
+    numberOfCards (Hand cards BJ) = length cards
 
     {-
       maximumNumberOfCards hand
@@ -46,13 +65,6 @@ module Hand where
   instance Eq PlayingHand where
     (==) (Hand cardsA _) (Hand cardsB _) = cardsA == cardsB
 
-  {-
-    TODO
-    PURPOSE: to order cards in a playingHand
-    HINT:
-  -}
-  instance Ord PlayingHand where
-    (<=) (Hand cardsA _) (Hand cardsB _) = undefined
 
   {- FUNCTIONS -}
 
@@ -68,17 +80,6 @@ module Hand where
   addCardToHand :: PlayingHand -> PlayingCard -> PlayingHand
   addCardToHand (Hand cards game) card = (Hand (card:cards) game)
 
-  {- numberOfCards hand
-  PURPOSE:  count the cards in hand
-  PRE:  ... pre-condition on the arguments ...
-  POST: ... post-condition on the result, in terms of the arguments ...
-  SIDE EFFECTS: ... if any, including exceptions ...
-  EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
-  -}
-
-  numberOfCards :: PlayingHand -> Int
-  numberOfCards (Hand cards BJ) = length cards
-
   {-
       cardAtPosition hand position
       PURPOSE: Return the card at the supplied position
@@ -92,11 +93,11 @@ module Hand where
   cardAtPosition (Hand cards _) position = cards !! position
 
   {-  removeCardAtPosition hand position
-    PURPOSE:  Remove the card and return the new hand.
-    PRE:  ... pre-condition on the arguments ...
-    POST: ... post-condition on the result, in terms of the arguments ...
-    SIDE EFFECTS: ... if any, including exceptions ...
-    EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
+      PURPOSE:  Remove the card and return the new hand.
+      PRE:  ... pre-condition on the arguments ...
+      POST: ... post-condition on the result, in terms of the arguments ...
+      SIDE EFFECTS: ... if any, including exceptions ...
+      EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
   -}
 
   removeCardAtPosition :: PlayingHand -> Int -> PlayingHand
@@ -109,6 +110,5 @@ module Hand where
   testCardAtPosition = TestCase $ assertBool "CardAtPosition" ((cardAtPosition testHand 1) == (Card Spades (Other 5) BJ))
   testRemoveCardAtPosition = TestCase $ assertBool "RemoveCardAtPosition" ((removeCardAtPosition testHand 1) == (Hand [(Card Diamonds A BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ))
   testAddCardToHand = TestCase $ assertBool "addCardToHand" ((addCardToHand testHand (Card Diamonds J BJ)) == (Hand [(Card Diamonds J BJ), (Card Diamonds A BJ), (Card Spades (Other 5) BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ))
-  testHandCount = TestCase $ assertBool "numberOfCards" ((numberOfCards testHand) == 4)
 
-  testListHand = TestList [testCardAtPosition, testRemoveCardAtPosition, testAddCardToHand, testHandCount]
+  testListHand = TestList [testCardAtPosition, testRemoveCardAtPosition, testAddCardToHand]
