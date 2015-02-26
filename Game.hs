@@ -4,6 +4,7 @@ module Game where
 
   data Game = None
             | BJ
+            | TX
             | GF deriving(Enum)
 
   {- INSTANCES -}
@@ -11,6 +12,7 @@ module Game where
   instance Show Game where
     show BJ = "Black Jack"
     show GF = "Go Fish"
+    show TX = "Texas Hold'Em"
     show None = "Undefined Game"
 
   {- FUNCTIONS -}
