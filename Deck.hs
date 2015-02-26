@@ -6,6 +6,10 @@ module Deck where
 
   {- DATA -}
 
+  {- REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+     REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+   -}
+   
   data PlayingDeck = Deck [PlayingCard]
                    | EmptyDeck
 
@@ -21,13 +25,18 @@ module Deck where
   instance Eq PlayingDeck where
     (==) (Deck []) (Deck []) = True
     (==) (Deck (card:deck)) (Deck (cardb:deckb)) = card == cardb && (Deck deck) == (Deck deckb)
-    (==) _ _ = False 
+    (==) _ _ = False
 
   {- FUNCTIONS -}
 
-  {-
-    PURPOSE: Create a playingCard deck with 52 cards, unshuffled.
+  {-  createEmptyDeck game
+      PURPOSE: Create a playingCard deck with 52 cards, unshuffled.
+      PRE:  ... pre-condition on the arguments ...
+      POST: ... post-condition on the result, in terms of the arguments ...
+      SIDE EFFECTS: ... if any, including exceptions ...
+      EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
   -}
+
   createEmptyDeck :: Game -> PlayingDeck
   createEmptyDeck game = (Deck (concat $ map (\suit -> (map (\value -> (Card suit value game)) [A .. K])) [Spades ..]))
 
@@ -35,13 +44,19 @@ module Deck where
     TODO
     PURPOSE: Shuffle the supplied deck
   -}
+
   shuffleDeck :: PlayingDeck -> PlayingDeck
   shuffleDeck deck = undefined
 
   {-
-    PURPOSE: Draw one card from the top of the deck, if there's no more cards
-      return InvisibleCard
-  -}
+      PURPOSE: Draw one card from the top of the deck, if there's no more cards
+          return InvisibleCard
+      PRE:  ... pre-condition on the arguments ...
+      POST: ... post-condition on the result, in terms of the arguments ...
+      SIDE EFFECTS: ... if any, including exceptions ...
+      EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
+    -}
+
   drawCardFromDeck :: PlayingDeck -> PlayingCard
   drawCardFromDeck EmptyDeck = InvisibleCard
   drawCardFromDeck (Deck (card:_)) = card
