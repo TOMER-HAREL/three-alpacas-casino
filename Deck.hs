@@ -37,9 +37,11 @@ module Deck where
   -}
   {- CRED suffleDeck function is taken from
   http://stackoverflow.com/questions/9877969/haskell-functions-to-randomly-order-a-list-not-working-properly-homework-begin -}
-  shuffleDeck :: StdGen -> [PlayinCard] -> [PlayingCard]
+  shuffleDeck :: StdGen -> [PlayingCard] -> [PlayingCard]
   shuffleDeck _ []   = []
-  shuffleDeck gen xs = let (n,newGen) = randomR (0,length xs -1) gen
+  shuffleDeck gen xs =
+                    let
+                        (n,newGen) = randomR (0,length xs -1) gen
                         front = xs !! n
                     in  front : shuffleDeck newGen (take n xs ++ drop (n+1) xs)
   {-
