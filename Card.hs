@@ -12,7 +12,7 @@ module Card where
   data Suit = Spades
             | Clubs
             | Diamonds
-            | Hearts deriving(Enum)
+            | Hearts
 
   data Value = Other Int
              | J
@@ -35,10 +35,14 @@ module Card where
     valueOf (Card _ _ GF) = 0
 
   instance Show Suit where
-    show Clubs = "♣︎"
-    show Diamonds = "♦︎"
-    show Hearts = "❤︎"
-    show Spades = "♠︎"
+    -- show Clubs = "♣︎"
+    -- show Diamonds = "♦︎"
+    -- show Hearts = "❤︎"
+    -- show Spades = "♠︎"
+    show Clubs = "C:"
+    show Diamonds = "D:"
+    show Hearts = "H:"
+    show Spades = "S:"
 
   instance Show Value where
     show J = "J"
@@ -58,7 +62,27 @@ module Card where
     toEnum 11 = J
     toEnum 12 = Q
     toEnum 13 = K
+    toEnum 0 = K -- to fix the Enum
     toEnum value = (Other value)
+
+  instance Enum Suit where
+    fromEnum Spades = 1
+    fromEnum Clubs = 2
+    fromEnum Diamonds = 3
+    fromEnum Hearts = 4
+
+    toEnum enum =
+      let
+        s = ((ceiling (toRational(enum `mod` 52) / 13.0)))
+      in
+        if s == 1 then Spades
+        else if s == 2 then Clubs
+        else if s == 3 then Diamonds
+        else Hearts
+
+  instance Enum PlayingCard where
+    fromEnum (Card suit value _) = fromEnum(suit) * fromEnum(value)
+    toEnum enum = (Card (toEnum enum::Suit) (toEnum (enum `mod` 13)::Value) BJ)
 
   instance Show PlayingCard where
     show (Card suit value None) = "U:[" ++ show(value) ++ show(suit) ++ "]"

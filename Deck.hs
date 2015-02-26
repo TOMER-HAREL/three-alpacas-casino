@@ -23,7 +23,7 @@ module Deck where
     PURPOSE: Create a playingCard deck with 52 cards, unshuffled.
   -}
   createEmptyDeck :: Game -> PlayingDeck
-  createEmptyDeck game = (Deck (concat $ map (\suit -> (map (\value -> (Card suit value game)) [A .. K])) [Spades ..]))
+  createEmptyDeck game = (Deck [(Card Spades A game) .. (Card Hearts K game)])
 
   {-
     TODO
