@@ -27,12 +27,16 @@ module Hand where
     sumOfHand (Hand [] _) = 0
     sumOfHand (Hand (card:rest) game) = (valueOf card) + (sumOfHand (Hand rest game))
 
-    {-
-      TODO
-      PURPOSE: Count the cards in hand
-      HINT: length
-    -}
-    numberOfCards (Hand cards BJ) = undefined
+    {- numberOfCards hand
+   PURPOSE:  count the cards in hand
+   PRE:  ... pre-condition on the arguments ...
+   POST: ... post-condition on the result, in terms of the arguments ...
+   SIDE EFFECTS: ... if any, including exceptions ...
+   EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
+   -}
+
+    numberOfCards (Hand cards BJ) = length cards
+
     {-
       TODO
       PURPOSE: Return the maximum number of cards you're allowed to have in a hand
@@ -45,7 +49,7 @@ module Hand where
   {-
     TODO
     PURPOSE: to order cards in a playingHand
-    HINT: 
+    HINT:
   -}
   instance Ord PlayingHand where
     (<=) (Hand cardsA _) (Hand cardsB _) = undefined
@@ -60,14 +64,25 @@ module Hand where
   addCardToHand hand card = undefined
 
   {-
-    PURPOSE: Return the card at the supplied position
-  -}
+   cardAtPosition hand position
+   PURPOSE: Return the card at the supplied position
+   PRE:  ... pre-condition on the arguments ...
+   POST: ... post-condition on the result, in terms of the arguments ...
+   SIDE EFFECTS: ... if any, including exceptions ...
+   EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
+   -}
+
   cardAtPosition :: PlayingHand -> Int -> PlayingCard
   cardAtPosition (Hand cards _) position = cards !! position
 
-  {-
-    PURPOSE: Remove the card and return the new hand.
+    {- removeCardAtPosition hand position
+   PURPOSE:  Remove the card and return the new hand.
+   PRE:  ... pre-condition on the arguments ...
+   POST: ... post-condition on the result, in terms of the arguments ...
+   SIDE EFFECTS: ... if any, including exceptions ...
+   EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
   -}
+
   removeCardAtPosition :: PlayingHand -> Int -> PlayingHand
   removeCardAtPosition hand@(Hand cards game) position  = (Hand (delete (cardAtPosition hand position) cards) game)
 
