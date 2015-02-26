@@ -16,6 +16,7 @@ module Hand where
   {- DATA -}
 
   data PlayingHand = Hand [PlayingCard] Game
+                   | EmptyHand
 
   {- INSTANCES -}
 
@@ -57,6 +58,7 @@ module Hand where
   {- FUNCTIONS -}
 
   {-
+    TODO
     PURPOSE: add a provided card to the hand in question, return the hand with
       the new card added.
   -}
@@ -92,5 +94,6 @@ module Hand where
 
   testCardAtPosition = TestCase $ assertBool "CardAtPosition" ((cardAtPosition testHand 1) == (Card Spades (Other 5) BJ))
   testRemoveCardAtPosition = TestCase $ assertBool "RemoveCardAtPosition" ((removeCardAtPosition testHand 1) == (Hand [(Card Diamonds A BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ))
+  testAddCardToHand = TestCase $ assertBool "addCardToHand" ((addCardToHand testHand (Card Diamonds J BJ)) == (Hand [(Card Diamonds J BJ), (Card Diamonds A BJ), (Card Spades (Other 5) BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ))
 
-  testListHand = TestList [testCardAtPosition, testRemoveCardAtPosition]
+  testListHand = TestList [testCardAtPosition, testRemoveCardAtPosition, testAddCardToHand]

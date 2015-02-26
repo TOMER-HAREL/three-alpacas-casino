@@ -6,7 +6,7 @@ module Deck where
   {- DATA -}
 
   data PlayingDeck = Deck [PlayingCard]
-                   | Empty
+                   | EmptyDeck
 
   {- INSTANCES -}
 
@@ -37,5 +37,5 @@ module Deck where
       return InvisibleCard
   -}
   drawCardFromDeck :: PlayingDeck -> PlayingCard
-  drawCardFromDeck Empty = InvisibleCard
+  drawCardFromDeck EmptyDeck = InvisibleCard
   drawCardFromDeck (Deck (card:_)) = card
