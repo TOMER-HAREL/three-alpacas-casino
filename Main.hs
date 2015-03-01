@@ -14,4 +14,4 @@ main = do
   putStrLn $ show (Hand [(Card Diamonds A BJ), (Card Spades (Other 5) BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ)
 
 {- TESTS -}
-runtests = runTestTT $ TestList [testListHand, testListDeck]
+runtests = runTestTT $ TestList [testListHand, testListDeck, testListCard]
