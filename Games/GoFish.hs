@@ -13,7 +13,7 @@ module Games.GoFish where
 
 
   createDeck :: PlayingDeck
-  createDeck = shuffleDeck (createEmptyDeck GF)
+  createDeck = shuffleDeck (createEmptyDeck)
 
   dealCards :: PlayingDeck -> GamePlayer -> GamePlayer
   dealCards EmptyDeck _ = undefined

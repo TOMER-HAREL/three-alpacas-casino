@@ -11,8 +11,21 @@ module Games.BlackJack where
 
   data GameState = GState [GamePlayer] PlayingDeck
 
+  instance GameValue PlayingCard where
+    valueOf (Card _ (Other value)) = value
+    valueOf (Card _ A) = 11
+    valueOf (Card _ _) = 10
+
+  instance GameValue PlayingHand where
+    valueOf (Hand []) = 0
+    valueOf (Hand (card:rest)) = (valueOf card) + (valueOf (Hand rest))
+
   instance Show GameState where
     show (GState [] deck) = "No players BJ"
+
+  instance Ord PlayingCard where
+    (<=) InvisibleCard InvisibleCard = True
+    (<=) cardA cardB = valueOf cardA <= valueOf cardB
 
   -- instance Show C.PlayingCard where
   --   show (C.Card _ C.A _) = "21"
@@ -22,7 +35,7 @@ module Games.BlackJack where
   printHand :: PlayingHand -> IO ()
   printHand hand = do
     putStrLn $ "Your hand: " ++ (show hand) ++ "."
-    putStrLn $ "Hand value " ++ (show (sumOfHand hand::Int)) ++ "."
+    putStrLn $ "Hand value " ++ (show (valueOf hand::Int)) ++ "."
 
 
   {-
@@ -34,49 +47,39 @@ module Games.BlackJack where
   {-
     PURPOSE:
   -}
-  dealCard :: PlayingDeck -> GamePlayer -> GamePlayer
-  dealCard EmptyDeck player = player
-  dealCard deck (Player hand role state game) = (Player (addCardToHand hand (drawCardFromDeck deck)) role state game)
+  dealCard :: PlayingDeck -> GamePlayer -> IO GamePlayer
+  dealCard EmptyDeck player = return player
+  dealCard deck (Player hand role state) = return (Player (addCardToHand hand (drawCardFromDeck deck)) role state)
 
   main :: IO ()
   main = do
     putStrLn ("Welcome to " ++ show(BJ))
     deck <- createDeck
-    putStrLn ("Current deck: " ++ show(deck))
+    player <- createBJShark
+    newPlayer <- dealCard deck player
+    newDeck <- return (removeTopCardFromDeck deck)
+    putStrLn ("New hand: " ++ show (getHand newPlayer))
+    putStrLn ("New deck: " ++ show (newDeck))
     -- player <- (Player (Hand []) Shark (State "") BJ)
     -- putStrLn ("PlayerHand: " ++ show(player))
 
+  getHand :: GamePlayer -> PlayingHand
+  getHand (Player hand _ _) = hand
+
+  createBJShark :: IO GamePlayer
+  createBJShark = return (createShark)
 
   {-
     PURPOSE: create a blackjack deck, consists of one deck.
   -}
   createDeck :: IO PlayingDeck
-  createDeck = do
-    return (shuffleDeck (createEmptyDeck BJ))
+  createDeck = return (shuffleDeck (createEmptyDeck))
 
 
   performMove :: GamePlayer -> PlayingDeck -> GamePlayer
-  performMove (Player hand roles (State "SPLIT") _) deck = undefined
-  performMove (Player hand role (State "HIT") _) deck = (Player hand role (State "UNKNOWN") BJ)
+  performMove (Player hand roles (State "SPLIT")) deck = undefined
+  performMove (Player hand role (State "HIT")) deck = (Player hand role (State "UNKNOWN"))
   performMove _ deck = undefined
-
-  -- printGamestate :: [PlayingHand] -> IO ()
-  -- printGamestate (hand:rest) = do
-  --   putStrLn show (hand)
-
-  {-
-  victory :: GameState -> Bool
-  victory
-          | hand > dealer && hand < 22 = True
-          | hand > dealer && hand >= 22 = False
-          | hand < dealer = False
-
-  playMove :: GameState -> Move -> IO PlayingHand
-  playMove hit = drawCardFromDeck addCardToHand
-  playMove stand  =
-  playMove double =
-  playMove split ?
-  -}
 
   {-
     TODO: Test cases

@@ -6,7 +6,7 @@ module Engine where
   {-
     PURPOSE: provide the game in question the function to create a deck.
   -}
-  provideDeck :: (Game -> PlayingDeck)
+  provideDeck :: PlayingDeck
   provideDeck = createEmptyDeck
 
   {-

@@ -38,8 +38,8 @@ module Deck where
     SIDE EFFECTS: ... if any, including exceptions ...
     EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ..
   -}
-  createEmptyDeck :: Game -> PlayingDeck
-  createEmptyDeck game = (Deck [(Card Spades A game) .. (Card Hearts K game)])
+  createEmptyDeck :: PlayingDeck
+  createEmptyDeck = (Deck [(Card Spades A) .. (Card Hearts K)])
 
   {-
     PURPOSE: Shuffle supplied list
@@ -88,32 +88,32 @@ module Deck where
   {- TESTS -}
 
   testDeck :: PlayingDeck
-  testDeck =  Deck [Card Spades A BJ,Card Spades (Other 2) BJ,
-          Card Spades (Other 3) BJ,Card Spades (Other 4) BJ,
-          Card Spades (Other 5) BJ,Card Spades (Other 6) BJ,
-          Card Spades (Other 7) BJ,Card Spades (Other 8) BJ,
-          Card Spades (Other 9) BJ,Card Spades (Other 10) BJ,
-          Card Spades J BJ,Card Spades Q BJ,Card Spades K BJ,Card Clubs A BJ,
-          Card Clubs (Other 2) BJ,Card Clubs (Other 3) BJ,
-          Card Clubs (Other 4) BJ,Card Clubs (Other 5) BJ,
-          Card Clubs (Other 6) BJ,Card Clubs (Other 7) BJ,
-          Card Clubs (Other 8) BJ,Card Clubs (Other 9) BJ,
-          Card Clubs (Other 10) BJ,Card Clubs J BJ,Card Clubs Q BJ,
-          Card Clubs K BJ,Card Diamonds A BJ,Card Diamonds (Other 2) BJ,
-          Card Diamonds (Other 3) BJ,Card Diamonds (Other 4) BJ,
-          Card Diamonds (Other 5) BJ,Card Diamonds (Other 6) BJ,
-          Card Diamonds (Other 7) BJ,Card Diamonds (Other 8) BJ,
-          Card Diamonds (Other 9) BJ,Card Diamonds (Other 10) BJ,
-          Card Diamonds J BJ,Card Diamonds Q BJ,Card Diamonds K BJ,
-          Card Hearts A BJ,Card Hearts (Other 2) BJ,Card Hearts (Other 3) BJ,
-          Card Hearts (Other 4) BJ,Card Hearts (Other 5) BJ,
-          Card Hearts (Other 6) BJ,Card Hearts (Other 7) BJ,
-          Card Hearts (Other 8) BJ,Card Hearts (Other 9) BJ,
-          Card Hearts (Other 10) BJ,Card Hearts J BJ,Card Hearts Q BJ,
-          Card Hearts K BJ]
+  testDeck =  Deck [Card Spades A,Card Spades (Other 2),
+          Card Spades (Other 3),Card Spades (Other 4),
+          Card Spades (Other 5),Card Spades (Other 6),
+          Card Spades (Other 7),Card Spades (Other 8),
+          Card Spades (Other 9),Card Spades (Other 10),
+          Card Spades J,Card Spades Q,Card Spades K,Card Clubs A,
+          Card Clubs (Other 2),Card Clubs (Other 3),
+          Card Clubs (Other 4),Card Clubs (Other 5),
+          Card Clubs (Other 6),Card Clubs (Other 7),
+          Card Clubs (Other 8),Card Clubs (Other 9),
+          Card Clubs (Other 10),Card Clubs J,Card Clubs Q,
+          Card Clubs K,Card Diamonds A,Card Diamonds (Other 2),
+          Card Diamonds (Other 3),Card Diamonds (Other 4),
+          Card Diamonds (Other 5),Card Diamonds (Other 6),
+          Card Diamonds (Other 7),Card Diamonds (Other 8),
+          Card Diamonds (Other 9),Card Diamonds (Other 10),
+          Card Diamonds J,Card Diamonds Q,Card Diamonds K,
+          Card Hearts A,Card Hearts (Other 2),Card Hearts (Other 3),
+          Card Hearts (Other 4),Card Hearts (Other 5),
+          Card Hearts (Other 6),Card Hearts (Other 7),
+          Card Hearts (Other 8),Card Hearts (Other 9),
+          Card Hearts (Other 10),Card Hearts J,Card Hearts Q,
+          Card Hearts K]
 
-  testCreateEmptyDeck = TestCase $ assertBool "createEmptyDeck" ((createEmptyDeck BJ) == testDeck)
-  testDrawCardFromDeck = TestCase $ assertBool "drawCardFromDeck" ((drawCardFromDeck testDeck) == (Card Spades A BJ))
+  testCreateEmptyDeck = TestCase $ assertBool "createEmptyDeck" ((createEmptyDeck) == testDeck)
+  testDrawCardFromDeck = TestCase $ assertBool "drawCardFromDeck" ((drawCardFromDeck testDeck) == (Card Spades A))
 
 
   testListDeck = TestList [testCreateEmptyDeck, testDrawCardFromDeck]

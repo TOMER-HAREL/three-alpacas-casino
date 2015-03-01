@@ -8,6 +8,9 @@ module Game where
             | P5
             | GF deriving(Enum)
 
+  class GameValue a where
+    valueOf :: a -> Int
+
   {- INSTANCES -}
 
   instance Show Game where
