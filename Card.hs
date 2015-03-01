@@ -10,10 +10,18 @@ module Card where
 
   {- DATA -}
 
+  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+     -}
+
   data Suit = Spades
             | Clubs
             | Diamonds
             | Hearts
+
+  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+     -}
 
   data Value = Other Int
              | J
@@ -21,6 +29,10 @@ module Card where
              | K
              | A
 
+ {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+     REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+    -}
+    
   data PlayingCard = Card Suit Value Game
                    | InvisibleCard
 
