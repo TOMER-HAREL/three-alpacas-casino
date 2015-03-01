@@ -4,14 +4,7 @@ module Hand where
   import Data.List
 
   import Card
-  import Game
 
-  {- CLASSES -}
-
-  class HandValue a where
-    sumOfHand :: a -> Int
-    numberOfCards :: a -> Int
-    maximumNumberOfCards :: a -> NumberOfCards
   {- DATA -}
 
 
@@ -61,7 +54,6 @@ module Hand where
 
 
   {- FUNCTIONS -}
-
 
   emptyHand :: PlayingHand
   emptyHand = (Hand [])

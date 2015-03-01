@@ -1,7 +1,6 @@
 module Player where
 
   import Deck
-  import Game
   import Hand
 
 

@@ -1,7 +1,6 @@
 module Deck where
 
   import Card
-  import Game
   import System.Random
   import Test.HUnit
 
