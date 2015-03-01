@@ -11,17 +11,17 @@ import Deck
 main :: IO ()
 main = do
   putStrLn "Welcome to Playboy Casino."
-  putStrLn $ show (Hand [(Card Diamonds A BJ), (Card Spades (Other 5) BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ)
+  -- putStrLn $ show (Hand [(Card Diamonds A BJ), (Card Spades (Other 5) BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ)
+  home
 
 home :: IO ()
 home = do
   putStrLn "Welcome to Playboy Casino."
-  printGameList
-
-printGameList :: IO ()
-printGameList = do
-  putStrLn "Please pick your poison: "
   printGameTable everyGame
+  line <- getLine
+  putStrLn ("Picked game: " ++ show(line))
+  home
+
 
 {- TESTS -}
 runtests = runTestTT $ TestList [testListHand, testListDeck]

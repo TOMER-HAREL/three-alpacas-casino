@@ -48,6 +48,7 @@ module Game where
         putStrLn("[n] GAME")
         putStrLn("-------------------------------")
         printGameTable' games 1
+        putStrLn("Please pick your poison [1 - " ++ show(gameCount) ++ "]: ")
 
   {-
     TODO
