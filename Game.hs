@@ -44,7 +44,7 @@ module Game where
   printGameTable games =
     let
       printGameTable' :: [Game] -> Int -> IO ()
-      printGameTable' [] _ = putStrLn ""
+      printGameTable' [] _ = return ()
       printGameTable' (game:rest) acc = do
         putStrLn ("[" ++ show(acc) ++ "] " ++ show(game))
         printGameTable' rest (acc + 1)

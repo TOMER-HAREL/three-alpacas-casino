@@ -20,15 +20,16 @@ module Games.BlackJack where
     valueOf (Hand []) = 0
     valueOf (Hand (card:rest)) = (valueOf card) + (valueOf (Hand rest))
 
+  instance GameValue PlayingDeck where
+    valueOf (Deck []) = 0
+    valueOf (Deck (card:rest)) = (valueOf card) + (valueOf (Deck rest))
+
   instance Show GameState where
     show (GState [] deck) = "No players BJ"
 
   instance Ord PlayingCard where
     (<=) InvisibleCard InvisibleCard = True
     (<=) cardA cardB = valueOf cardA <= valueOf cardB
-
-  -- instance Show C.PlayingCard where
-  --   show (C.Card _ C.A _) = "21"
 
   {- FUNCTIONS -}
 
@@ -54,14 +55,6 @@ module Games.BlackJack where
   main :: IO ()
   main = do
     putStrLn ("Welcome to " ++ show(BJ))
-    deck <- createDeck
-    player <- createBJShark
-    newPlayer <- dealCard deck player
-    newDeck <- return (removeTopCardFromDeck deck)
-    putStrLn ("New hand: " ++ show (getHand newPlayer))
-    putStrLn ("New deck: " ++ show (newDeck))
-    -- player <- (Player (Hand []) Shark (State "") BJ)
-    -- putStrLn ("PlayerHand: " ++ show(player))
 
   getHand :: GamePlayer -> PlayingHand
   getHand (Player hand _ _) = hand
@@ -84,3 +77,7 @@ module Games.BlackJack where
   {-
     TODO: Test cases
   -}
+  testBJDrawCardFromDeck = T.TestCase $ T.assertBool "testBJDrawCardFromDeck" ((createEmptyDeck) == testDeck)
+
+
+  testListDeck = T.TestList [testCreateEmptyDeck, testDrawCardFromDeck]
