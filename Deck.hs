@@ -36,14 +36,16 @@ module Deck where
     PURPOSE: Shuffle the supplied deck
   -}
   {- CRED suffleDeck function is taken from
-  http://stackoverflow.com/questions/9877969/haskell-functions-to-randomly-order-a-list-not-working-properly-homework-begin -}
+  http://stackoverflow.com/questions/9877969/haskell-functions-to-randomly-order-a-list-not-working-properly-homework-begin
+  -}
   shuffleDeck :: StdGen -> [PlayingCard] -> [PlayingCard]
   shuffleDeck _ []   = []
   shuffleDeck gen xs =
-                    let
-                        (n,newGen) = randomR (0,length xs -1) gen
-                        front = xs !! n
-                    in  front : shuffleDeck newGen (take n xs ++ drop (n+1) xs)
+    let
+      (n,newGen) = randomR (0,length xs -1) gen
+      front = xs !! n
+    in
+      front : shuffleDeck newGen (take n xs ++ drop (n+1) xs)
   {-
     PURPOSE: Draw one card from the top of the deck, if there's no more cards
       return InvisibleCard

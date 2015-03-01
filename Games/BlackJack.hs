@@ -1,8 +1,11 @@
 module Games.BlackJack where
 
+  import qualified Test.HUnit as T
   import Game
   import Card
   import Hand
+  import Player
+  import Deck
 
 
   -- integrate hit, stand, double, split
@@ -16,6 +19,14 @@ module Games.BlackJack where
     putStrLn $ "Your hand: " ++ (show hand) ++ "."
     putStrLn $ "Hand value " ++ (show (sumOfHand hand::Int)) ++ "."
 
+  states :: [PlayerState]
+  states = [(State "HIT"), (State "UNKNOWN"), (State "SPLIT"), (State "STAND"), (State "DOUBLE")]
+
+
+  performMove :: GamePlayer -> PlayingDeck -> GamePlayer
+  performMove (Player hand roles (State "SPLIT") _) deck = undefined
+  performMove (Player hand role (State "HIT") _) deck = (Player hand role (State "UNKNOWN") BJ)
+  performMove _ deck = undefined
 
   -- printGamestate :: [PlayingHand] -> IO ()
   -- printGamestate (hand:rest) = do
@@ -33,4 +44,8 @@ module Games.BlackJack where
   playMove stand  =
   playMove double =
   playMove split ?
+  -}
+
+  {-
+    TODO: Test cases
   -}
