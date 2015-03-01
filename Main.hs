@@ -13,5 +13,15 @@ main = do
   putStrLn "Welcome to Playboy Casino."
   putStrLn $ show (Hand [(Card Diamonds A BJ), (Card Spades (Other 5) BJ), (Card Clubs K BJ), (Card Diamonds (Other 2) BJ)] BJ)
 
+home :: IO ()
+home = do
+  putStrLn "Welcome to Playboy Casino."
+  printGameList
+
+printGameList :: IO ()
+printGameList = do
+  putStrLn "Please pick your poison: "
+  printGameTable everyGame
+
 {- TESTS -}
 runtests = runTestTT $ TestList [testListHand, testListDeck, testListCard]

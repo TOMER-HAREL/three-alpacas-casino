@@ -24,11 +24,30 @@ module Game where
   everyGame :: [Game]
   everyGame = [BJ ..] --thanks to deriving(Enum) we can do this.
 
+  {-
+    PURPOSE: return an integer that denotes the number of games available.
+  -}
+  gameCount :: Int
+  gameCount = length everyGame
 
+
+  {-
+    PURPOSE: Provide the player with a list of all the games available.
+  -}
   printGameTable :: [Game] -> IO ()
-  printGameTable (game:rest) = undefined
-
-
+  printGameTable [] = putStrLn "Playboy Casino is out of poison."
+  printGameTable games =
+    let
+      printGameTable' :: [Game] -> Int -> IO ()
+      printGameTable' [] _ = putStrLn ""
+      printGameTable' (game:rest) acc = do
+        putStrLn ("[" ++ show(acc) ++ "] " ++ show(game))
+        printGameTable' rest (acc + 1)
+    in
+      do
+        putStrLn("[n] GAME")
+        putStrLn("-------------------------------")
+        printGameTable' games 1
 
   {-
     TODO
