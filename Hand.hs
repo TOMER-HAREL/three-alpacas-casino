@@ -68,6 +68,10 @@ module Hand where
 
   {- FUNCTIONS -}
 
+
+  emptyHand :: Game -> PlayingHand
+  emptyHand game = (Hand [] game)
+
   {-
       addCardToHand hand card
       PURPOSE: add a provided card to the hand in question, return the hand with
