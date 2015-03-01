@@ -7,6 +7,10 @@ module Deck where
 
   {- DATA -}
 
+  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+     -}
+
   data PlayingDeck = Deck [PlayingCard]
                    | EmptyDeck
 
@@ -27,8 +31,14 @@ module Deck where
   {- FUNCTIONS -}
 
   {-
+    createEmptyDeck game
     PURPOSE: Create a playingCard deck with 52 cards, unshuffled.
+    PRE:  ... pre-condition on the arguments ...
+    POST: ... post-condition on the result, in terms of the arguments ...
+    SIDE EFFECTS: ... if any, including exceptions ...
+    EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ..
   -}
+
   createEmptyDeck :: Game -> PlayingDeck
   createEmptyDeck game = (Deck [(Card Spades A game) .. (Card Hearts K game)])
 
@@ -48,14 +58,33 @@ module Deck where
   shuffleDeck :: PlayingDeck -> PlayingDeck
   shuffleDeck (Deck cards) = (Deck (shuffleList (mkStdGen 1023012301230) cards))
   {-
+    drawCardFromDeck deck
     PURPOSE: Draw one card from the top of the deck, if there's no more cards
       return InvisibleCard
+    PRE:  ... pre-condition on the arguments ...
+    POST: ... post-condition on the result, in terms of the arguments ...
+    SIDE EFFECTS: ... if any, including exceptions ...
+    EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ..
   -}
+
   drawCardFromDeck :: PlayingDeck -> PlayingCard
   drawCardFromDeck EmptyDeck = InvisibleCard
   drawCardFromDeck (Deck (card:_)) = card
 
+  {-
+    removeTopCardFromDeck deck
+    PURPOSE: Remove drawn card from deck
+    PRE:  ... pre-condition on the arguments ...
+    POST: ... post-condition on the result, in terms of the arguments ...
+    SIDE EFFECTS: ... if any, including exceptions ...
+    EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ..
+  -}
+
+  removeTopCardFromDeck :: PlayingDeck -> PlayingDeck
+  removeTopCardFromDeck (Deck (topcard:deck)) = (Deck deck)
+
   {- TESTS -}
+
   testDeck :: PlayingDeck
   testDeck =  Deck [Card Spades A BJ,Card Spades (Other 2) BJ,
           Card Spades (Other 3) BJ,Card Spades (Other 4) BJ,
