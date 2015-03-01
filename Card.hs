@@ -1,5 +1,6 @@
 module Card where
 
+  import Test.HUnit
   import Game
 
   {- CLASSES -}
@@ -66,10 +67,10 @@ module Card where
     toEnum value = (Other value)
 
   instance Enum Suit where
-    fromEnum Spades = 1
-    fromEnum Clubs = 2
-    fromEnum Diamonds = 3
-    fromEnum Hearts = 4
+    fromEnum Spades = 0
+    fromEnum Clubs = 1
+    fromEnum Diamonds = 2
+    fromEnum Hearts = 3
 
     toEnum enum =
       let
@@ -81,7 +82,7 @@ module Card where
         else Hearts
 
   instance Enum PlayingCard where
-    fromEnum (Card suit value _) = fromEnum(suit) * fromEnum(value)
+    fromEnum (Card suit value _) = fromEnum(suit) * 13 + fromEnum(value)
     toEnum enum = (Card (toEnum enum::Suit) (toEnum (enum `mod` 13)::Value) BJ)
 
   instance Show PlayingCard where
@@ -116,3 +117,19 @@ module Card where
   instance Ord PlayingCard where
     (<=) InvisibleCard InvisibleCard = True
     (<=) cardA cardB = valueOf cardA <= valueOf cardB
+
+  {- TESTS -}
+
+  testfromEnum1 = TestCase $ assertBool "testfromEnum" ((fromEnum (Card Spades A BJ)) == 1)
+  testfromEnum2 = TestCase $ assertBool "testfromEnum" ((fromEnum (Card Hearts K BJ)) == 52)
+  testtoEnum = TestCase $ assertBool "testtoEnum" ((toEnum 1) == (Card Spades A BJ))
+  testfromEnumAce = TestCase $ assertBool "testfromEnumAce" ((fromEnum (Card Spades A BJ)) == 1 && fromEnum (Card Clubs A BJ) == 14 && fromEnum (Card Diamonds A BJ) == 27 && fromEnum (Card Hearts A BJ) == 40)
+  testiterateHearts = TestCase $ assertBool "testinterateHearts" (([(Card Hearts A BJ)..(Card Hearts K BJ)]) ==
+        [Card Hearts A BJ,Card Hearts (Other 2) BJ,
+         Card Hearts (Other 3) BJ,Card Hearts (Other 4) BJ,
+         Card Hearts (Other 5) BJ,Card Hearts (Other 6) BJ,
+         Card Hearts (Other 7) BJ,Card Hearts (Other 8) BJ,
+         Card Hearts (Other 9) BJ,Card Hearts (Other 10) BJ,
+         Card Hearts J BJ,Card Hearts Q BJ,Card Hearts K BJ])
+
+  testListCard = TestList [testfromEnum1, testfromEnum2, testtoEnum, testfromEnumAce, testiterateHearts]

@@ -24,4 +24,4 @@ home = do
 
 
 {- TESTS -}
-runtests = runTestTT $ TestList [testListHand, testListDeck]
+runtests = runTestTT $ TestList [testListHand, testListDeck, testListCard]
