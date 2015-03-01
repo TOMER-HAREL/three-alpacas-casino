@@ -22,6 +22,9 @@ module Games.BlackJack where
   states :: [PlayerState]
   states = [(State "HIT"), (State "UNKNOWN"), (State "SPLIT"), (State "STAND"), (State "DOUBLE")]
 
+  createDeck :: PlayingDeck
+  createDeck = shuffleDeck (createEmptyDeck BJ)
+
 
   performMove :: GamePlayer -> PlayingDeck -> GamePlayer
   performMove (Player hand roles (State "SPLIT") _) deck = undefined

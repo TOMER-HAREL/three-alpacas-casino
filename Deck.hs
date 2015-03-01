@@ -33,19 +33,20 @@ module Deck where
   createEmptyDeck game = (Deck [(Card Spades A game) .. (Card Hearts K game)])
 
   {-
-    PURPOSE: Shuffle the supplied deck
+    PURPOSE: Shuffle supplied list
+    CREDITS: http://stackoverflow.com/questions/9877969/haskell-functions-to-randomly-order-a-list-not-working-properly-homework-begin
   -}
-  {- CRED suffleDeck function is taken from
-  http://stackoverflow.com/questions/9877969/haskell-functions-to-randomly-order-a-list-not-working-properly-homework-begin
-  -}
-  shuffleDeck :: StdGen -> [PlayingCard] -> [PlayingCard]
-  shuffleDeck _ []   = []
-  shuffleDeck gen xs =
+  shuffleList :: StdGen -> [a] -> [a]
+  shuffleList _ []   = []
+  shuffleList gen xs =
     let
       (n,newGen) = randomR (0,length xs -1) gen
       front = xs !! n
     in
-      front : shuffleDeck newGen (take n xs ++ drop (n+1) xs)
+      front : shuffleList newGen (take n xs ++ drop (n+1) xs)
+
+  shuffleDeck :: PlayingDeck -> PlayingDeck
+  shuffleDeck (Deck cards) = (Deck (shuffleList (mkStdGen 1023012301230) cards))
   {-
     PURPOSE: Draw one card from the top of the deck, if there's no more cards
       return InvisibleCard
