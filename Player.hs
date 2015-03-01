@@ -17,7 +17,7 @@ module Player where
     show (Player hand role (State state) game) = state ++ " : " ++ show(hand)
 
   createShark :: Game -> GamePlayer
-  createShark game = (Player emptyHand Shark UndefinedState game)
+  createShark game = (Player (emptyHand game) Shark UndefinedState game)
 
   createDealer :: Game -> GamePlayer
-  createDealer game = (Player emptyHand Dealer UndefinedState game)
+  createDealer game = (Player (emptyHand game) Dealer UndefinedState game)
