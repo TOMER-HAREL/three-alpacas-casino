@@ -38,7 +38,6 @@ module Deck where
     SIDE EFFECTS: ... if any, including exceptions ...
     EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ..
   -}
-
   createEmptyDeck :: Game -> PlayingDeck
   createEmptyDeck game = (Deck [(Card Spades A game) .. (Card Hearts K game)])
 
@@ -55,8 +54,13 @@ module Deck where
     in
       front : shuffleList newGen (take n xs ++ drop (n+1) xs)
 
+  {-
+    PURPOSE: Shuffle supplied deck
+    TODO: Make it random for every shuffle, unix-timestamp?
+  -}
   shuffleDeck :: PlayingDeck -> PlayingDeck
   shuffleDeck (Deck cards) = (Deck (shuffleList (mkStdGen 1023012301230) cards))
+
   {-
     drawCardFromDeck deck
     PURPOSE: Draw one card from the top of the deck, if there's no more cards
@@ -66,7 +70,6 @@ module Deck where
     SIDE EFFECTS: ... if any, including exceptions ...
     EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ..
   -}
-
   drawCardFromDeck :: PlayingDeck -> PlayingCard
   drawCardFromDeck EmptyDeck = InvisibleCard
   drawCardFromDeck (Deck (card:_)) = card
@@ -79,7 +82,6 @@ module Deck where
     SIDE EFFECTS: ... if any, including exceptions ...
     EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ..
   -}
-
   removeTopCardFromDeck :: PlayingDeck -> PlayingDeck
   removeTopCardFromDeck (Deck (topcard:deck)) = (Deck deck)
 

@@ -9,6 +9,8 @@ import Game
 import Deck
 import Player
 
+import System.Console.ANSI
+
 main :: IO ()
 main = do
   home

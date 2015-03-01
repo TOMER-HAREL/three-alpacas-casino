@@ -51,7 +51,6 @@ module Game where
         putStrLn("Please pick your poison [1 - " ++ show(gameCount) ++ "]: ")
 
   {-
-    TODO
     PURPOSE: Return the number of players you're required to be to play a certain
       game.
   -}
