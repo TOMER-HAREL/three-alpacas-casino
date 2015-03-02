@@ -22,6 +22,11 @@ module Player where
   instance Show GamePlayer where
     show (Player hand role state) = "[" ++ show(role) ++ ", " ++ show(state) ++ "] " ++ show(hand)
 
+  instance Eq PlayerState where
+    (==) (State stateA) (State stateB) = stateA == stateB
+    (==) UndefinedState UndefinedState = True
+    (==) _ _ = False
+
 
   createShark :: GamePlayer
   createShark = (Player EmptyHand Shark UndefinedState)
