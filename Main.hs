@@ -32,6 +32,8 @@ home = do
       putStrLn (show game)
       if game == BJ then
         BJ.main
+      else if game == P5 then
+        P5.main
       else
         return ()
       -- TODO load game.main
