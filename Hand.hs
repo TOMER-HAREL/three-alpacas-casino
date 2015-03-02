@@ -5,8 +5,11 @@ module Hand where
 
   import Card
 
-  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
-      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+  {- DATA -}
+
+
+  {-  REPRESENTATION CONVENTION: Hand represents a hand of playing cards. EmptyHand represents a hand with no playing cards.
+      REPRESENTATION INVARIANT: A hand cannot contain only invisible cards.
    -}
 
   data PlayingHand = Hand [PlayingCard]
@@ -15,8 +18,9 @@ module Hand where
   {- INSTANCES -}
 
   instance Show PlayingHand where
-    show (Hand []) = []
+    show (Hand []) = ""
     show (Hand (card:xs)) = show(card) ++ " " ++ show(Hand xs)
+    show EmptyHand = "Empty Hand"
 
   instance Eq PlayingHand where
     (==) (Hand cardsA) (Hand cardsB) = cardsA == cardsB
@@ -25,8 +29,15 @@ module Hand where
   {- FUNCTIONS -}
 
   {-
+    emptyHand
     PURPOSE: Create empty playinghand
-  -}
+    PRE:  true
+    POST: Creats a hand with no cards in it.
+    SIDE EFFECTS: none
+    EXAMPLES: emptyHand = ""
+    -}
+
+
   emptyHand :: PlayingHand
   emptyHand = (Hand [])
 
@@ -34,44 +45,35 @@ module Hand where
       addCardToHand hand card
       PURPOSE: add a provided card to the hand in question, return the hand with
       the new card added.
-      PRE:  ... pre-condition on the arguments ...
-      POST: ... post-condition on the result, in terms of the arguments ...
-      SIDE EFFECTS: ... if any, including exceptions ...
-      EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
+      PRE: true
+      POST: a hand with the provided card
+      SIDE EFFECTS: none
+      EXAMPLES: addCardToHand (Hand [(Card Diamonds A)]) (Card Clubs K) = [KC] [AD]
   -}
+
   addCardToHand :: PlayingHand -> PlayingCard -> PlayingHand
   addCardToHand (Hand cards) card = (Hand (card:cards))
 
   {-
       cardAtPosition hand position
       PURPOSE: Return the card at the supplied position
-      PRE:  ... pre-condition on the arguments ...
-      POST: ... post-condition on the result, in terms of the arguments ...
-      SIDE EFFECTS: ... if any, including exceptions ...
-      EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
+      PRE: must provide an index inside the list of cards
+      POST: the card at the given index
+      SIDE EFFECTS: none
+      EXAMPLES: cardAtPosition (Hand [(Card Diamonds A), (Card Spades (Other 10))]) 1 = [10S]
    -}
+
   cardAtPosition :: PlayingHand -> Int -> PlayingCard
   cardAtPosition (Hand cards) position = cards !! position
 
-  {-
-    PURPOSE: alias for cardAtPosition
-  -}
-  (!!!) :: PlayingHand -> Int -> PlayingCard
-  (!!!) = cardAtPosition
-
-  {-
-    PURPOSE: return the number of cards in a hand
-  -}
-  numberOfCards :: PlayingHand -> Int
-  numberOfCards (Hand cards) = length cards
-
   {-  removeCardAtPosition hand position
       PURPOSE:  Remove the card and return the new hand.
-      PRE:  ... pre-condition on the arguments ...
-      POST: ... post-condition on the result, in terms of the arguments ...
-      SIDE EFFECTS: ... if any, including exceptions ...
-      EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
+      PRE:  must provide an index inside the list of cards
+      POST: a playinghand with a card removed from the given index
+      SIDE EFFECTS: index
+      EXAMPLES: removeCardAtPosition  (Hand [(Card Diamonds A), (Card Spades (Other 10))]) 1 = [AD]
   -}
+
   removeCardAtPosition :: PlayingHand -> Int -> PlayingHand
   removeCardAtPosition hand@(Hand cards) position  = (Hand (delete (cardAtPosition hand position) cards))
 
