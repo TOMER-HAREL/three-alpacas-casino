@@ -100,25 +100,22 @@ module Games.BlackJack where
   createDeck :: IO PlayingDeck
   createDeck = return (shuffleDeck (createEmptyDeck))
 
-<<<<<<< HEAD
+  {-
+    PURPOSE: return available states for a certain hand of cards.
+  -}
   statesAvailable :: PlayingHand -> [PlayerState]
   statesAvailable (Hand (cards))
                           | length (cards) == 2 && head (cards) == last (cards) = [(State "SPLIT"), (State "Double"), (State "HIT"),(State "STAND")]
                           | otherwise = undefined
 
+  {-
+    PURPOSE: perform move for one player
+  -}
   performMove :: GamePlayer -> PlayingDeck -> [GamePlayer]
   performMove (Player (Hand (card:cards)) roles (State "SPLIT")) deck = [(Player (Hand [card]) roles (State "SPLIT")),(Player (Hand cards) roles (State "SPLIT"))]
   performMove (Player hand role (State "HIT")) deck = [(Player (addCardToHand hand (drawCardFromDeck deck)) role (UndefinedState))]
   performMove (Player hand role (State "DOUBLE")) deck = [(Player (addCardToHand hand (drawCardFromDeck deck)) role (State "DOUBLE"))]
   performMove (Player hand role (State "STAND")) deck = [(Player hand role (UndefinedState))]
-=======
-  {-
-    PURPOSE: perform a move for one player.
-  -}
-  performMove :: GamePlayer -> PlayingDeck -> GamePlayer
-  performMove (Player hand roles (State "SPLIT")) deck = undefined
-  performMove (Player hand role (State "HIT")) deck = (Player hand role (State "UNKNOWN"))
->>>>>>> 53e440564b88bbdd6bf3220eee7c441d08dc2cdf
   performMove _ deck = undefined
 
 
