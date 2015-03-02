@@ -3,7 +3,6 @@ module Player where
   import Deck
   import Hand
 
-
   data PlayerRole = Dealer
                   | Shark
 

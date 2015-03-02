@@ -28,33 +28,15 @@ module Hand where
     show (Hand []) = []
     show (Hand (card:xs)) = show(card) ++ " " ++ show(Hand xs)
 
-  {- numberOfCards hand
-     PURPOSE:  count the cards in hand
-     PRE:  ... pre-condition on the arguments ...
-     POST: ... post-condition on the result, in terms of the arguments ...
-     SIDE EFFECTS: ... if any, including exceptions ...
-     EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
-   -}
-
-    -- numberOfCards (Hand cards) = length cards
-
-    {-
-      maximumNumberOfCards hand
-      PURPOSE: Return the maximum number of cards you're allowed to have in a hand
-      PRE:  ... pre-condition on the arguments ...
-      POST: ... post-condition on the result, in terms of the arguments ...
-      SIDE EFFECTS: ... if any, including exceptions ...
-      EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
-    -}
-
-    -- maximumNumberOfCards (Hand cards) = NoLimit
-
   instance Eq PlayingHand where
     (==) (Hand cardsA) (Hand cardsB) = cardsA == cardsB
 
 
   {- FUNCTIONS -}
 
+  {-
+    PURPOSE: Create empty playinghand
+  -}
   emptyHand :: PlayingHand
   emptyHand = (Hand [])
 
@@ -78,7 +60,6 @@ module Hand where
       SIDE EFFECTS: ... if any, including exceptions ...
       EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
    -}
-
   cardAtPosition :: PlayingHand -> Int -> PlayingCard
   cardAtPosition (Hand cards) position = cards !! position
 
@@ -89,7 +70,6 @@ module Hand where
       SIDE EFFECTS: ... if any, including exceptions ...
       EXAMPLES: ... especially if useful to highlight delicate issues; also consider including counter-examples ...
   -}
-
   removeCardAtPosition :: PlayingHand -> Int -> PlayingHand
   removeCardAtPosition hand@(Hand cards) position  = (Hand (delete (cardAtPosition hand position) cards))
 

@@ -31,14 +31,14 @@ module Card where
                    | InvisibleCard
 
   instance Show Suit where
-    show Clubs = "♣︎"
-    show Diamonds = "♦︎"
-    show Hearts = "❤︎"
-    show Spades = "♠︎"
-    -- show Clubs = "C"
-    -- show Diamonds = "D"
-    -- show Hearts = "H"
-    -- show Spades = "S"
+    -- show Clubs = "♣︎"
+    -- show Diamonds = "♦︎"
+    -- show Hearts = "❤︎"
+    -- show Spades = "♠︎"
+    show Clubs = "C"
+    show Diamonds = "D"
+    show Hearts = "H"
+    show Spades = "S"
 
   instance Show Value where
     show J = "J"
@@ -46,6 +46,10 @@ module Card where
     show K = "K"
     show A = "A"
     show (Other value) = show(value)
+
+  instance Show PlayingCard where
+    show (Card suit value) = "[" ++ show(value) ++ show(suit) ++ "]"
+    show InvisibleCard = "[]"
 
   instance Enum Value where
     fromEnum A = 1
@@ -80,9 +84,14 @@ module Card where
     fromEnum (Card suit value) = fromEnum(suit) * 13 + fromEnum(value)
     toEnum enum = (Card (toEnum enum::Suit) (toEnum (enum `mod` 13)::Value))
 
-  instance Show PlayingCard where
-    show (Card suit value) = "[" ++ show(value) ++ show(suit) ++ "]"
-    show InvisibleCard = "[]"
+  instance Eq Value where
+    (==) (Other valueA) (Other valueB) = (valueA == valueB)
+    (==) J J = True
+    (==) Q Q = True
+    (==) K K = True
+    (==) A A = True
+    (==) _ _ = False
+
 
   instance Eq Suit where
     (==) Diamonds Diamonds = True
@@ -96,12 +105,7 @@ module Card where
   -}
   instance Eq PlayingCard where
     (==) InvisibleCard InvisibleCard = True
-    (==) (Card suitA (Other valueA)) (Card suitB (Other valueB)) = (valueA == valueB) && (suitA == suitB)
-    (==) (Card suitA J) (Card suitB J) = (suitA == suitB)
-    (==) (Card suitA Q) (Card suitB Q) = (suitA == suitB)
-    (==) (Card suitA K) (Card suitB K) = (suitA == suitB)
-    (==) (Card suitA A) (Card suitB A) = (suitA == suitB)
-    (==) (Card _ _) (Card _ _) = False
+    (==) (Card suitA valueA) (Card suitB valueB) = (valueA == valueB) && (suitA == suitB)
 
   {- TESTS -}
 

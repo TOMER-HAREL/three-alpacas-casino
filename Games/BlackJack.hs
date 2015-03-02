@@ -38,7 +38,6 @@ module Games.BlackJack where
     putStrLn $ "Your hand: " ++ (show hand) ++ "."
     putStrLn $ "Hand value " ++ (show (valueOf hand::Int)) ++ "."
 
-
   {-
     PURPOSE: list every possible state a blackjack player could have
   -}
