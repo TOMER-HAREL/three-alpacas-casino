@@ -127,4 +127,4 @@ module Games.BlackJack where
   -- testBJperformMove = T.TestCase $ T.assertBool "testBJperformMove" ((performMove ) == testDeck)
   testBJstatesAvailable = T.TestCase $ T.assertBool "testBJstatesAvailable" (statesAvailable (Hand [(Card Diamonds (Other 3)), (Card Clubs (Other 5))]) == ([(State "DOUBLE"), (State "HIT"),(State "STAND")]))
 
-  testListDeck = T.TestList [testCreateEmptyDeck, testDrawCardFromDeck, {-testBJperformMove,-} testBJstatesAvailable]
+  testListBJ = T.TestList [testCreateEmptyDeck, testDrawCardFromDeck, {-testBJperformMove,-} testBJstatesAvailable]
