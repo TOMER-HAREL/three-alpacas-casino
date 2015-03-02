@@ -23,7 +23,12 @@ module Games.BlackJack where
     valueOf (Deck (card:rest)) = (valueOf card) + (valueOf (Deck rest))
 
   instance GameEq PlayingCard where
-    (===) cardA cardB = valueOf cardA == valueOf cardB
+    (===) (Card _ K) (Card _ K) = True
+    (===) (Card _ Q) (Card _ Q) = True
+    (===) (Card _ J) (Card _ J) = True
+    (===) (Card _ A) (Card _ A) = True
+    (===) (Card _ (Other valueA)) (Card _ (Other valueB)) = valueA == valueB
+    (===) _ _ = False
 
   instance Show GameState where
     show (GState [] deck) = "deck consists of " ++ show(deck)
@@ -40,12 +45,104 @@ module Games.BlackJack where
     putStrLn (show(gameState))
 
   {-
+    TODO
+    PURPOSE: iterate every player in a supplied gamestate and a apply a certain function that
+      takes a player as an argument and returns a player, then return the gamestate.
+  -}
+  mapPlayers :: (GamePlayer -> GamePlayer) -> GameState -> GameState
+  mapPlayers f gameState = undefined
+
+  {-
+    TODO
+    PURPOSE: infinite loop until game is done, loop through players and ask for actions,
+      deal cards, etc etc.
+  -}
+  gamePhase :: GameState -> IO ()
+  gamePhase gameState = do undefined
+
+  {-
+    TODO
+    PURPOSE: check if hand is 21 or not
+  -}
+  isTwentyOne :: PlayingHand -> Bool
+  isTwentyOne hand = undefined
+
+  {-
+    TODO
+    PURPOSE: check if hand is fat (above 21) or not
+  -}
+  isFat :: PlayingHand -> Bool
+  isFat hand = undefined
+
+  {-
+    TODO
+    PURPOSE: check if hand is 17 or above, for the dealer.
+  -}
+  isAbove17 :: PlayingHand -> Bool
+  isAbove17 hand = undefined
+
+  {-
+    TODO
+    PURPOSE: check if the hand has Black Jack or not
+    HOW: check if there's two cards in hand and that it is 21.
+  -}
+  hasBlackJack :: PlayingHand -> Bool
+  hasBlackJack hand = undefined
+
+  {-
+    TODO
+
+  -}
+
+  {-
+    valueOfPlayerHand player
+    PURPOSE: calculate value of hand, with Ace having two values, 1 or 11.
+  -}
+  valueOfPlayerHand :: PlayingHand -> Int
+  valueOfPlayerHand hand =
+    let
+      valueOfPlayerHand' :: PlayingHand -> Int -> Int
+      valueOfPlayerHand' hand value
+        | (value == 0) = valueOfPlayerHand' hand (valueOf hand) --put the value of the hand inside of the val arg and recurse.
+        | (value > 21) =
+            let
+              numberOfAces = numberOfValuesInHand hand A
+              difference = value - 21
+              minimumAcesNeeded = ceiling ((toRational difference) / 10.0)
+            in
+              if (numberOfAces > 0) then
+                if (numberOfAces >= minimumAcesNeeded) then
+                  valueOfPlayerHand' hand (value - 10 * minimumAcesNeeded) --remove the number of aces needed.
+                else
+                  (value - 10 * numberOfAces) --return with minimum value, still fat hand.
+              else
+                value
+        | (value > 0) = value
+    in
+      valueOfPlayerHand' hand 0
+
+  {-
+    PURPOSE: count every card in hand that contains value of the supplied card (dont give a shit about the suit)
+  -}
+  numberOfValuesInHand :: PlayingHand -> Value -> Int
+  numberOfValuesInHand EmptyHand _ = 0
+  numberOfValuesInHand hand needle =
+    let
+      numberOfValuesInHand' :: PlayingHand -> Value -> Int -> Int
+      numberOfValuesInHand' (Hand []) _ acc = acc
+      numberOfValuesInHand' (Hand ((Card _ value):rest)) needleValue acc
+        | (value == needleValue) = numberOfValuesInHand' (Hand rest) needleValue (acc+1)
+        | otherwise = numberOfValuesInHand' (Hand rest) needleValue acc
+    in
+      numberOfValuesInHand' hand needle 0
+
+  {-
     PURPOSE: the phase where the user defines the number of players and generates
       a matching gamestate for it.
   -}
   playerPhase :: IO GameState
   playerPhase = do
-    putStr ("How many players are you participating? [1 - 6]: ")
+    putStr ("How many players are participating? [1 - 6]: ")
     userInput <- getLine
     let numberOfPlayers = read userInput :: Int
     return (generateGameStateForPlayers numberOfPlayers)
@@ -84,12 +181,6 @@ module Games.BlackJack where
   dealCard deck (Player hand role state) = return (Player (addCardToHand hand (drawCardFromDeck deck)) role state)
 
   {-
-    PURPOSE: return the hand of a player.
-  -}
-  getHand :: GamePlayer -> PlayingHand
-  getHand (Player hand _ _) = hand
-
-  {-
     PURPOSE: create a blackjack deck, consists of one deck.
   -}
   createDeck :: IO PlayingDeck
@@ -119,10 +210,15 @@ module Games.BlackJack where
   {-
     TODO: Test cases
   -}
-  testBJCalculateFatHand = T.TestCase $ T.assertBool "testFatHand" (valueOf (Hand [(Card Diamonds K), (Card Clubs Q), (Card Spades (Other 3))]) == 23)
-  testBJFuckedUpHand = T.TestCase $ T.assertBool "testFuckedUpHand" (valueOf (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts A), (Card Spades A), (Card Spades (Other 7))]) == 21)
-  testBJCalculateAceHand = T.TestCase $ T.assertBool "testAceHand" (valueOf (Hand [(Card Diamonds A), (Card Clubs A)]) == 12)
-  testBJCalculateAce21 = T.TestCase $ T.assertBool "testAce21" (valueOf (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))]) == 21)
+  testValuesInHand = T.TestCase $ T.assertBool "testValuesInHand" (numberOfValuesInHand (Hand [(Card Diamonds A), (Card Spades A), (Card Clubs (Other 5))]) A == 2)
+  testValuesInHand2 = T.TestCase $ T.assertBool "testValuesInHand2" (numberOfValuesInHand (Hand [(Card Diamonds A), (Card Spades Q), (Card Clubs (Other 5))]) K == 0)
+  testBJHasBlackJack = T.TestCase $ T.assertBool "testBJHasBlackJack" (hasBlackJack (Hand [(Card Diamonds A), (Card Spades K)]) == True)
+  testBJHasBlackJack2 = T.TestCase $ T.assertBool "testBJHasBlackJack2" (hasBlackJack (Hand [(Card Diamonds A), (Card Spades (Other 2))]) == False)
+  testBJHasBlackJack3 = T.TestCase $ T.assertBool "testBJHasBlackJack3" (hasBlackJack (Hand [(Card Diamonds (Other 7)), (Card Clubs (Other 7)), (Card Spades (Other 7))]) == False)
+  testBJCalculateFatHand = T.TestCase $ T.assertBool "testFatHand" (valueOfPlayerHand (Hand [(Card Diamonds K), (Card Clubs Q), (Card Spades (Other 3))]) == 23)
+  testBJFuckedUpHand = T.TestCase $ T.assertBool "testFuckedUpHand" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts A), (Card Spades A), (Card Spades (Other 7))]) == 21)
+  testBJCalculateAceHand = T.TestCase $ T.assertBool "testAceHand" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A)]) == 12)
+  testBJCalculateAce21 = T.TestCase $ T.assertBool "testAce21" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))]) == 21)
   testBJDrawCardFromDeck = T.TestCase $ T.assertBool "testBJDrawCardFromDeck" ((createEmptyDeck) == testDeck)
   testBJstatesAvailable = T.TestCase $ T.assertBool "testBJstatesAvailable" (statesAvailable (Hand [(Card Diamonds (Other 3)), (Card Clubs (Other 5))]) == ([(State "DOUBLE"), (State "HIT"),(State "STAND")]))
   testBJstatesAvailable2 = T.TestCase $ T.assertBool "testBJstatesAvailable2" (statesAvailable (Hand [(Card Diamonds K), (Card Clubs K)]) == ([(State "SPLIT"), (State "DOUBLE"), (State "HIT"),(State "STAND")]))
@@ -138,4 +234,9 @@ module Games.BlackJack where
                           testBJCalculateFatHand,
                           testBJCalculateAceHand,
                           testBJCalculateAce21,
-                          testBJFuckedUpHand]
+                          testBJFuckedUpHand,
+                          testBJHasBlackJack,
+                          testBJHasBlackJack2,
+                          testBJHasBlackJack3,
+                          testValuesInHand,
+                          testValuesInHand2]

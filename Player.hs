@@ -29,6 +29,20 @@ module Player where
 
   {-
     TODO
+    PURPOSE: return state of player
+  -}
+  stateForPlayer :: GamePlayer -> PlayerState
+  stateForPlayer (Player _ _ (State state)) = undefined
+
+  {-
+    TODO
+    PURPOSE: return the hand of a player.
+  -}
+  handForPlayer :: GamePlayer -> PlayingHand
+  handForPlayer (Player hand _ _) = hand
+
+  {-
+    TODO
     PURPOSE: change the state of a player to the supplied state.
   -}
   editStateForPlayer :: GamePlayer -> PlayerState -> GamePlayer
