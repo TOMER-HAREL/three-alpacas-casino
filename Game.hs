@@ -11,7 +11,7 @@ module Game where
             | BJ
             | TX
             | P5
-            | GF deriving(Enum)
+            | GF deriving(Enum, Eq)
 
   instance Show Game where
     show BJ = "Black Jack"
@@ -51,4 +51,4 @@ module Game where
         putStrLn("[n] GAME")
         putStrLn("-------------------------------")
         printGameTable' games 1
-        putStrLn("Please pick your poison [1 - " ++ show(gameCount) ++ "]: ")
+        putStr("Please pick your poison [1 - " ++ show(gameCount) ++ "]")

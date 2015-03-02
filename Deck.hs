@@ -4,16 +4,12 @@ module Deck where
   import System.Random
   import Test.HUnit
 
-  {- DATA -}
-
-  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
-      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
-     -}
-
+  {-
+    REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+    REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+  -}
   data PlayingDeck = Deck [PlayingCard]
                    | EmptyDeck
-
-  {- INSTANCES -}
 
   {-
     PURPOSE: convert every card in a deck into a string and show i nicely.
@@ -26,8 +22,6 @@ module Deck where
     (==) (Deck []) (Deck []) = True
     (==) (Deck (card:deck)) (Deck (cardb:deckb)) = card == cardb && (Deck deck) == (Deck deckb)
     (==) _ _ = False
-
-  {- FUNCTIONS -}
 
   {-
     createEmptyDeck game
