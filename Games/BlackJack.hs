@@ -7,8 +7,6 @@ module Games.BlackJack where
   import Player
   import Deck
 
-  -- compare dealer hand and player hand
-
   data GameState = GState [GamePlayer] PlayingDeck
 
   instance GameValue PlayingCard where
@@ -36,8 +34,30 @@ module Games.BlackJack where
     (<=) InvisibleCard InvisibleCard = True
     (<=) cardA cardB = valueOf cardA <= valueOf cardB
 
-  {- FUNCTIONS -}
+  {-
+    PURPOSE: main function to fire it all up.
+  -}
+  main :: IO ()
+  main = do
+    putStrLn ("Welcome to " ++ show(BJ))
+    gameState <- playerPhase
+    putStrLn (show(gameState))
 
+
+  {-
+    PURPOSE: the phase where the user defines the number of players and generates
+      a matching gamestate for it.
+  -}
+  playerPhase :: IO GameState
+  playerPhase = do
+    putStr ("How many players are you participating? [1 - 6]: ")
+    userInput <- getLine
+    let numberOfPlayers = read userInput :: Int
+    return (generateGameStateForPlayers numberOfPlayers)
+
+  {-
+    PURPOSE: generate a gamestate for n players and a dealer.
+  -}
   generateGameStateForPlayers :: Int -> GameState
   generateGameStateForPlayers number =
     let
@@ -47,7 +67,9 @@ module Games.BlackJack where
     in
       (GState (createDealer : (generateGameStateForPlayers' number)) createEmptyDeck)
 
-
+  {-
+    PURPOSE: print a players hand
+  -}
   printHand :: PlayingHand -> IO ()
   printHand hand = do
     putStrLn $ "Your hand: " ++ (show hand) ++ "."
@@ -60,16 +82,15 @@ module Games.BlackJack where
   states = [(State "HIT"), (State "UNKNOWN"), (State "SPLIT"), (State "STAND"), (State "DOUBLE")]
 
   {-
-    PURPOSE:
+    PURPOSE: deal a card to one player from a provided deck
   -}
   dealCard :: PlayingDeck -> GamePlayer -> IO GamePlayer
   dealCard EmptyDeck player = return player
   dealCard deck (Player hand role state) = return (Player (addCardToHand hand (drawCardFromDeck deck)) role state)
 
-  main :: IO ()
-  main = do
-    putStrLn ("Welcome to " ++ show(BJ))
-
+  {-
+    PURPOSE: return the hand of a player.
+  -}
   getHand :: GamePlayer -> PlayingHand
   getHand (Player hand _ _) = hand
 
@@ -79,6 +100,7 @@ module Games.BlackJack where
   createDeck :: IO PlayingDeck
   createDeck = return (shuffleDeck (createEmptyDeck))
 
+<<<<<<< HEAD
   statesAvailable :: PlayingHand -> [PlayerState]
   statesAvailable (Hand (cards))
                           | length (cards) == 2 && head (cards) == last (cards) = [(State "SPLIT"), (State "Double"), (State "HIT"),(State "STAND")]
@@ -89,6 +111,14 @@ module Games.BlackJack where
   performMove (Player hand role (State "HIT")) deck = [(Player (addCardToHand hand (drawCardFromDeck deck)) role (UndefinedState))]
   performMove (Player hand role (State "DOUBLE")) deck = [(Player (addCardToHand hand (drawCardFromDeck deck)) role (State "DOUBLE"))]
   performMove (Player hand role (State "STAND")) deck = [(Player hand role (UndefinedState))]
+=======
+  {-
+    PURPOSE: perform a move for one player.
+  -}
+  performMove :: GamePlayer -> PlayingDeck -> GamePlayer
+  performMove (Player hand roles (State "SPLIT")) deck = undefined
+  performMove (Player hand role (State "HIT")) deck = (Player hand role (State "UNKNOWN"))
+>>>>>>> 53e440564b88bbdd6bf3220eee7c441d08dc2cdf
   performMove _ deck = undefined
 
 

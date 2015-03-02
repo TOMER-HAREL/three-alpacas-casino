@@ -11,6 +11,9 @@ module Games.GoFish where
   instance Show GameState where
     show (GState []) = "No players GF"
 
+  main :: IO ()
+  main = do
+    putStrLn ("Welcome to " ++ show(GF)) 
 
   createDeck :: PlayingDeck
   createDeck = shuffleDeck (createEmptyDeck)
