@@ -100,17 +100,18 @@ module Games.BlackJack where
   createDeck :: IO PlayingDeck
   createDeck = return (shuffleDeck (createEmptyDeck))
 
-  {-
-    PURPOSE: return available states for a certain hand of cards.
-  -}
+
   statesAvailable :: PlayingHand -> [PlayerState]
   statesAvailable (Hand (cards))
-                          | length (cards) == 2 && head (cards) == last (cards) = [(State "SPLIT"), (State "Double"), (State "HIT"),(State "STAND")]
-                          | otherwise = undefined
+                          | length (cards) == 2 && head (cards) /== last (cards) = [(State "DOUBLE"), (State "HIT"),(State "STAND")]
+                          | length (cards) == 2 && head (cards) == last (cards) = [(State "SPLIT"), (State "DOUBLE"), (State "HIT"),(State "STAND")]
+                          | length (cards) > 2 && 9 <= valueOf (Hand(cards)) && valueOf (Hand(cards)) <= 11 = [(State "DOUBLE"), (State "HIT"),(State "STAND")]
+                          | otherwise = [(State "HIT"),(State "STAND")]
 
   {-
-    PURPOSE: perform move for one player
+    PURPOSE: perform a move for one player.
   -}
+
   performMove :: GamePlayer -> PlayingDeck -> [GamePlayer]
   performMove (Player (Hand (card:cards)) roles (State "SPLIT")) deck = [(Player (Hand [card]) roles (State "SPLIT")),(Player (Hand cards) roles (State "SPLIT"))]
   performMove (Player hand role (State "HIT")) deck = [(Player (addCardToHand hand (drawCardFromDeck deck)) role (UndefinedState))]
@@ -123,6 +124,7 @@ module Games.BlackJack where
     TODO: Test cases
   -}
   testBJDrawCardFromDeck = T.TestCase $ T.assertBool "testBJDrawCardFromDeck" ((createEmptyDeck) == testDeck)
+  -- testBJperformMove = T.TestCase $ T.assertBool "testBJperformMove" ((performMove ) == testDeck)
+  testBJstatesAvailable = T.TestCase $ T.assertBool "testBJstatesAvailable" (statesAvailable (Hand [(Card Diamonds (Other 3)), (Card Clubs (Other 5))]) == ([(State "DOUBLE"), (State "HIT"),(State "STAND")]))
 
-
-  testListDeck = T.TestList [testCreateEmptyDeck, testDrawCardFromDeck]
+  testListDeck = T.TestList [testCreateEmptyDeck, testDrawCardFromDeck, {-testBJperformMove,-} testBJstatesAvailable]
