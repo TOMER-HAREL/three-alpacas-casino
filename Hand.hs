@@ -5,16 +5,6 @@ module Hand where
 
   import Card
 
-  {- DATA -}
-
-
-  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
-      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
-     -}
-
-  data NumberOfCards = Limit Int | NoLimit
-
-
   {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
       REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
    -}
@@ -62,6 +52,18 @@ module Hand where
    -}
   cardAtPosition :: PlayingHand -> Int -> PlayingCard
   cardAtPosition (Hand cards) position = cards !! position
+
+  {-
+    PURPOSE: alias for cardAtPosition
+  -}
+  (!!!) :: PlayingHand -> Int -> PlayingCard
+  (!!!) = cardAtPosition
+
+  {-
+    PURPOSE: return the number of cards in a hand
+  -}
+  numberOfCards :: PlayingHand -> Int
+  numberOfCards (Hand cards) = length cards
 
   {-  removeCardAtPosition hand position
       PURPOSE:  Remove the card and return the new hand.

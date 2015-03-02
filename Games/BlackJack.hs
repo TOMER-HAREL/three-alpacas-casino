@@ -24,6 +24,9 @@ module Games.BlackJack where
     valueOf (Deck []) = 0
     valueOf (Deck (card:rest)) = (valueOf card) + (valueOf (Deck rest))
 
+  instance GameEq PlayingCard where
+    (===) cardA cardB = valueOf cardA == valueOf cardB
+
   instance Show GameState where
     show (GState [] deck) = "No players BJ"
 

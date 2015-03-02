@@ -3,6 +3,10 @@ module Game where
   class GameValue a where
     valueOf :: a -> Int
 
+  class GameEq a where
+    (===) :: a -> a -> Bool
+    -- (!!!) :: a -> Int -> a
+
   data Game = None
             | BJ
             | TX

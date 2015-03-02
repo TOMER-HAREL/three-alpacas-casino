@@ -6,7 +6,6 @@ module Card where
     REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
     REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
   -}
-
   data Suit = Spades
             | Clubs
             | Diamonds
@@ -16,7 +15,6 @@ module Card where
     REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
     REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
   -}
-
   data Value = Other Int
              | J
              | Q
@@ -27,7 +25,6 @@ module Card where
     REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
     REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
   -}
-
   data PlayingCard = Card Suit Value
                    | InvisibleCard
 
@@ -104,7 +101,9 @@ module Card where
     (==) InvisibleCard InvisibleCard = True
     (==) (Card suitA valueA) (Card suitB valueB) = (valueA == valueB) && (suitA == suitB)
 
-  {- TESTS -}
+  {-
+    TESTS
+  -}
   testfromEnum1 = TestCase $ assertBool "testfromEnum" ((fromEnum (Card Spades A)) == 1)
   testfromEnum2 = TestCase $ assertBool "testfromEnum" ((fromEnum (Card Hearts K)) == 52)
   testtoEnum = TestCase $ assertBool "testtoEnum" ((toEnum 1) == (Card Spades A))
