@@ -28,6 +28,21 @@ module Player where
     (==) _ _ = False
 
   {-
+    TODO
+    PURPOSE: change the state of a player to the supplied state.
+  -}
+  editStateForPlayer :: GamePlayer -> PlayerState -> GamePlayer
+  editStateForPlayer = undefined
+
+  {-
+    TODO
+    PURPOSE: check if a player is a dealer or not
+    HINT: Pattern-match the Constructor of the datatype PlayerRole.
+  -}
+  isDealer :: GamePlayer -> Bool
+  isDealer (Player _ role _) = undefined
+
+  {-
     PURPOSE: create a player, aka shark.
   -}
   createShark :: GamePlayer

@@ -95,7 +95,9 @@ module Games.BlackJack where
   createDeck :: IO PlayingDeck
   createDeck = return (shuffleDeck (createEmptyDeck))
 
-
+  {-
+    PURPOSE: return every playable
+  -}
   statesAvailable :: PlayingHand -> [PlayerState]
   statesAvailable (Hand (cards))
     | length (cards) == 2 && head cards /== last cards = [(State "DOUBLE"), (State "HIT"),(State "STAND")]
@@ -118,6 +120,7 @@ module Games.BlackJack where
     TODO: Test cases
   -}
   testBJCalculateFatHand = T.TestCase $ T.assertBool "testFatHand" (valueOf (Hand [(Card Diamonds K), (Card Clubs Q), (Card Spades (Other 3))]) == 23)
+  testBJFuckedUpHand = T.TestCase $ T.assertBool "testFuckedUpHand" (valueOf (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts A), (Card Spades A), (Card Spades (Other 7))]) == 21)
   testBJCalculateAceHand = T.TestCase $ T.assertBool "testAceHand" (valueOf (Hand [(Card Diamonds A), (Card Clubs A)]) == 12)
   testBJCalculateAce21 = T.TestCase $ T.assertBool "testAce21" (valueOf (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))]) == 21)
   testBJDrawCardFromDeck = T.TestCase $ T.assertBool "testBJDrawCardFromDeck" ((createEmptyDeck) == testDeck)
@@ -134,4 +137,5 @@ module Games.BlackJack where
                           testBJstatesAvailable4,
                           testBJCalculateFatHand,
                           testBJCalculateAceHand,
-                          testBJCalculateAce21]
+                          testBJCalculateAce21,
+                          testBJFuckedUpHand]
