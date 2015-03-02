@@ -39,7 +39,6 @@ module Games.BlackJack where
     gameState <- playerPhase
     putStrLn (show(gameState))
 
-
   {-
     PURPOSE: the phase where the user defines the number of players and generates
       a matching gamestate for it.
@@ -116,6 +115,7 @@ module Games.BlackJack where
   performMove _ deck = undefined
 
 
+  testBJCalculateFatHand = T.TestCase $ T.assertBool "testFatHand" (valueOf (Hand [(Card Diamonds A), (Card Clubs A), (Card Spades (Other 7))]) == 0)
   {-
     TODO: Test cases
   -}

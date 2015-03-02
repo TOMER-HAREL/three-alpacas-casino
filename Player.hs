@@ -1,6 +1,5 @@
 module Player where
 
-  import Test.HUnit
   import Deck
   import Hand
 
@@ -39,5 +38,3 @@ module Player where
   -}
   createDealer :: GamePlayer
   createDealer = (Player EmptyHand Dealer UndefinedState)
-
-  

@@ -7,7 +7,6 @@ module Game where
     (===) :: a -> a -> Bool
     (/==) :: a -> a -> Bool
     (/==) a b = not(a === b)
-    -- (!!!) :: a -> Int -> a
 
   data Game = None
             | BJ
