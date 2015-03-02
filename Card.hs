@@ -4,7 +4,7 @@ module Card where
 
   {-
     REPRESENTATION CONVENTION: Suit Spades Clubs Diamonds Hearts represent the suit of each playingcard.
-    REPRESENTATION INVARIANT:  ... ???requirements on elements of the datatype that the code preserves at all times ...
+    REPRESENTATION INVARIANT: True
   -}
   data Suit = Spades
             | Clubs
@@ -13,7 +13,7 @@ module Card where
 
   {-
     REPRESENTATION CONVENTION: Value Other Int J Q K A respresent the value denomination of each card in the deck.
-    REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+    REPRESENTATION INVARIANT: True
   -}
   data Value = Other Int
              | J
@@ -22,8 +22,10 @@ module Card where
              | A
 
   {-
-    REPRESENTATION CONVENTION: Card Suit Value represent a playingcard where suit and value together create each card.
-    REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+    REPRESENTATION CONVENTION: Card Suit Value represent a playingcard where suit and value together create each card. InvisibleCard represent a card that
+                                doesn't exist (a placeholder for nothing)
+    REPRESENTATION INVARIANT: In Playingcard each card need to be represented with one Suit of Spades Clubs Diamond Hearts and
+                              with one Value of Other Int J Q K A. InvisibleCard are always represented as an empty list.
   -}
   data PlayingCard = Card Suit Value
                    | InvisibleCard
