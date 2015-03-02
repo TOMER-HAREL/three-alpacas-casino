@@ -27,7 +27,7 @@ home = do
     gameDoesntExist
   else do -- if it's not a user action but a game choice
     let gameNumber = read userAction :: Int
-    if (gameNumber <= gameCount) && (gameNumber > 0) then do
+    if validGameEnum gameNumber then do
       let game = (toEnum gameNumber :: Game)
       putStrLn (show game)
       if game == BJ then

@@ -27,12 +27,8 @@ module Games.BlackJack where
 
   instance Show GameState where
     show (GState [] deck) = "deck consists of " ++ show(deck)
-    show (GState (player@(Player _ Dealer _):rest) deck) = "Dealer: " ++ show(player) ++ ", " ++ show(GState rest deck)
+    show (GState (dealer@(Player _ Dealer _):rest) deck) = "Dealer: " ++ show(dealer) ++ ", " ++ show(GState rest deck)
     show (GState (player:rest) deck) = "Player: " ++ show(player) ++ ", " ++ show(GState rest deck)
-
-  instance Ord PlayingCard where
-    (<=) InvisibleCard InvisibleCard = True
-    (<=) cardA cardB = valueOf cardA <= valueOf cardB
 
   {-
     PURPOSE: main function to fire it all up.

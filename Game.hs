@@ -35,6 +35,11 @@ module Game where
   gameCount :: Int
   gameCount = length everyGame
 
+  {-
+    PURPOSE: Check if a number is mapped to a game.
+  -}
+  validGameEnum :: Int -> Bool
+  validGameEnum enum = (enum <= gameCount) && (enum > 0)
 
   {-
     PURPOSE: Provide the player with a list of all the games available.

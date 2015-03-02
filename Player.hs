@@ -1,5 +1,6 @@
 module Player where
 
+  import Test.HUnit
   import Deck
   import Hand
 
@@ -27,9 +28,16 @@ module Player where
     (==) UndefinedState UndefinedState = True
     (==) _ _ = False
 
-
+  {-
+    PURPOSE: create a player, aka shark.
+  -}
   createShark :: GamePlayer
   createShark = (Player EmptyHand Shark UndefinedState)
 
+  {-
+    PURPOSE: create a dealer
+  -}
   createDealer :: GamePlayer
   createDealer = (Player EmptyHand Dealer UndefinedState)
+
+  
