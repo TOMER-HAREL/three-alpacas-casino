@@ -28,13 +28,25 @@ module Games.BlackJack where
     (===) cardA cardB = valueOf cardA == valueOf cardB
 
   instance Show GameState where
-    show (GState [] deck) = "No players BJ"
+    show (GState [] deck) = "deck consists of " ++ show(deck)
+    show (GState (player@(Player _ Dealer _):rest) deck) = "Dealer: " ++ show(player) ++ ", " ++ show(GState rest deck)
+    show (GState (player:rest) deck) = "Player: " ++ show(player) ++ ", " ++ show(GState rest deck)
 
   instance Ord PlayingCard where
     (<=) InvisibleCard InvisibleCard = True
     (<=) cardA cardB = valueOf cardA <= valueOf cardB
 
   {- FUNCTIONS -}
+
+  generateGameStateForPlayers :: Int -> GameState
+  generateGameStateForPlayers number =
+    let
+      generateGameStateForPlayers' :: Int -> [GamePlayer]
+      generateGameStateForPlayers' 0 = []
+      generateGameStateForPlayers' number = createShark : (generateGameStateForPlayers' (number - 1))
+    in
+      (GState (createDealer : (generateGameStateForPlayers' number)) createEmptyDeck)
+
 
   printHand :: PlayingHand -> IO ()
   printHand hand = do
@@ -60,9 +72,6 @@ module Games.BlackJack where
 
   getHand :: GamePlayer -> PlayingHand
   getHand (Player hand _ _) = hand
-
-  createBJShark :: IO GamePlayer
-  createBJShark = return (createShark)
 
   {-
     PURPOSE: create a blackjack deck, consists of one deck.

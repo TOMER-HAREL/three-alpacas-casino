@@ -11,12 +11,20 @@ module Player where
 
   data GamePlayer = Player PlayingHand PlayerRole PlayerState
 
+  instance Show PlayerRole where
+    show Dealer = "Dealer"
+    show Shark = "Shark"
+
+  instance Show PlayerState where
+    show (State state) = state
+    show UndefinedState = "Undefined Status"
+
   instance Show GamePlayer where
-    show (Player hand role (State state)) = state ++ " : " ++ show(hand)
+    show (Player hand role state) = "[" ++ show(role) ++ ", " ++ show(state) ++ "] " ++ show(hand)
 
 
   createShark :: GamePlayer
-  createShark = (Player (emptyHand) Shark UndefinedState)
+  createShark = (Player EmptyHand Shark UndefinedState)
 
   createDealer :: GamePlayer
-  createDealer = (Player (emptyHand) Dealer UndefinedState)
+  createDealer = (Player EmptyHand Dealer UndefinedState)
