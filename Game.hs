@@ -1,6 +1,7 @@
 module Game where
 
-  {- DATA -}
+  class GameValue a where
+    valueOf :: a -> Int
 
   data Game = None
             | BJ
@@ -8,19 +9,12 @@ module Game where
             | P5
             | GF deriving(Enum)
 
-  class GameValue a where
-    valueOf :: a -> Int
-
-  {- INSTANCES -}
-
   instance Show Game where
     show BJ = "Black Jack"
     show GF = "Go Fish"
     show TX = "Texas Hold'Em"
     show P5 =  "Poker"
     show None = "Undefined Game"
-
-  {- FUNCTIONS -}
 
   {-
     PURPOSE: Return every game that we're adding, may use it in a list
@@ -54,13 +48,3 @@ module Game where
         putStrLn("-------------------------------")
         printGameTable' games 1
         putStrLn("Please pick your poison [1 - " ++ show(gameCount) ++ "]: ")
-
-  {-
-    PURPOSE: Return the number of players you're required to be to play a certain
-      game.
-  -}
-  minimumOfPlayers :: Game -> Int
-  minimumOfPlayers None = 0
-  minimumOfPlayers BJ = 1
-  minimumOfPlayers GF = 2
-  minimumOfPlayers TX = 2

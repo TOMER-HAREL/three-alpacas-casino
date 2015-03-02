@@ -2,20 +2,20 @@ module Card where
 
   import Test.HUnit
 
-  {- DATA -}
-
-  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
-      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
-     -}
+  {-
+    REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+    REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+  -}
 
   data Suit = Spades
             | Clubs
             | Diamonds
             | Hearts
 
-  {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
-      REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
-     -}
+  {-
+    REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+    REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+  -}
 
   data Value = Other Int
              | J
@@ -23,9 +23,10 @@ module Card where
              | K
              | A
 
- {-  REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
-     REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
-    -}
+  {-
+    REPRESENTATION CONVENTION: ... description of how the datatype represents data ...
+    REPRESENTATION INVARIANT:  ... requirements on elements of the datatype that the code preserves at all times ...
+  -}
 
   data PlayingCard = Card Suit Value
                    | InvisibleCard
@@ -92,7 +93,6 @@ module Card where
     (==) A A = True
     (==) _ _ = False
 
-
   instance Eq Suit where
     (==) Diamonds Diamonds = True
     (==) Clubs Clubs = True
@@ -100,15 +100,11 @@ module Card where
     (==) Hearts Hearts = True
     (==) _ _ = False
 
-  {-
-    PURPOSE: match cards
-  -}
   instance Eq PlayingCard where
     (==) InvisibleCard InvisibleCard = True
     (==) (Card suitA valueA) (Card suitB valueB) = (valueA == valueB) && (suitA == suitB)
 
   {- TESTS -}
-
   testfromEnum1 = TestCase $ assertBool "testfromEnum" ((fromEnum (Card Spades A)) == 1)
   testfromEnum2 = TestCase $ assertBool "testfromEnum" ((fromEnum (Card Hearts K)) == 52)
   testtoEnum = TestCase $ assertBool "testtoEnum" ((toEnum 1) == (Card Spades A))
