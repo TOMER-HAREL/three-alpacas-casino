@@ -1,6 +1,7 @@
 module Games.BlackJack where
 
   import qualified Test.HUnit as T
+  import Control.Monad
   import Interface
   import Game
   import Card
@@ -35,22 +36,22 @@ module Games.BlackJack where
   main :: IO ()
   main = do
     putStrLn ("Welcome to " ++ show(BJ))
-    gameState <- setupPhase
-    gamePhase gameState
+    setupGameState <- setupPhase
+    gamePhase setupGameState
+    return ()
 
   {-
     TODO
     PURPOSE: infinite loop until game is done, loop through players and ask for actions,
       deal cards, etc etc.
   -}
-  gamePhase :: GameState -> IO ()
-  gamePhase gameState = do
+  gamePhase :: GameState -> IO GameState
+  gamePhase gameState@(GState _ deck) = do
     printGameState gameState
-    let
-      dealerGameState = dealerPhase gameState
-      -- (mapPlayers (\player -> (playerPhase player)) dealerGameState)
-    do
-      return ()
+    dealerGameState <- dealerPhase gameState
+    players <- (forM (playersInGameState dealerGameState) (\player -> (playerPhase player)))
+    gamePhase (GState players deck)
+
 
   {-
     PURPOSE: wait for user input.
@@ -60,17 +61,17 @@ module Games.BlackJack where
     let
       states = statesAvailable $ handForPlayer player
     in do
-    putStrLn (show states)
-    input <- getLine
-    return player
+      putStrLn (show states)
+      input <- getLine
+      return player
 
   {-
     TODO
     PURPOSE: dealer draws card and adds it to hand if less than 17
   -}
-  dealerPhase :: GameState -> GameState
+  dealerPhase :: GameState -> IO GameState
   dealerPhase gameState
-    | True = undefined
+    | True = return gameState
     | otherwise = undefined
 
   {-
@@ -269,8 +270,8 @@ module Games.BlackJack where
   -}
   performMove :: GamePlayer -> PlayingDeck -> [GamePlayer]
   performMove (Player (Hand (card:cards)) roles (State "SPLIT")) deck = [(Player (Hand [card]) roles (State "SPLIT")),(Player (Hand cards) roles (State "SPLIT"))]
-  performMove (Player hand role (State "HIT")) deck = [(Player (addCardToHand hand (drawCardFromDeck deck)) role (UndefinedState))]
-  performMove (Player hand role (State "DOUBLE")) deck = [(Player (addCardToHand hand (drawCardFromDeck deck)) role (State "DOUBLE"))]
+  performMove (Player hand role (State "HIT")) deck = [(Player (addCardToHand hand (fst(drawAndRemoveCardFromDeck deck))) role (UndefinedState))]
+  performMove (Player hand role (State "DOUBLE")) deck = [(Player (addCardToHand hand (fst(drawAndRemoveCardFromDeck deck))) role (State "DOUBLE"))]
   performMove (Player hand role (State "STAND")) deck = [(Player hand role (UndefinedState))]
   performMove _ deck = undefined
 
