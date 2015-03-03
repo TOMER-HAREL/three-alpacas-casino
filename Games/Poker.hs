@@ -131,9 +131,9 @@ module Games.Poker where
     -}
     isThreeOfAKind :: PlayingHand -> Bool
     isThreeOfAKind hand = let
-                        numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
-                        in
-                          elem 3 numbers
+                            numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+                            in
+                              elem 3 numbers
 
     {-
           isTwoPair hand
@@ -143,12 +143,12 @@ module Games.Poker where
           SIDE EFFECTS: none
           (isTwoPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 3))])) == True)
      -}
-     isTwoPair :: PlayingHand -> Bool
-     isTwoPair hand = let
-                  numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
-                  numbersOfCombos = map (\n -> length n) (group $ sort numbers)
-                  in
-                    numbersOfCombos !! 1 == 2
+    isTwoPair :: PlayingHand -> Bool
+    isTwoPair hand = let
+                       numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+                       numbersOfCombos = map (\n -> length n) (group $ sort numbers)
+                       in
+                         numbersOfCombos !! 1 == 2
     {-
         isPair hand
         PURPOSE: check if there is any pair in hand
@@ -166,32 +166,32 @@ module Games.Poker where
 
         {- TESTS -}
 
-        testisPair = T.TestCase $ T.assertBool "testisPair" ((isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
-        testisPair2 = T.TestCase $ T.assertBool "testisPair2" ((isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == False)
-        testisTwoPair1 = T.TestCase $ T.assertBool "testisTwoPair1" ((isTwoPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 3))])) == True)
-        testisTwoPair2 = T.TestCase $ T.assertBool "testisTwoPair2" ((isTwoPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == False)
-        testisThreeOfAKind = T.TestCase $ T.assertBool "testisThreeOfAKind" ((isThreeOfAKind (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
-        testisStraight = T.TestCase $ T.assertBool "testisStraight" ((isStraight (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])) == True)
-        testisStraight2 = T.TestCase $ T.assertBool "testisStraight1" ((isStraight (Hand [(Card Diamonds K), (Card Hearts (Other 2)), (Card Clubs (Other 3)), (Card Spades (Other 4)), (Card Diamonds (Other 5))])) == False)
-        testisFlush1 = T.TestCase $ T.assertBool "testisFlush1" ((isFlush (Hand [(Card Clubs (Other 6)), (Card Clubs (Other 7)), (Card Clubs (Other 9)), (Card Clubs (Other 8)), (Card Clubs (Other 5))])) == True)
-        testisFlush2 = T.TestCase $ T.assertBool "testisFlush2" ((isFlush (Hand [(Card Diamonds (Other 6)), (Card Diamonds (Other 7)), (Card Diamonds (Other 9)), (Card Diamonds (Other 8)), (Card Diamonds (Other 5))])) == True)
-        testisFullHouse = T.TestCase $ T.assertBool "testisFullHouse" ((isFullHouse (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 6)), (Card Hearts K), (Card Diamonds (Other 6)), (Card Spades K )])) == True)
-        testisFourOfAKind = T.TestCase $ T.assertBool "testisFourOfAKind" ((isFourOfAKind (Hand [(Card Clubs (Other 10)), (Card Diamonds (Other 7)), (Card Hearts (Other 10)), (Card Diamonds (Other 10)), (Card Spades (Other 10))])) == True)
-        testisStraightFlush = T.TestCase $ T.assertBool "testisStraightFlush" ((isStraightFlush (Hand [(Card Diamonds (Other 4)), (Card Diamonds (Other 7)), (Card Diamonds (Other 6)), (Card Diamonds (Other 3)), (Card Diamonds (Other 5))])) == True)
-        testisRoyalStraigtFlush1 = T.TestCase $ T.assertBool "testisRoyalStraigtFlush1" ((isRoyalStraigtFlush (Hand [(Card Diamonds J), (Card Hearts K), (Card Diamonds A), (Card Diamonds Q), (Card Diamonds (Other 10))])) == False)
-        testisRoyalStraigtFlush2 = T.TestCase $ T.assertBool "testisRoyalStraigtFlush2" ((isRoyalStraigtFlush (Hand [(Card Diamonds K), (Card Diamonds Q), (Card Diamonds A), (Card Diamonds J), (Card Diamonds (Other 10))])) == True)
-        testhandValues = T.TestCase $ T.assertBool "testhandValues"(handValues (Hand [(Card Diamonds (Other 5)), (Card Diamonds J), (Card Diamonds A), (Card Diamonds (Other 5)), (Card Diamonds (Other 10))])) == [5,5,10,11,14]
+    testisPair = T.TestCase $ T.assertBool "testisPair" ((isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
+    testisPair2 = T.TestCase $ T.assertBool "testisPair2" ((isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == False)
+    testisTwoPair1 = T.TestCase $ T.assertBool "testisTwoPair1" ((isTwoPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 3))])) == True)
+    testisTwoPair2 = T.TestCase $ T.assertBool "testisTwoPair2" ((isTwoPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == False)
+    testisThreeOfAKind = T.TestCase $ T.assertBool "testisThreeOfAKind" ((isThreeOfAKind (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
+    testisStraight = T.TestCase $ T.assertBool "testisStraight" ((isStraight (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])) == True)
+    testisStraight2 = T.TestCase $ T.assertBool "testisStraight1" ((isStraight (Hand [(Card Diamonds K), (Card Hearts (Other 2)), (Card Clubs (Other 3)), (Card Spades (Other 4)), (Card Diamonds (Other 5))])) == False)
+    testisFlush1 = T.TestCase $ T.assertBool "testisFlush1" ((isFlush (Hand [(Card Clubs (Other 6)), (Card Clubs (Other 7)), (Card Clubs (Other 9)), (Card Clubs (Other 8)), (Card Clubs (Other 5))])) == True)
+    testisFlush2 = T.TestCase $ T.assertBool "testisFlush2" ((isFlush (Hand [(Card Diamonds (Other 6)), (Card Diamonds (Other 7)), (Card Diamonds (Other 9)), (Card Diamonds (Other 8)), (Card Diamonds (Other 5))])) == True)
+    testisFullHouse = T.TestCase $ T.assertBool "testisFullHouse" ((isFullHouse (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 6)), (Card Hearts K), (Card Diamonds (Other 6)), (Card Spades K )])) == True)
+    testisFourOfAKind = T.TestCase $ T.assertBool "testisFourOfAKind" ((isFourOfAKind (Hand [(Card Clubs (Other 10)), (Card Diamonds (Other 7)), (Card Hearts (Other 10)), (Card Diamonds (Other 10)), (Card Spades (Other 10))])) == True)
+    testisStraightFlush = T.TestCase $ T.assertBool "testisStraightFlush" ((isStraightFlush (Hand [(Card Diamonds (Other 4)), (Card Diamonds (Other 7)), (Card Diamonds (Other 6)), (Card Diamonds (Other 3)), (Card Diamonds (Other 5))])) == True)
+    testisRoyalStraightFlush1 = T.TestCase $ T.assertBool "testisRoyalStraightFlush1" ((isRoyalStraightFlush (Hand [(Card Diamonds J), (Card Hearts K), (Card Diamonds A), (Card Diamonds Q), (Card Diamonds (Other 10))])) == False)
+    testisRoyalStraightFlush2 = T.TestCase $ T.assertBool "testisRoyalStraightFlush2" ((isRoyalStraightFlush (Hand [(Card Diamonds K), (Card Diamonds Q), (Card Diamonds A), (Card Diamonds J), (Card Diamonds (Other 10))])) == True)
+    testhandValues = T.TestCase $ T.assertBool "testhandValues" ((handValues (Hand [(Card Diamonds (Other 5)), (Card Diamonds J), (Card Diamonds A), (Card Diamonds (Other 5)), (Card Diamonds (Other 10))])) == [5,5,10,11,14])
 
-        testListP5 = T.TestList [testisPair,
-                          testisPair2,
-                          testisThreeOfAKind,
-                          testisStraight,
-                          testisStraight2,
-                          testisRoyalStraigtFlush1,
-                          testisRoyalStraigtFlush2,
-                          testisStraightFlush,
-                          testisFourOfAKind,
-                          testisFullHouse,
-                          testisFlush1,
-                          testisFlush2,
-                          testhandValues]
+    testListP5 = T.TestList [testisPair,
+                      testisPair2,
+                      testisThreeOfAKind,
+                      testisStraight,
+                      testisStraight2,
+                      testisRoyalStraightFlush1,
+                      testisRoyalStraightFlush2,
+                      testisStraightFlush,
+                      testisFourOfAKind,
+                      testisFullHouse,
+                      testisFlush1,
+                      testisFlush2,
+                      testhandValues]
