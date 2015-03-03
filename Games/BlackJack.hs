@@ -85,7 +85,7 @@ module Games.BlackJack where
     HOW: check if there's two cards in hand and that it is 21.
   -}
   hasBlackJack :: PlayingHand -> Bool
-  hasBlackJack hand = cardsInHand(hand) == 2 && valueOfPlayerHand == 21
+  hasBlackJack hand = cardsInHand hand == 2 && valueOfPlayerHand hand == 21
 
   {-
     valueOfPlayerHand player
