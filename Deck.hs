@@ -26,6 +26,9 @@ module Deck where
     (==) (Deck (card:deck)) (Deck (cardb:deckb)) = card == cardb && (Deck deck) == (Deck deckb)
     (==) _ _ = False
 
+  -- instance Ord PlayingDeck where
+  --   (<=) (Deck cardsA) (Deck cardsB) = cardsA <= cardsB
+
   {-
     createEmptyDeck game
     PURPOSE: Create a playingCard deck with 52 cards, unshuffled.

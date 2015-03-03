@@ -32,6 +32,21 @@ module Hand where
   emptyHand = (Hand [])
 
   {-
+    PURPOSE: count every card in hand that contains value of the supplied card (dont give a shit about the suit)
+  -}
+  numberOfValuesInHand :: PlayingHand -> Value -> Int
+  numberOfValuesInHand EmptyHand _ = 0
+  numberOfValuesInHand hand needle =
+    let
+      numberOfValuesInHand' :: PlayingHand -> Value -> Int -> Int
+      numberOfValuesInHand' (Hand []) _ acc = acc
+      numberOfValuesInHand' (Hand ((Card _ value):rest)) needleValue acc
+        | (value == needleValue) = numberOfValuesInHand' (Hand rest) needleValue (acc+1)
+        | otherwise = numberOfValuesInHand' (Hand rest) needleValue acc
+    in
+      numberOfValuesInHand' hand needle 0
+
+  {-
     PURPOSE: count the cards in a hand.
   -}
   cardsInHand :: PlayingHand -> Int

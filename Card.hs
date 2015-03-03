@@ -103,6 +103,15 @@ module Card where
     (==) InvisibleCard InvisibleCard = True
     (==) (Card suitA valueA) (Card suitB valueB) = (valueA == valueB) && (suitA == suitB)
 
+  instance Ord Suit where
+    (<=) suitA suitB = (fromEnum suitA <= fromEnum suitB)
+
+  instance Ord Value where
+    (<=) valueA valueB = (fromEnum valueA <= fromEnum valueB)
+
+  instance Ord PlayingCard where
+    (<=) cardA cardB = fromEnum cardA <= fromEnum cardB
+
   {-
     TESTS
   -}

@@ -1,6 +1,7 @@
 module Games.BlackJack where
 
   import qualified Test.HUnit as T
+  import Interface
   import Game
   import Card
   import Hand
@@ -35,6 +36,8 @@ module Games.BlackJack where
     show (GState (dealer@(Player _ Dealer _):rest) deck) = "Dealer: " ++ show(dealer) ++ ", " ++ show(GState rest deck)
     show (GState (player:rest) deck) = "Player: " ++ show(player) ++ ", " ++ show(GState rest deck)
 
+
+
   {-
     PURPOSE: main function to fire it all up.
   -}
@@ -57,17 +60,72 @@ module Games.BlackJack where
     do
       putStrLn "lol"
 
-
+  {-
+    PURPOSE: wait for user input.
+  -}
   playerPhase :: GamePlayer -> IO GamePlayer
   playerPhase player = do
     putStrLn "Player phase"
     input <- getLine
     return player
 
+  {-
+    TODO
+    PURPOSE: dealer draws card and adds it to hand if less than 17
+  -}
   dealerPhase :: GameState -> GameState
   dealerPhase gameState
     | True = undefined
     | otherwise = undefined
+
+  {-
+    PURPOSE: the phase where the user defines the number of players and generates
+      a matching gamestate for it.
+  -}
+  setupPhase :: IO GameState
+  setupPhase = do
+    putStr ("How many players are participating? [1 - 7]: ")
+    userInput <- getLine
+    let numberOfPlayers = read userInput :: Int
+    return (generateGameStateForPlayers numberOfPlayers)
+
+  {-
+    TODO
+    PURPOSE: print gameState as a userInterface.
+    SIDE-EFFECTS: output to the terminal.
+  -}
+  printGameState :: GameState -> IO ()
+  printGameState (GState players deck) = do
+    printDivider
+    printDealers players
+    printPlayers players
+    printDivider
+
+  {-
+    PURPOSE: print player cards in a nice way, not the dealers card.
+    SIDE-EFFECTS: output to the terminal
+  -}
+  printPlayers :: [GamePlayer] -> IO ()
+  printPlayers players =
+    let
+      printPlayers' :: [GamePlayer] -> String
+      printPlayers' [] = []
+      printPlayers' ((Player _ Dealer _):rest) = printPlayers' rest
+      printPlayers' ((Player hand _ _):[]) = show hand ++ (printPlayers' [])
+      printPlayers' ((Player hand _ _):rest) = show hand ++ " | " ++ (printPlayers' rest)
+    in
+      printLnCenter $ printPlayers' players
+
+  {-
+    PURPOSE: print dealer cards in a nice way
+    SIDE-EFFECTS: output to the terminal
+  -}
+  printDealers :: [GamePlayer] -> IO ()
+  printDealers [] = putStrLn $ repeatCharacter '\n' 5
+  printDealers ((Player hand Dealer _):rest) = do
+    printLnCenter $ (show hand)
+    printDealers rest
+  printDealers (_:rest) = printDealers rest
 
   {-
     PURPOSE: iterate every player in a supplied gamestate and a apply a certain function that
@@ -160,32 +218,6 @@ module Games.BlackJack where
         | (value > 0) = value
     in
       valueOfPlayerHand' hand 0
-
-  {-
-    PURPOSE: count every card in hand that contains value of the supplied card (dont give a shit about the suit)
-  -}
-  numberOfValuesInHand :: PlayingHand -> Value -> Int
-  numberOfValuesInHand EmptyHand _ = 0
-  numberOfValuesInHand hand needle =
-    let
-      numberOfValuesInHand' :: PlayingHand -> Value -> Int -> Int
-      numberOfValuesInHand' (Hand []) _ acc = acc
-      numberOfValuesInHand' (Hand ((Card _ value):rest)) needleValue acc
-        | (value == needleValue) = numberOfValuesInHand' (Hand rest) needleValue (acc+1)
-        | otherwise = numberOfValuesInHand' (Hand rest) needleValue acc
-    in
-      numberOfValuesInHand' hand needle 0
-
-  {-
-    PURPOSE: the phase where the user defines the number of players and generates
-      a matching gamestate for it.
-  -}
-  setupPhase :: IO GameState
-  setupPhase = do
-    putStr ("How many players are participating? [1 - 6]: ")
-    userInput <- getLine
-    let numberOfPlayers = read userInput :: Int
-    return (generateGameStateForPlayers numberOfPlayers)
 
   {-
     PURPOSE: generate a gamestate for n players and a dealer.
