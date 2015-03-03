@@ -80,4 +80,13 @@ module Games.Poker where
 
     testisPair = T.TestCase $ T.assertBool "testisPair" ((isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
 
-    testListP5 = T.TestList [testisPair]
+    testisFlush = T.TestCase $ T.assertBool "testisflush" ((isStraight (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 7)), (Card Hearts (Other 9)), (Card Diamonds (Other 8)), (Card Spades (Other 5))])) == True)
+    testisFullHouse = T.TestCase $ T.assertBool "testisFullHouse" ((isFullHouse (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 6)), (Card Hearts K), (Card Diamonds (Other 6)), (Card Spades K )])) == True)
+    testisFourOfAKind = T.TestCase $ T.assertBool "testisFourOfAKind" ((isFourOfAKind (Hand [(Card Clubs (Other 10)), (Card Diamonds (Other 7)), (Card Hearts (Other 10)), (Card Diamonds (Other 10)), (Card Spades (Other 10))])) == True)
+    testisStraightFlush = T.TestCase $ T.assertBool "testisStraightFlush" ((isStraightFlush (Hand [(Card Diamonds (Other 4)), (Card Diamonds (Other 7)), (Card Diamonds (Other 6)), (Card Diamonds (Other 3)), (Card Diamonds (Other 5))])) == True)
+    testisRoyalStraigtFlush1 = T.TestCase $ T.assertBool "testisRoyalStraigtFlush1" ((isRoyalStraigtFlush (Hand [(Card Diamonds J), (Card Hearts K), (Card Diamonds A), (Card Diamonds Q), (Card Diamonds (Other 10))])) == False)
+    testisRoyalStraigtFlush2 = T.TestCase $ T.assertBool "testisRoyalStraigtFlush2" ((isRoyalStraigtFlush (Hand [(Card Diamonds K), (Card Diamonds Q), (Card Diamonds A), (Card Diamonds J), (Card Diamonds (Other 10))])) == True)
+
+
+    testListP5 = T.TestList [testisPair, testisRoyalStraigtFlush1, testisRoyalStraigtFlush2,
+                            testisStraightFlush, testisFourOfAKind, testisFullHouse, testisFlush]
