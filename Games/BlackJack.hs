@@ -42,7 +42,8 @@ module Games.BlackJack where
   main = do
     putStrLn ("Welcome to " ++ show(BJ))
     gameState <- playerPhase
-    putStrLn (show(gameState))
+    return ()
+    -- phase <- gamePhase
 
   {-
     TODO
@@ -50,7 +51,11 @@ module Games.BlackJack where
       takes a player as an argument and returns a player, then return the gamestate.
   -}
   mapPlayers :: (GamePlayer -> GamePlayer) -> GameState -> GameState
-  mapPlayers f gameState = undefined
+  mapPlayers f (GState players deck) =
+    let
+      newPlayers = map (\player -> f player) players
+    in
+      (GState newPlayers deck)
 
   {-
     TODO
@@ -58,7 +63,8 @@ module Games.BlackJack where
       deal cards, etc etc.
   -}
   gamePhase :: GameState -> IO ()
-  gamePhase gameState = do undefined
+  gamePhase gameState = do return ()
+
 
   {-
     isTwentyOne hand
@@ -209,16 +215,15 @@ module Games.BlackJack where
     PURPOSE: return every playable
   -}
   statesAvailable :: PlayingHand -> [PlayerState]
-  statesAvailable (Hand (cards))
-    | length (cards) == 2 && head cards /== last cards = [(State "DOUBLE"), (State "HIT"),(State "STAND")]
-    | length (cards) == 2 && valueOf (head cards) == valueOf(last (cards)) = [(State "SPLIT"), (State "DOUBLE"), (State "HIT"),(State "STAND")]
-    | length (cards) > 2 && 9 <= valueOf (Hand cards) && valueOf (Hand cards) <= 11 = [(State "DOUBLE"), (State "HIT"),(State "STAND")]
-    | otherwise = [(State "HIT"),(State "STAND")]
+  statesAvailable hand@(Hand cards)
+    | (cardsInHand hand == 2 && head cards /== last cards) = [(State "DOUBLE"), (State "HIT"), (State "STAND")]
+    | (cardsInHand hand == 2 && valueOf (head cards) == valueOf(last (cards))) = [(State "SPLIT"), (State "DOUBLE"), (State "HIT"), (State "STAND")]
+    | ((cardsInHand hand) > 2 && (valueOfPlayerHand hand) >= 9 && (valueOfPlayerHand hand) <= 11) = [(State "DOUBLE"), (State "HIT"), (State "STAND")]
+    | otherwise = [(State "HIT"), (State "STAND")]
 
   {-
     PURPOSE: perform a move for one player.
   -}
-
   performMove :: GamePlayer -> PlayingDeck -> [GamePlayer]
   performMove (Player (Hand (card:cards)) roles (State "SPLIT")) deck = [(Player (Hand [card]) roles (State "SPLIT")),(Player (Hand cards) roles (State "SPLIT"))]
   performMove (Player hand role (State "HIT")) deck = [(Player (addCardToHand hand (drawCardFromDeck deck)) role (UndefinedState))]
@@ -243,6 +248,7 @@ module Games.BlackJack where
   testBJstatesAvailable2 = T.TestCase $ T.assertBool "testBJstatesAvailable2" (statesAvailable (Hand [(Card Diamonds K), (Card Clubs K)]) == ([(State "SPLIT"), (State "DOUBLE"), (State "HIT"),(State "STAND")]))
   testBJstatesAvailable3 = T.TestCase $ T.assertBool "testBJstatesAvailable3" (statesAvailable (Hand [(Card Diamonds (Other 4)), (Card Clubs (Other 3)), (Card Hearts (Other 3))]) == ([(State "DOUBLE"), (State "HIT"),(State "STAND")]))
   testBJstatesAvailable4 = T.TestCase $ T.assertBool "testBJstatesAvailable4" (statesAvailable (Hand [(Card Diamonds (Other 7)), (Card Clubs (Other 3)), (Card Hearts (Other 3))]) == ([(State "HIT"),(State "STAND")]))
+  -- testBJperformMove = T.TestCase $ T.assertBool "testBJperformMove" ((performMove (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Shark (State "Split")) testDeck)  == [(Player (Hand [(Card Diamonds K)]) Shark (State "SPLIT")) , (Player (Hand [(Card Clubs K)]) Shark (State "SPLIT")))]))
 
   testListBJ = T.TestList [testCreateEmptyDeck,
                           testDrawCardFromDeck,
