@@ -47,7 +47,12 @@ module Game where
   everyGame = [BJ ..] --thanks to deriving(Enum) we can do this.
 
   {-
+    playersInGameState gamestate
     PURPOSE: return players in provided gamestate.
+    PRE: true
+    POST: a list with all Sharks in game
+    SIDE EFFECTS: none
+    EXAMPLES: TODO
   -}
   playersInGameState :: GameState -> [GamePlayer]
   playersInGameState (GState [] _) = []
@@ -55,7 +60,12 @@ module Game where
   playersInGameState (GState (player@(Player _ Shark _):rest) deck) = player : (playersInGameState (GState rest deck))
 
   {-
+    dealersInGameState gamestate
     PURPOSE: return dealers in provided gamestate.
+    PRE: true
+    POST: a list with all dealers in game
+    SIDE EFFECTS: none
+    EXAMPLES: TODO
   -}
   dealersInGameState :: GameState -> [GamePlayer]
   dealersInGameState (GState [] _) = []
