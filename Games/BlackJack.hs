@@ -55,9 +55,7 @@ module Games.BlackJack where
     let dealers = dealersInGameState dealerGameState
     let gamestate = (GState (players ++ dealers) deck)
     do
-    putStrLn ("DEBUG: " ++ show(gamestate))
     gamePhase gamestate
-
 
   {-
     PURPOSE: wait for user input.
@@ -74,7 +72,7 @@ module Games.BlackJack where
       let state = (State stateIdentifier)
       do
         if elem state states then do
-          let newPlayer = editStateForPlayer player state
+          let newPlayer = (editStateForPlayer player state)
           return newPlayer
         else do
           playerPhase player
