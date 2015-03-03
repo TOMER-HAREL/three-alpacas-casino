@@ -41,12 +41,33 @@ module Games.BlackJack where
   main :: IO ()
   main = do
     putStrLn ("Welcome to " ++ show(BJ))
-    gameState <- playerPhase
-    return ()
-    -- phase <- gamePhase
+    gameState <- setupPhase
+    gamePhase gameState
 
   {-
     TODO
+    PURPOSE: infinite loop until game is done, loop through players and ask for actions,
+      deal cards, etc etc.
+  -}
+  gamePhase :: GameState -> IO ()
+  gamePhase gameState = do
+    return (dealerPhase gameState)
+    -- return (mapPlayers (\player -> (playerPhase player)) gameState)
+    return ()
+
+
+  playerPhase :: GamePlayer -> IO GamePlayer
+  playerPhase player = do
+    putStrLn "Player phase"
+    input <- getLine
+    return player
+
+  dealerPhase :: GameState -> IO GameState
+  dealerPhase gameState = do
+    putStrLn "Dealer phase"
+    return gameState
+
+  {-
     PURPOSE: iterate every player in a supplied gamestate and a apply a certain function that
       takes a player as an argument and returns a player, then return the gamestate.
   -}
@@ -56,15 +77,6 @@ module Games.BlackJack where
       newPlayers = map (\player -> f player) players
     in
       (GState newPlayers deck)
-
-  {-
-    TODO
-    PURPOSE: infinite loop until game is done, loop through players and ask for actions,
-      deal cards, etc etc.
-  -}
-  gamePhase :: GameState -> IO ()
-  gamePhase gameState = do return ()
-
 
   {-
     PURPOSE: check if hand is 21 or not
@@ -138,8 +150,8 @@ module Games.BlackJack where
     PURPOSE: the phase where the user defines the number of players and generates
       a matching gamestate for it.
   -}
-  playerPhase :: IO GameState
-  playerPhase = do
+  setupPhase :: IO GameState
+  setupPhase = do
     putStr ("How many players are participating? [1 - 6]: ")
     userInput <- getLine
     let numberOfPlayers = read userInput :: Int
