@@ -32,7 +32,7 @@ module Player where
     PURPOSE: return state of player
   -}
   stateForPlayer :: GamePlayer -> PlayerState
-  stateForPlayer (Player _ _ (State state)) = undefined
+  stateForPlayer (Player _ _ (State state)) = (State state)
 
   {-
     TODO
@@ -46,7 +46,7 @@ module Player where
     PURPOSE: change the state of a player to the supplied state.
   -}
   editStateForPlayer :: GamePlayer -> PlayerState -> GamePlayer
-  editStateForPlayer = undefined
+  editStateForPlayer (Player hand role (State state1)) (State state2) = (Player hand role (State state2))
 
   {-
     TODO
