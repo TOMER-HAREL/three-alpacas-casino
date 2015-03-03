@@ -6,14 +6,9 @@ module Games.GoFish where
   import Player
   import Deck
 
-  data GameState = GState [GamePlayer]
-
-  instance Show GameState where
-    show (GState []) = "No players GF"
-
   main :: IO ()
   main = do
-    putStrLn ("Welcome to " ++ show(GF)) 
+    putStrLn ("Welcome to " ++ show(GF))
 
   createDeck :: PlayingDeck
   createDeck = shuffleDeck (createEmptyDeck)

@@ -8,8 +8,6 @@ module Games.BlackJack where
   import Player
   import Deck
 
-  data GameState = GState [GamePlayer] PlayingDeck
-
   instance GameValue PlayingCard where
     valueOf (Card _ (Other value)) = value
     valueOf (Card _ A) = 11
@@ -30,13 +28,6 @@ module Games.BlackJack where
     (===) (Card _ A) (Card _ A) = True
     (===) (Card _ (Other valueA)) (Card _ (Other valueB)) = valueA == valueB
     (===) _ _ = False
-
-  instance Show GameState where
-    show (GState [] deck) = "deck consists of " ++ show(deck)
-    show (GState (dealer@(Player _ Dealer _):rest) deck) = "Dealer: " ++ show(dealer) ++ ", " ++ show(GState rest deck)
-    show (GState (player:rest) deck) = "Player: " ++ show(player) ++ ", " ++ show(GState rest deck)
-
-
 
   {-
     PURPOSE: main function to fire it all up.
@@ -65,8 +56,11 @@ module Games.BlackJack where
     PURPOSE: wait for user input.
   -}
   playerPhase :: GamePlayer -> IO GamePlayer
-  playerPhase player = do
-    putStrLn "Player phase"
+  playerPhase player =
+    let
+      states = statesAvailable $ handForPlayer player
+    in do
+    putStrLn (show states)
     input <- getLine
     return player
 
@@ -268,6 +262,7 @@ module Games.BlackJack where
     | (cardsInHand hand == 2 && valueOf (head cards) == valueOf(last (cards))) = [(State "SPLIT"), (State "DOUBLE"), (State "HIT"), (State "STAND")]
     | ((cardsInHand hand) > 2 && (valueOfPlayerHand hand) >= 9 && (valueOfPlayerHand hand) <= 11) = [(State "DOUBLE"), (State "HIT"), (State "STAND")]
     | otherwise = [(State "HIT"), (State "STAND")]
+  statesAvailable EmptyHand = [(State "HIT"), (State "STAND")]
 
   {-
     PURPOSE: perform a move for one player.

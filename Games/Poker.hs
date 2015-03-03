@@ -8,8 +8,6 @@ module Games.Poker where
     import Deck
     import Data.List
 
-    data GameState = GState [GamePlayer] PlayingDeck
-
     instance GameValue PlayingCard where
       valueOf (Card _ (Other value)) = value
       valueOf (Card _ J) = 11
@@ -24,10 +22,6 @@ module Games.Poker where
     instance GameValue PlayingDeck where
         valueOf (Deck []) = 0
         valueOf (Deck (card:rest)) = (valueOf card) + (valueOf (Deck rest))
-
-    instance Show GameState where
-          show (GState [] deck) = "deck consists of " ++ show(deck)
-          show (GState (player:rest) deck) = "Player: " ++ show(player) ++ ", " ++ show(GState rest deck)
 
     main :: IO ()
     main = do

@@ -1,5 +1,11 @@
 module Game where
 
+  import Player
+  import Card
+  import Deck
+  import Hand
+
+
   class GameValue a where
     valueOf :: a -> Int
 
@@ -14,12 +20,19 @@ module Game where
             | P5
             | GF deriving(Enum, Eq)
 
+  data GameState = GState [GamePlayer] PlayingDeck
+
   instance Show Game where
     show BJ = "Black Jack"
     show GF = "Go Fish"
     show TX = "Texas Hold'Em"
     show P5 =  "Poker"
     show None = "Undefined Game"
+
+  instance Show GameState where
+    show (GState [] deck) = "deck consists of " ++ show(deck)
+    show (GState (dealer@(Player _ Dealer _):rest) deck) = "Dealer: " ++ show(dealer) ++ ", " ++ show(GState rest deck)
+    show (GState (player:rest) deck) = "Player: " ++ show(player) ++ ", " ++ show(GState rest deck)
 
   {-
     everygame
@@ -64,7 +77,7 @@ module Game where
     PRE: true
     POST: TODO
     SIDE EFFECTS: TODO
-    EXAMPLES:  TODO 
+    EXAMPLES:  TODO
   -}
 
 
