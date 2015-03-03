@@ -23,9 +23,9 @@ module Card where
 
   {-
     REPRESENTATION CONVENTION: Card Suit Value represent a playingcard where suit and value together create each card. InvisibleCard represent a card that
-                                doesn't exist (a placeholder for nothing)
+      doesn't exist (a placeholder for nothing)
     REPRESENTATION INVARIANT: In Playingcard each card need to be represented with one Suit of Spades Clubs Diamond Hearts and
-                              with one Value of Other Int J Q K A. InvisibleCard are always represented as an empty list.
+      with one Value of Other Int J Q K A. InvisibleCard are always represented as an empty list.
   -}
   data PlayingCard = Card Suit Value
                    | InvisibleCard

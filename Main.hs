@@ -1,4 +1,4 @@
-import Test.HUnit
+import qualified Test.HUnit as T
 import Data.Char
 import qualified Games.BlackJack as BJ
 import qualified Games.GoFish as GF
@@ -71,4 +71,4 @@ filterUserInput :: String -> String
 filterUserInput input = filter (\character -> elem character validUserInput) input
 
 {- TESTS -}
-runtests = runTestTT $ TestList [testListHand, testListDeck, testListCard, BJ.testListBJ]
+runtests = T.runTestTT $ T.TestList [testListHand, testListDeck, testListCard, BJ.testListBJ]
