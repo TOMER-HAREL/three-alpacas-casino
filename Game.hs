@@ -43,9 +43,14 @@ module Game where
     SIDE EFFECTS: none
     EXAMPLES: everyGame = [Black Jack, Poker]
   -}
-
   everyGame :: [Game]
   everyGame = [BJ ..] --thanks to deriving(Enum) we can do this.
+
+  {-
+    PURPOSE: return players in provided gamestate.
+  -}
+  playersInGameState :: GameState -> [GamePlayer]
+  playersInGameState (GState players _) = players
 
   {-
     gameCount
