@@ -48,11 +48,15 @@ module Games.Poker where
 
     --if we got one isPair and isThreeOfAKind at the same hand the full house will return True
     isFullHouse :: PlayingHand -> Bool
-    isFullHouse hand = undefined
+    isFullHouse hand = (isThreeOfAKind hand) && (isPair hand)
 
     --if all cards in one hand has the suit isFlush will return True
     isFlush :: PlayingHand -> Bool
-    isFlush hand = undefined
+    isFlush (Hand ((Card suitA _):(Card suitB _):(Card suitC _):(Card suitD _):(Card suitE)) = suitA == suitB
+                                                                                            && suitA == suitC
+                                                                                            && suitA == suitD
+                                                                                            && suitA == suitE
+    isFlush _ = False
 
     -- All cards on hand in numerical order
     isStraight :: PlayingHand -> Bool
@@ -102,7 +106,7 @@ module Games.Poker where
     testListP5 = T.TestList [testisPair,
                               testisPair2,
                               testisThreeOfAKind,
-                              testisStraight, 
+                              testisStraight,
                               testisStraight1,
                               testisStraight2,
                               testisRoyalStraigtFlush1,
