@@ -71,4 +71,4 @@ filterUserInput :: String -> String
 filterUserInput input = filter (\character -> elem character validUserInput) input
 
 {- TESTS -}
-runtests = T.runTestTT $ T.TestList [testListHand, testListDeck, testListCard, BJ.testListBJ]
+runtests = T.runTestTT $ T.TestList [testListHand, testListDeck, testListCard, BJ.testListBJ, P5.testListP5]

@@ -59,7 +59,10 @@ module Games.Poker where
 
     --Three cards of the same value
     isThreeOfAKind :: PlayingHand -> Bool
-    isThreeOfAKind hand = undefined
+    isThreeOfAKind hand = let
+                    numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+                    in
+                      elem 3 numbers
 
     --if we got two isPair in one hand, isTwoPair will return True
     isTwoPair :: PlayingHand -> Bool
@@ -67,4 +70,14 @@ module Games.Poker where
 
     --if we got two cards of same value, isPair will returnn True
     isPair :: PlayingHand -> Bool
-    isPair hand = undefined
+    isPair hand = let
+                    numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+                    in
+                      elem 2 numbers
+
+
+    {- TESTS -}
+
+    testisPair = T.TestCase $ T.assertBool "testisPair" ((isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
+
+    testListP5 = T.TestList [testisPair]
