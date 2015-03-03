@@ -58,33 +58,67 @@ module Games.Poker where
                                                                                             && suitA == suitE
     isFlush _ = False
 
-    -- All cards on hand in numerical order
+    {-
+        isStraight hand
+        PURPOSE: check if the card in in numerical order.
+        PRE:  true
+        POST: Returns a bool that tells you if the hand contains isStraight
+        SIDE EFFECTS: none
+        EXAMPLES: (isStraight (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])) == True)
+    -}
     isStraight :: PlayingHand -> Bool
     isStraight hand = let
                         numbers = handValues hand
                       in
                         (numbers !! 0 == numbers !! 1 - 1) && (numbers !! 0 == numbers !! 2 - 2) && (numbers !! 0 == numbers !! 3 - 3) && (numbers !! 0 == numbers !! 4 - 4)
-
+    {-
+        handValues hand
+        PURPOSE: Calculate the value of each card and sort it from low-to-high.
+        PRE:  true
+        POST: Returns a list that is storted from low-to-high
+        SIDE EFFECTS: none
+        EXAMPLES: (handValues (Hand [(Card Diamonds (Other 5)), (Card Diamonds J), (Card Diamonds A), (Card Diamonds (Other 5)), (Card Diamonds (Other 10))])) == [5,5,10,11,14]
+                        -}
     handValues :: PlayingHand -> [Int]
     handValues (Hand cards) = sort $ map (\card -> valueOf card) cards
 
 
-    --Three cards of the same value
+    {-
+        isThreeOfAKind hand
+        PURPOSE: check if the hand contains 3 cards of the same value
+        PRE:  true
+        POST: Returns a bool that tells you if the hand contains isThreeOfAKind or not
+        SIDE EFFECTS: none
+        EXAMPLES: isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
+    -}
     isThreeOfAKind :: PlayingHand -> Bool
     isThreeOfAKind hand = let
                             numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
                             in
                               elem 3 numbers
 
-    --if we got two isPair in one hand, isTwoPair will return True
+        {-
+              isTwoPair hand
+              PURPOSE: check if the hands contains two pairs
+              PRE:  true
+              POST: Returns a bool that tells you if there appears isTwoPair
+              SIDE EFFECTS: none
+              isThreeOfAKind (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
+         -}
     isTwoPair :: PlayingHand -> Bool
     isTwoPair hand = let
                       numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
                       numbersOfCombos = map (\n -> length n) (group $ sort numbers)
                       in
                         numbersOfCombos !! 1 == 2
-
-    --if we got two cards of same value, isPair will returnn True
+        {-
+            isPair hand
+            PURPOSE: check if there is any pair in hand
+            PRE:  true
+            POST: Returns a bool that tells you if there appears isPair in the hand or not.
+            SIDE EFFECTS: none
+            EXAMPLES: isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
+        -}
     isPair :: PlayingHand -> Bool
     isPair hand = let
                     numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
@@ -108,7 +142,7 @@ module Games.Poker where
     testisStraightFlush = T.TestCase $ T.assertBool "testisStraightFlush" ((isStraightFlush (Hand [(Card Diamonds (Other 4)), (Card Diamonds (Other 7)), (Card Diamonds (Other 6)), (Card Diamonds (Other 3)), (Card Diamonds (Other 5))])) == True)
     testisRoyalStraigtFlush1 = T.TestCase $ T.assertBool "testisRoyalStraigtFlush1" ((isRoyalStraigtFlush (Hand [(Card Diamonds J), (Card Hearts K), (Card Diamonds A), (Card Diamonds Q), (Card Diamonds (Other 10))])) == False)
     testisRoyalStraigtFlush2 = T.TestCase $ T.assertBool "testisRoyalStraigtFlush2" ((isRoyalStraigtFlush (Hand [(Card Diamonds K), (Card Diamonds Q), (Card Diamonds A), (Card Diamonds J), (Card Diamonds (Other 10))])) == True)
-
+    testhandValues = T.TestCase $ T.assertBool "testhandValues"(handValues (Hand [(Card Diamonds (Other 5)), (Card Diamonds J), (Card Diamonds A), (Card Diamonds (Other 5)), (Card Diamonds (Other 10))])) == [5,5,10,11,14]
 
     testListP5 = T.TestList [testisPair,
                               testisPair2,
