@@ -121,7 +121,7 @@ module Games.BlackJack where
   isAbove16 hand = valueOfPlayerHand hand >= 17
 
   {-
-    hadBlackJack hand
+    hasBlackJack hand
     PURPOSE: check if the hand has Black Jack or not
     PRE: True
     POST: Returns a bool of hand, if the value of the players hand is 21 has 2 cards in hand or not.

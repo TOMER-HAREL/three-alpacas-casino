@@ -34,7 +34,7 @@ module Card where
     -- show Clubs = "♣"
     -- show Diamonds = "♦"
     -- show Hearts = "♥"
-    -- show Spades = "♠"
+    -- how Spades = "♠"
     show Clubs = "C"
     show Diamonds = "D"
     show Hearts = "H"
