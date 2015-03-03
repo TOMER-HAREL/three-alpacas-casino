@@ -19,7 +19,8 @@ module Hand where
 
   instance Eq PlayingHand where
     (==) (Hand cardsA) (Hand cardsB) = cardsA == cardsB
-
+    (==) EmptyHand EmptyHand = True
+    (==) _ _ = False
   {-
     emptyHand
     PURPOSE: Create empty playinghand

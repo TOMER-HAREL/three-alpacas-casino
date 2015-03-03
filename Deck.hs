@@ -40,6 +40,8 @@ module Deck where
   createEmptyDeck = (Deck [(Card Spades A) .. (Card Hearts K)])
 
   {-
+
+    TODO
     shuffleList
     PURPOSE: Shuffle supplied list
     CREDITS: http://stackoverflow.com/questions/9877969/haskell-functions-to-randomly-order-a-list-not-working-properly-homework-begin

@@ -5,7 +5,7 @@ module Player where
 
 
   data PlayerRole = Dealer
-                  | Shark
+                  | Shark deriving (Eq)
 
   data PlayerState = State String
                    | UndefinedState
@@ -28,6 +28,9 @@ module Player where
     (==) UndefinedState UndefinedState = True
     (==) _ _ = False
 
+  instance Eq GamePlayer where
+    (==) (Player handa rolea statea) (Player handb roleb stateb) = handa == handb && rolea == roleb && statea == stateb
+    
   {-
     stateForPlayer player
     PURPOSE: return state of player
