@@ -50,7 +50,17 @@ module Game where
     PURPOSE: return players in provided gamestate.
   -}
   playersInGameState :: GameState -> [GamePlayer]
-  playersInGameState (GState players _) = players
+  playersInGameState (GState [] _) = []
+  playersInGameState (GState ((Player _ Dealer _):rest) deck) = (playersInGameState (GState rest deck))
+  playersInGameState (GState (player@(Player _ Shark _):rest) deck) = player : (playersInGameState (GState rest deck))
+
+  {-
+    PURPOSE: return dealers in provided gamestate.
+  -}
+  dealersInGameState :: GameState -> [GamePlayer]
+  dealersInGameState (GState [] _) = []
+  dealersInGameState (GState ((Player _ Shark _):rest) deck) = (dealersInGameState (GState rest deck))
+  dealersInGameState (GState (player@(Player _ Dealer _):rest) deck) = player : (dealersInGameState (GState rest deck))
 
   {-
     gameCount

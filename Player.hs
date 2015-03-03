@@ -30,7 +30,7 @@ module Player where
 
   instance Eq GamePlayer where
     (==) (Player handa rolea statea) (Player handb roleb stateb) = handa == handb && rolea == roleb && statea == stateb
-    
+
   {-
     stateForPlayer player
     PURPOSE: return state of player
@@ -65,7 +65,8 @@ module Player where
   -}
 
   editStateForPlayer :: GamePlayer -> PlayerState -> GamePlayer
-  editStateForPlayer (Player hand role (State state1)) (State state2) = (Player hand role (State state2))
+  editStateForPlayer (Player hand role UndefinedState) state  = (Player hand role state)
+  editStateForPlayer (Player hand role _) state = (Player hand role state)
 
   {-
     isDealer player

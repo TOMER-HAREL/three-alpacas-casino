@@ -2,6 +2,7 @@ module Games.BlackJack where
 
   import qualified Test.HUnit as T
   import Control.Monad
+  import Data.Char
   import Interface
   import Game
   import Card
@@ -46,11 +47,16 @@ module Games.BlackJack where
       deal cards, etc etc.
   -}
   gamePhase :: GameState -> IO GameState
-  gamePhase gameState@(GState _ deck) = do
+  gamePhase gameState@(GState _ deck) =
+    do
     printGameState gameState
     dealerGameState <- dealerPhase gameState
     players <- (forM (playersInGameState dealerGameState) (\player -> (playerPhase player)))
-    gamePhase (GState players deck)
+    let dealers = dealersInGameState dealerGameState
+    let gamestate = (GState (players ++ dealers) deck)
+    do
+    putStrLn ("DEBUG: " ++ show(gamestate))
+    gamePhase gamestate
 
 
   {-
@@ -61,9 +67,17 @@ module Games.BlackJack where
     let
       states = statesAvailable $ handForPlayer player
     in do
+
       putStrLn (show states)
       input <- getLine
-      return player
+      let stateIdentifier = map toUpper input
+      let state = (State stateIdentifier)
+      do
+        if elem state states then do
+          let newPlayer = editStateForPlayer player state
+          return newPlayer
+        else do
+          playerPhase player
 
   {-
     TODO
@@ -73,6 +87,10 @@ module Games.BlackJack where
   dealerPhase gameState
     | True = return gameState
     | otherwise = undefined
+
+  {-
+    PURPOSE:
+  -}
 
   {-
     PURPOSE: the phase where the user defines the number of players and generates
@@ -91,10 +109,10 @@ module Games.BlackJack where
     SIDE-EFFECTS: output to the terminal.
   -}
   printGameState :: GameState -> IO ()
-  printGameState (GState players deck) = do
+  printGameState gameState@(GState players deck) = do
     printDivider
-    printDealers players
-    printPlayers players
+    printDealers (dealersInGameState gameState)
+    printPlayers (playersInGameState gameState)
     printDivider
 
   {-
@@ -106,9 +124,8 @@ module Games.BlackJack where
     let
       printPlayers' :: [GamePlayer] -> String
       printPlayers' [] = []
-      printPlayers' ((Player _ Dealer _):rest) = printPlayers' rest
-      printPlayers' ((Player hand _ _):[]) = show hand ++ (printPlayers' [])
-      printPlayers' ((Player hand _ _):rest) = show hand ++ " | " ++ (printPlayers' rest)
+      printPlayers' ((Player hand Shark _):[]) = show hand ++ (printPlayers' [])
+      printPlayers' ((Player hand Shark _):rest) = show hand ++ " | " ++ (printPlayers' rest)
     in
       printLnCenter $ printPlayers' players
 
