@@ -28,25 +28,41 @@ module Hand where
     PRE:  true
     POST: Creats a hand with no cards in it.
     SIDE EFFECTS: none
-    EXAMPLES: emptyHand = ""
+    EXAMPLES: emptyHand == ""
   -}
   emptyHand :: PlayingHand
   emptyHand = (Hand [])
 
+
   {-
+    cardsFromHand hand
     PURPOSE: return a list of cards from a hand
+    PRE:  true
+    POST: list of cards in hand
+    SIDE EFFECTS: none
+    EXAMPLES: cardsFromHand (Hand [(Card Diamonds A),(Card Clubs Q)]) == [[AD],[QC]]
   -}
   cardsFromHand :: PlayingHand -> [PlayingCard]
   cardsFromHand (Hand cards) = cards
 
   {-
+    sortHand hand
     PURPOSE: sort a hand
+    PRE:  true
+    POST: a hand with cards sorted their enums
+    SIDE EFFECTS: none
+    EXAMPLES: sortHand (Hand [(Card Diamonds A),(Card Clubs Q)]) == [QC] [AD]
   -}
   sortHand :: PlayingHand -> PlayingHand
   sortHand (Hand cards) = (Hand (sort cards))
 
   {-
-    PURPOSE: count every card in hand that contains value of the supplied card (dont give a shit about the suit)
+    numberOfValuesInHand
+    PURPOSE: count every card in hand that contains value of the supplied card
+    PRE:  true
+    POST: an int that represents the amount of cards thats equal to the value of the given value
+    SIDE EFFECTS: none
+    EXAMPLES: numberOfValuesInHand (Hand [(Card Diamonds A),(Card Hearts Q),(Card Clubs Q)]) Q == 2
   -}
   numberOfValuesInHand :: PlayingHand -> Value -> Int
   numberOfValuesInHand EmptyHand _ = 0
