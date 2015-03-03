@@ -112,6 +112,7 @@ module Hand where
   -}
 
   addCardToHand :: PlayingHand -> PlayingCard -> PlayingHand
+  addCardToHand EmptyHand card = (Hand [card])
   addCardToHand (Hand cards) card = (Hand (card:cards))
 
   {-
