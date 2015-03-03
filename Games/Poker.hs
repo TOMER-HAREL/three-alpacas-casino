@@ -44,7 +44,10 @@ module Games.Poker where
 
     --Look up if we got 4 card of the same value
     isFourOfAKind :: PlayingHand -> Bool
-    isFourOfAKind hand = undefined
+    isFourOfAKind hand = let
+                    numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+                    in
+                      elem 4 numbers
 
     --if we got one isPair and isThreeOfAKind at the same hand the full house will return True
     isFullHouse :: PlayingHand -> Bool
@@ -52,7 +55,8 @@ module Games.Poker where
 
     --if all cards in one hand has the suit isFlush will return True
     isFlush :: PlayingHand -> Bool
-    isFlush (Hand ((Card suitA _):(Card suitB _):(Card suitC _):(Card suitD _):(Card suitE)) = suitA == suitB
+    isFlush (Hand ((Card suitA _):(Card suitB _):(Card suitC _):(Card suitD _):(Card suitE _):rest))
+                                                                                            = suitA == suitB
                                                                                             && suitA == suitC
                                                                                             && suitA == suitD
                                                                                             && suitA == suitE
@@ -95,7 +99,8 @@ module Games.Poker where
     testisStraight = T.TestCase $ T.assertBool "testisStraight" ((isStraight (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])) == True)
     testisStraight1 = T.TestCase $ T.assertBool "testisStraight1" ((isStraight (Hand [(Card Diamonds A), (Card Hearts (Other 2)), (Card Clubs (Other 3)), (Card Spades (Other 4)), (Card Diamonds (Other 5))])) == True)
     testisStraight2 = T.TestCase $ T.assertBool "testisStraight1" ((isStraight (Hand [(Card Diamonds K), (Card Hearts (Other 2)), (Card Clubs (Other 3)), (Card Spades (Other 4)), (Card Diamonds (Other 5))])) == False)
-    testisFlush = T.TestCase $ T.assertBool "testisflush" ((isStraight (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 7)), (Card Hearts (Other 9)), (Card Diamonds (Other 8)), (Card Spades (Other 5))])) == True)
+    testisFlush1 = T.TestCase $ T.assertBool "testisFlush1" ((isFlush (Hand [(Card Clubs (Other 6)), (Card Clubs (Other 7)), (Card Clubs (Other 9)), (Card Clubs (Other 8)), (Card Clubs (Other 5))])) == True)
+    testisFlush2 = T.TestCase $ T.assertBool "testisFlush2" ((isFlush (Hand [(Card Diamonds (Other 6)), (Card Diamonds (Other 7)), (Card Diamonds (Other 9)), (Card Diamonds (Other 8)), (Card Diamonds (Other 5))])) == True)
     testisFullHouse = T.TestCase $ T.assertBool "testisFullHouse" ((isFullHouse (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 6)), (Card Hearts K), (Card Diamonds (Other 6)), (Card Spades K )])) == True)
     testisFourOfAKind = T.TestCase $ T.assertBool "testisFourOfAKind" ((isFourOfAKind (Hand [(Card Clubs (Other 10)), (Card Diamonds (Other 7)), (Card Hearts (Other 10)), (Card Diamonds (Other 10)), (Card Spades (Other 10))])) == True)
     testisStraightFlush = T.TestCase $ T.assertBool "testisStraightFlush" ((isStraightFlush (Hand [(Card Diamonds (Other 4)), (Card Diamonds (Other 7)), (Card Diamonds (Other 6)), (Card Diamonds (Other 3)), (Card Diamonds (Other 5))])) == True)
@@ -114,4 +119,5 @@ module Games.Poker where
                               testisStraightFlush,
                               testisFourOfAKind,
                               testisFullHouse,
-                              testisFlush]
+                              testisFlush1,
+                              testisFlush2]
