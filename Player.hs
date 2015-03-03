@@ -3,6 +3,7 @@ module Player where
   import Deck
   import Hand
 
+
   data PlayerRole = Dealer
                   | Shark
 
@@ -28,42 +29,74 @@ module Player where
     (==) _ _ = False
 
   {-
-    TODO
+    stateForPlayer player
     PURPOSE: return state of player
+    PRE:  true
+    POST: the state of the player
+    SIDE EFFECTS: none
+    EXAMPLES: stateForPlayer (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Shark (State "HIT")) = "HIT"
   -}
+
   stateForPlayer :: GamePlayer -> PlayerState
   stateForPlayer (Player _ _ (State state)) = (State state)
 
   {-
-    TODO
-    PURPOSE: return the hand of a player.
+    handForPlayer player
+    PURPOSE: return hand of the player
+    PRE:  true
+    POST: the hand of the player
+    SIDE EFFECTS: none
+    EXAMPLES: handForPlayer (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Shark (State "STAND")) = [KD] [KC]
   -}
+
   handForPlayer :: GamePlayer -> PlayingHand
   handForPlayer (Player hand _ _) = hand
 
   {-
-    TODO
+    editStateForPlayer player state
     PURPOSE: change the state of a player to the supplied state.
+    PRE:  true
+    POST: the player with the given state
+    SIDE EFFECTS: none
+    EXAMPLES: editStateForPlayer (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Shark (State "HIT")) (State "STAND") = [Shark, STAND] [KD] [KC]
   -}
+
   editStateForPlayer :: GamePlayer -> PlayerState -> GamePlayer
   editStateForPlayer (Player hand role (State state1)) (State state2) = (Player hand role (State state2))
 
   {-
-    TODO
+    isDealer player
     PURPOSE: check if a player is a dealer or not
-    HINT: Pattern-match the Constructor of the datatype PlayerRole.
+    PRE:  true
+    POST: bool that describes if the player are a dealer or not
+    SIDE EFFECTS: none
+    EXAMPLES: isDealer (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Dealer (State "HIT")) = True
   -}
+
   isDealer :: GamePlayer -> Bool
-  isDealer (Player _ role _) = undefined
+  isDealer (Player _ Dealer _) = True
+  isDealer (Player _ _ _) = False
+
 
   {-
+    createShark
     PURPOSE: create a player, aka shark.
+    PRE:  true
+    POST: a shark player
+    SIDE EFFECTS: none
+    EXAMPLES: createShark = [Shark, Undefined Status] Empty Hand
   -}
   createShark :: GamePlayer
   createShark = (Player EmptyHand Shark UndefinedState)
 
   {-
+    createDealer
     PURPOSE: create a dealer
+    PRE:  true
+    POST: a dealer
+    SIDE EFFECTS: none
+    EXAMPLES: createDealer = [Dealer, Undefined Status] Empty Hand
   -}
+
   createDealer :: GamePlayer
   createDealer = (Player EmptyHand Dealer UndefinedState)
