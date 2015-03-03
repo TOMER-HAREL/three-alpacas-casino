@@ -3,6 +3,7 @@ module Deck where
   import Card
   import System.Random
   import Test.HUnit
+  import Data.List
 
   {-
     REPRESENTATION CONVENTION: Deck represents a card deck containing 52 playing cards. EmptyDeck represents a card deck with no cards.
@@ -26,9 +27,6 @@ module Deck where
     (==) (Deck (card:deck)) (Deck (cardb:deckb)) = card == cardb && (Deck deck) == (Deck deckb)
     (==) _ _ = False
 
-  -- instance Ord PlayingDeck where
-  --   (<=) (Deck cardsA) (Deck cardsB) = cardsA <= cardsB
-
   {-
     createEmptyDeck game
     PURPOSE: Create a playingCard deck with 52 cards, unshuffled.
@@ -41,6 +39,12 @@ module Deck where
   -}
   createEmptyDeck :: PlayingDeck
   createEmptyDeck = (Deck [(Card Spades A) .. (Card Hearts K)])
+
+  {-
+    PURPOSE: return cards from a deck
+  -}
+  cardsFromDeck :: PlayingDeck -> [PlayingCard]
+  cardsFromDeck (Deck cards) = cards
 
   {-
 
@@ -65,10 +69,13 @@ module Deck where
     TODO: Make it random for every shuffle, unix-timestamp?
   -}
   shuffleDeck :: PlayingDeck -> PlayingDeck
-  shuffleDeck (Deck cards) = do undefined
-    -- time <- getPOSIXTime
-    -- (Deck (shuffleList (mkStdGen time) cards))
-    -- loop time
+  shuffleDeck (Deck cards) = (Deck (shuffleList (mkStdGen 18234891023849012) cards))
+
+  {-
+    PURPOSE: sort a deck
+  -}
+  sortDeck :: PlayingDeck -> PlayingDeck
+  sortDeck (Deck cards) = (Deck (sort cards))
 
   {-
     drawCardFromDeck deck

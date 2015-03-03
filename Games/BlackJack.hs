@@ -54,11 +54,12 @@ module Games.BlackJack where
   -}
   gamePhase :: GameState -> IO ()
   gamePhase gameState = do
+    printGameState gameState
     let
       dealerGameState = dealerPhase gameState
       -- (mapPlayers (\player -> (playerPhase player)) dealerGameState)
     do
-      putStrLn "lol"
+      return ()
 
   {-
     PURPOSE: wait for user input.

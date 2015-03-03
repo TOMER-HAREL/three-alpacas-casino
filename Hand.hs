@@ -14,13 +14,14 @@ module Hand where
 
   instance Show PlayingHand where
     show (Hand []) = ""
-    show (Hand (card:xs)) = show(card) ++ " " ++ show(Hand xs)
+    show (Hand (card:rest)) = show(card) ++ " " ++ show(Hand rest)
     show EmptyHand = "Empty Hand"
 
   instance Eq PlayingHand where
     (==) (Hand cardsA) (Hand cardsB) = cardsA == cardsB
     (==) EmptyHand EmptyHand = True
     (==) _ _ = False
+
   {-
     emptyHand
     PURPOSE: Create empty playinghand
@@ -29,9 +30,20 @@ module Hand where
     SIDE EFFECTS: none
     EXAMPLES: emptyHand = ""
   -}
-
   emptyHand :: PlayingHand
   emptyHand = (Hand [])
+
+  {-
+    PURPOSE: return a list of cards from a hand
+  -}
+  cardsFromHand :: PlayingHand -> [PlayingCard]
+  cardsFromHand (Hand cards) = cards
+
+  {-
+    PURPOSE: sort a hand
+  -}
+  sortHand :: PlayingHand -> PlayingHand
+  sortHand (Hand cards) = (Hand (sort cards))
 
   {-
     PURPOSE: count every card in hand that contains value of the supplied card (dont give a shit about the suit)
