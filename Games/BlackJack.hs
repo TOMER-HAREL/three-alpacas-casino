@@ -51,9 +51,11 @@ module Games.BlackJack where
   -}
   gamePhase :: GameState -> IO ()
   gamePhase gameState = do
-    return (dealerPhase gameState)
-    -- return (mapPlayers (\player -> (playerPhase player)) gameState)
-    return ()
+    let
+      dealerGameState = dealerPhase gameState
+      -- (mapPlayers (\player -> (playerPhase player)) dealerGameState)
+    do
+      putStrLn "lol"
 
 
   playerPhase :: GamePlayer -> IO GamePlayer
@@ -62,10 +64,10 @@ module Games.BlackJack where
     input <- getLine
     return player
 
-  dealerPhase :: GameState -> IO GameState
-  dealerPhase gameState = do
-    putStrLn "Dealer phase"
-    return gameState
+  dealerPhase :: GameState -> GameState
+  dealerPhase gameState
+    | True = undefined
+    | otherwise = undefined
 
   {-
     PURPOSE: iterate every player in a supplied gamestate and a apply a certain function that
@@ -77,14 +79,6 @@ module Games.BlackJack where
       newPlayers = map (\player -> f player) players
     in
       (GState newPlayers deck)
-
-  {-
-    TODO
-    PURPOSE: infinite loop until game is done, loop through players and ask for actions,
-      deal cards, etc etc.
-  -}
-  gamePhase :: GameState -> IO ()
-  gamePhase gameState = do return ()
 
 
   {-
