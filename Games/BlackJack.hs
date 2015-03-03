@@ -90,11 +90,6 @@ module Games.BlackJack where
   hasBlackJack hand = undefined
 
   {-
-    TODO
-
-  -}
-
-  {-
     valueOfPlayerHand player
     PURPOSE: calculate value of hand, with Ace having two values, 1 or 11.
   -}

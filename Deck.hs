@@ -14,11 +14,13 @@ module Deck where
   {-
     PURPOSE: convert every card in a deck into a string and show i nicely.
   -}
-
   instance Show PlayingDeck where
     show (Deck []) = ""
     show (Deck (card:rest)) = show card ++ show (Deck rest)
 
+  {-
+    PURPOSE: check if decks are equal
+  -}
   instance Eq PlayingDeck where
     (==) (Deck []) (Deck []) = True
     (==) (Deck (card:deck)) (Deck (cardb:deckb)) = card == cardb && (Deck deck) == (Deck deckb)
@@ -34,7 +36,6 @@ module Deck where
     [5C][6C][7C][8C][9C][10C][JC][QC][KC][AD][2D][3D][4D][5D][6D][7D][8D][9D][10D][JD][QD][KD][AH][2H]
     [3H][4H][5H][6H][7H][8H][9H][10H][JH][QH][KH]
   -}
-
   createEmptyDeck :: PlayingDeck
   createEmptyDeck = (Deck [(Card Spades A) .. (Card Hearts K)])
 
@@ -58,9 +59,11 @@ module Deck where
     PURPOSE: Shuffle supplied deck
     TODO: Make it random for every shuffle, unix-timestamp?
   -}
-
   shuffleDeck :: PlayingDeck -> PlayingDeck
-  shuffleDeck (Deck cards) = (Deck (shuffleList (mkStdGen 1023012301230) cards))
+  shuffleDeck (Deck cards) = do undefined
+    -- time <- getPOSIXTime
+    -- (Deck (shuffleList (mkStdGen time) cards))
+    -- loop time
 
   {-
     drawCardFromDeck deck

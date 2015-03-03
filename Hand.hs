@@ -32,6 +32,12 @@ module Hand where
   emptyHand = (Hand [])
 
   {-
+    PURPOSE: count the cards in a hand.
+  -}
+  cardsInHand :: PlayingHand -> Int
+  cardsInHand (Hand cards) = length cards
+
+  {-
     PURPOSE: check if a hand contains a certain card.
   -}
   handContainsCard :: PlayingHand -> PlayingCard -> Bool
