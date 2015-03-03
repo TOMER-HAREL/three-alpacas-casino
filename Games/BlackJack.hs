@@ -61,33 +61,31 @@ module Games.BlackJack where
   gamePhase gameState = do undefined
 
   {-
-    TODO
     PURPOSE: check if hand is 21 or not
   -}
   isTwentyOne :: PlayingHand -> Bool
-  isTwentyOne hand = undefined
+  isTwentyOne hand = valueOfPlayerHand hand == 21
 
   {-
-    TODO
+
     PURPOSE: check if hand is fat (above 21) or not
   -}
   isFat :: PlayingHand -> Bool
-  isFat hand = undefined
+  isFat hand = valueOfPlayerHand hand < 21
 
   {-
-    TODO
+
     PURPOSE: check if hand is 17 or above, for the dealer.
   -}
   isAbove17 :: PlayingHand -> Bool
-  isAbove17 hand = undefined
+  isAbove17 hand = valueOfPlayerHand hand <= 17
 
   {-
-    TODO
     PURPOSE: check if the hand has Black Jack or not
     HOW: check if there's two cards in hand and that it is 21.
   -}
   hasBlackJack :: PlayingHand -> Bool
-  hasBlackJack hand = undefined
+  hasBlackJack hand = cardsInHand(hand) == 2 && valueOfPlayerHand == 21
 
   {-
     valueOfPlayerHand player
