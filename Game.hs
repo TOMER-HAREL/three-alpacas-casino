@@ -22,27 +22,52 @@ module Game where
     show None = "Undefined Game"
 
   {-
+    everygame
     PURPOSE: Return every game that we're adding, may use it in a list
-      at the Playboy Casino home screen.
+      at the Three Alpacas homescreen.
+    PRE: true
+    POST: a list with all games
+    SIDE EFFECTS: none
+    EXAMPLES: everyGame = [Black Jack, Poker]
   -}
+
   everyGame :: [Game]
   everyGame = [BJ ..] --thanks to deriving(Enum) we can do this.
 
   {-
+    gameCount
     PURPOSE: return an integer that denotes the number of games available.
+    PRE: true
+    POST: the number of available games
+    SIDE EFFECTS: none
+    EXAMPLES: gameCount = 2
   -}
+
   gameCount :: Int
   gameCount = length everyGame
 
   {-
+    validGameEnum
     PURPOSE: Check if a number is mapped to a game.
+    PRE: true
+    POST: bool that tells you if a game at given index exists
+    SIDE EFFECTS: none
+    EXAMPLES:  validGameEnum 1 = True
   -}
+
   validGameEnum :: Int -> Bool
   validGameEnum enum = (enum <= gameCount) && (enum > 0)
 
   {-
+    printGameTable games
     PURPOSE: Provide the player with a list of all the games available.
+    PRE: true
+    POST: TODO
+    SIDE EFFECTS: TODO
+    EXAMPLES:  TODO 
   -}
+
+
   printGameTable :: [Game] -> IO ()
   printGameTable [] = putStrLn "Playboy Casino is out of poison."
   printGameTable games =
