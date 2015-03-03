@@ -102,7 +102,7 @@ module Games.Poker where
     testListP5 = T.TestList [testisPair,
                               testisPair2,
                               testisThreeOfAKind,
-                              testisStraight, 
+                              testisStraight,
                               testisStraight1,
                               testisStraight2,
                               testisRoyalStraigtFlush1,

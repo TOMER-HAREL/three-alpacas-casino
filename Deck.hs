@@ -92,6 +92,14 @@ module Deck where
   drawCardFromDeck (Deck (card:_)) = card
 
   {-
+    TODO cc
+    PURPOSE: Draw and remove a card from a deck
+    POST: a card and the new deck inside of a tuple.
+  -}
+  drawAndRemoveCardFromDeck :: PlayingDeck -> (PlayingCard, PlayingDeck)
+  drawAndRemoveCardFromDeck deck = (drawCardFromDeck deck, removeTopCardFromDeck deck)
+
+  {-
     removeTopCardFromDeck deck
     PURPOSE: Remove drawn card from deck
     PRE:  true
