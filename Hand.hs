@@ -19,7 +19,8 @@ module Hand where
 
   instance Eq PlayingHand where
     (==) (Hand cardsA) (Hand cardsB) = cardsA == cardsB
-
+    (==) EmptyHand EmptyHand = True
+    (==) _ _ = False
   {-
     emptyHand
     PURPOSE: Create empty playinghand
@@ -28,6 +29,7 @@ module Hand where
     SIDE EFFECTS: none
     EXAMPLES: emptyHand = ""
   -}
+
   emptyHand :: PlayingHand
   emptyHand = (Hand [])
 
@@ -47,14 +49,27 @@ module Hand where
       numberOfValuesInHand' hand needle 0
 
   {-
+    cardsInHand hand
     PURPOSE: count the cards in a hand.
+    PRE:  true
+    POST: the amount of cards in the hand
+    SIDE EFFECTS: none
+    EXAMPLES: cardsInHand (Hand [(Card Diamonds A), (Card Spades Q), (Card Clubs (Other 5))]) = 3
+
   -}
+
   cardsInHand :: PlayingHand -> Int
   cardsInHand (Hand cards) = length cards
 
   {-
+    handContainsCard hand card
     PURPOSE: check if a hand contains a certain card.
+    PRE:  true
+    POST: bool that tells you if given card is in hand
+    SIDE EFFECTS: none
+    EXAMPLES: handContainsCard  (Hand [(Card Diamonds A), (Card Spades Q), (Card Clubs (Other 5))]) (Card Spades Q) = True
   -}
+
   handContainsCard :: PlayingHand -> PlayingCard -> Bool
   handContainsCard (Hand cards) card = elem card cards
 
@@ -67,6 +82,7 @@ module Hand where
     SIDE EFFECTS: none
     EXAMPLES: addCardToHand (Hand [(Card Diamonds A)]) (Card Clubs K) == [KC] [AD]
   -}
+
   addCardToHand :: PlayingHand -> PlayingCard -> PlayingHand
   addCardToHand (Hand cards) card = (Hand (card:cards))
 
@@ -78,6 +94,7 @@ module Hand where
     SIDE EFFECTS: none
     EXAMPLES: cardAtPosition (Hand [(Card Diamonds A), (Card Spades (Other 10))]) 1 == [10S]
   -}
+
   cardAtPosition :: PlayingHand -> Int -> PlayingCard
   cardAtPosition (Hand cards) position = cards !! position
 
@@ -89,10 +106,12 @@ module Hand where
     SIDE EFFECTS: index
     EXAMPLES: removeCardAtPosition  (Hand [(Card Diamonds A), (Card Spades (Other 10))]) 1 == [AD]
   -}
+
   removeCardAtPosition :: PlayingHand -> Int -> PlayingHand
   removeCardAtPosition hand@(Hand cards) position  = (Hand (delete (cardAtPosition hand position) cards))
 
   {- TESTS -}
+
   testHand :: PlayingHand
   testHand = (Hand [(Card Diamonds A), (Card Spades (Other 5)), (Card Clubs K), (Card Diamonds (Other 2))])
 
