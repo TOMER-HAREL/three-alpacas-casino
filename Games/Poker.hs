@@ -30,8 +30,10 @@ module Games.Poker where
 
     --If isStraightFlush is True map the list and look if fst is an A
     isRoyalStraigtFlush:: PlayingHand -> Bool
-    isRoyalStraigtFlush hand = undefined
-
+    isRoyalStraigtFlush hand = let
+                                numbers = handValues hand
+                                in
+                                  elem 14 numbers && (isStraightFlush hand)
     --If we got an isStraight and isFlush at the same hand isStraightFlush will return true
     isStraightFlush :: PlayingHand -> Bool
     isStraightFlush hand = (isFlush hand) && (isStraight hand)
@@ -39,9 +41,9 @@ module Games.Poker where
     --Look up if we got 4 card of the same value
     isFourOfAKind :: PlayingHand -> Bool
     isFourOfAKind hand = let
-                    numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
-                    in
-                      elem 4 numbers
+                          numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+                          in
+                            elem 4 numbers
 
     --if we got one isPair and isThreeOfAKind at the same hand the full house will return True
     isFullHouse :: PlayingHand -> Bool
