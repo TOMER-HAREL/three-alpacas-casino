@@ -40,7 +40,7 @@ module Games.Poker where
 
     --If we got an isStraight and isFlush at the same hand isStraightFlush will return true
     isStraightFlush :: PlayingHand -> Bool
-    isStraightFlush hand = undefined
+    isStraightFlush hand = (isFlush hand) && (isStraight hand)
 
     --Look up if we got 4 card of the same value
     isFourOfAKind :: PlayingHand -> Bool
