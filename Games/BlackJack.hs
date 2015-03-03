@@ -61,28 +61,54 @@ module Games.BlackJack where
   gamePhase gameState = do undefined
 
   {-
+    isTwentyOne hand
     PURPOSE: check if hand is 21 or not
+    PRE: True
+    POST: Returns a bool if the player have 21 or not
+    SIDE EFFECTS: None
+    EXAMPLES:
+        isTwentyOne (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))]) = True
+        isTwentyOne (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 8))]) = False
   -}
   isTwentyOne :: PlayingHand -> Bool
   isTwentyOne hand = valueOfPlayerHand hand == 21
 
   {-
-
+    isFat hand
     PURPOSE: check if hand is fat (above 21) or not
+    PRE: True
+    POST: Returns a bool of hand if the player is "fat" (hand value over 21) or not.
+    SIDE EFFECTS: None
+    EXAMPLES:
+        isFat (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other K))]) = True
+        isFat (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 4))]) = False
   -}
   isFat :: PlayingHand -> Bool
-  isFat hand = valueOfPlayerHand hand < 21
+  isFat hand = valueOfPlayerHand hand > 21
 
   {-
-
+    isAbove16 hand
     PURPOSE: check if hand is 17 or above, for the dealer.
+    PRE: True
+    POST: Returns a bool of hand if the value of the players hand is eq or above 17.
+    SIDE EFFECTS: None
+    EXAMPLES:
+        isAbove16 (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 5))]) = True
+        isAbove16 (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 2))]) = False
   -}
-  isAbove17 :: PlayingHand -> Bool
-  isAbove17 hand = valueOfPlayerHand hand <= 17
+  isAbove16 :: PlayingHand -> Bool
+  isAbove16 hand = valueOfPlayerHand hand >= 17
 
   {-
+    hadBlackJack hand
     PURPOSE: check if the hand has Black Jack or not
-    HOW: check if there's two cards in hand and that it is 21.
+    PRE: True
+    POST: Returns a bool of hand, if the value of the players hand is 21 has 2 cards in hand or not.
+    SIDE EFFECTS: None
+    EXAMPLES:
+        isAbove16 (Hand [(Card Diamonds A), (Card Clubs k)]) = True
+        isAbove16 (Hand [(Card Diamonds A), (Card Clubs 5)]) = False
+        isAbove16 (Hand [(Card Diamonds A), (Card Clubs 5), (Card Hearts (Other 5))]) = False
   -}
   hasBlackJack :: PlayingHand -> Bool
   hasBlackJack hand = cardsInHand hand == 2 && valueOfPlayerHand hand == 21
