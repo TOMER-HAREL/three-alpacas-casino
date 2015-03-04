@@ -53,11 +53,15 @@ module Games.BlackJack where
       deal cards, etc etc.
   -}
   gamePhase :: GameState -> IO GameState
+  gamePhase FuckYouState =
+    do
+    putStrLn "Bye bye"
+    return FuckYouState
+
   gamePhase gameState@(GState _ deck status) =
     do
-    if status == (Yellow "QUIT") then do
-      putStrLn "Main screen"
-      return FuckYouState
+    if status /= Green then do
+      undefined
     else do
       printGameState gameState
       dGameState <- dealerPhase gameState
@@ -66,7 +70,8 @@ module Games.BlackJack where
       printGameState pGameState
       cGameState@(GState players deck status) <- checkPhase pGameState
       if status == Red then do
-        askPhase cGameState
+        aGameState <- (askPhase cGameState)
+        gamePhase aGameState
       else do
         gamePhase cGameState
 
