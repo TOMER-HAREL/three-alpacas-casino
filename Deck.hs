@@ -69,12 +69,14 @@ module Deck where
     TODO: Make it random for every shuffle, unix-timestamp?
   -}
   shuffleDeck :: PlayingDeck -> PlayingDeck
+  shuffleDeck EmptyDeck = EmptyDeck
   shuffleDeck (Deck cards) = (Deck (shuffleList (mkStdGen 18234891023849012) cards))
 
   {-
     PURPOSE: sort a deck
   -}
   sortDeck :: PlayingDeck -> PlayingDeck
+  sortDeck EmptyDeck = EmptyDeck
   sortDeck (Deck cards) = (Deck (sort cards))
 
   {-
@@ -89,6 +91,7 @@ module Deck where
   -}
   drawCardFromDeck :: PlayingDeck -> PlayingCard
   drawCardFromDeck EmptyDeck = InvisibleCard
+  drawCardFromDeck (Deck []) = InvisibleCard
   drawCardFromDeck (Deck (card:_)) = card
 
   {-
@@ -109,6 +112,8 @@ module Deck where
     (Card Spades (Other 3)),(Card Spades (Other 4))]) = [2S][3S][4S]
   -}
   removeTopCardFromDeck :: PlayingDeck -> PlayingDeck
+  removeTopCardFromDeck EmptyDeck = EmptyDeck
+  removeTopCardFromDeck (Deck (topcard:[])) = EmptyDeck
   removeTopCardFromDeck (Deck (topcard:deck)) = (Deck deck)
 
   {- TESTS -}

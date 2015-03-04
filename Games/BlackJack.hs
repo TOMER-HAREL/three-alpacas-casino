@@ -10,18 +10,23 @@ module Games.BlackJack where
   import Player
   import Deck
 
+  type PlayersAndDeck = ([GamePlayer], PlayingDeck)
+
   instance GameValue PlayingCard where
     valueOf (Card _ (Other value)) = value
     valueOf (Card _ A) = 11
     valueOf (Card _ _) = 10
+    valueOf _ = 0
 
   instance GameValue PlayingHand where
     valueOf (Hand []) = 0
     valueOf (Hand (card:rest)) = (valueOf card) + (valueOf (Hand rest))
+    valueOf _ = 0
 
   instance GameValue PlayingDeck where
     valueOf (Deck []) = 0
     valueOf (Deck (card:rest)) = (valueOf card) + (valueOf (Deck rest))
+    valueOf _ = 0
 
   instance GameEq PlayingCard where
     (===) (Card _ K) (Card _ K) = True
@@ -50,35 +55,69 @@ module Games.BlackJack where
   gamePhase gameState@(GState _ deck) =
     do
     printGameState gameState
-    dealerGameState <- dealerPhase gameState
-    players <- (forM (playersInGameState dealerGameState) (\player -> (playerPhase player deck)))
-    let (_, newDeck) = last players
-    let newPlayers = concat $ map (\(newPlayers, _) -> newPlayers) players
-    let dealers = dealersInGameState dealerGameState
-    let gamestate = (GState (newPlayers ++ dealers) newDeck)
+    (GState dPlayers dDeck) <- dealerPhase gameState
+    (GState pPlayers pDeck) <- playerPhase gameState
+    -- players <- (forM (playersInGameState dealerGameState) (\player -> do
+    --   (playerPhase player deck)
+    --   ))
+    -- let (_, newDeck) = last players
+    -- let newPlayers = concat $ map (\(newPlayers, _) -> newPlayers) players
+    -- let dealers = dealersInGameState dealerGameState
+    -- let gamestate = (GState (newPlayers ++ dealers) newDeck)
     do
-    gamePhase gamestate
+    gamePhase gameState
 
   {-
-    PURPOSE: wait for user input.
+    PURPOSE: read move of player
   -}
-  playerPhase :: GamePlayer -> PlayingDeck -> IO ([GamePlayer], PlayingDeck)
-  playerPhase player deck =
+  readMove :: GamePlayer -> IO PlayerState
+  readMove player =
     let
       states = statesAvailable $ handForPlayer player
     in do
-
-      putStrLn (show states)
+      putStr ("Make your move " ++ (show states) ++ ": ")
       input <- getLine
       let stateIdentifier = map toUpper input
       let state = (State stateIdentifier)
       do
         if elem state states then do
-          let newPlayer = (editStateForPlayer player state)
-          let (performedPlayer, newDeck) = performMove newPlayer deck
-          return (performedPlayer, newDeck)
+          return state
         else do
-          playerPhase player deck
+          readMove player
+
+  {-
+    PURPOSE: wait for user input.
+  -}
+  playerPhase :: GameState -> IO GameState
+  playerPhase gameState@(GState _ deck) =
+    let
+
+      dealers = playersWithRoleInGameState gameState Dealer
+
+      --([GamePlayer], PlayingDeck)
+      playerPhase' :: GamePlayer -> PlayersAndDeck
+      playerPhase' player = 
+        let
+          states = statesAvailable $ handForPlayer player --should provide player instead of hand. TODO
+        in
+          undefined
+
+
+      playerPhase'' :: [PlayersAndDeck] -> GameState
+      playerPhase'' _ = undefined
+
+
+        -- let
+        --   states = statesAvailable $ handForPlayer player
+        -- in do
+        --   state <- (readMove player deck)
+        --   let newPlayer = (editStateForPlayer player state)
+        --   let (performedPlayer, newDeck) = performMove newPlayer deck
+        --   return (performedPlayer, newDeck)
+    in do
+      --return (GState (playerPhase' (playersWithRoleInGameState gameState Shark) deck) deck)
+      undefined
+
 
   {-
     TODO
@@ -110,36 +149,42 @@ module Games.BlackJack where
     SIDE-EFFECTS: output to the terminal.
   -}
   printGameState :: GameState -> IO ()
-  printGameState gameState@(GState players deck) = do
+  printGameState gameState = do
     printDivider
-    printDealers (dealersInGameState gameState)
-    printPlayers (playersInGameState gameState)
+    printDealers gameState
+    printPlayers gameState
     printDivider
 
   {-
     PURPOSE: print player cards in a nice way, not the dealers card.
     SIDE-EFFECTS: output to the terminal
   -}
-  printPlayers :: [GamePlayer] -> IO ()
-  printPlayers players =
+  printPlayers :: GameState -> IO ()
+  printPlayers gameState =
     let
       printPlayers' :: [GamePlayer] -> String
       printPlayers' [] = []
-      printPlayers' ((Player hand Shark _):[]) = show hand ++ (printPlayers' [])
-      printPlayers' ((Player hand Shark _):rest) = show hand ++ " | " ++ (printPlayers' rest)
+      printPlayers' ((Player hand _ _):[]) = show hand ++ (printPlayers' [])
+      printPlayers' ((Player hand _ _):rest) = show hand ++ " | " ++ (printPlayers' rest)
     in
-      printLnCenter $ printPlayers' players
+      printLnCenter $ printPlayers' (playersWithRoleInGameState gameState Shark)
 
   {-
     PURPOSE: print dealer cards in a nice way
     SIDE-EFFECTS: output to the terminal
   -}
-  printDealers :: [GamePlayer] -> IO ()
-  printDealers [] = putStrLn $ repeatCharacter '\n' 5
-  printDealers ((Player hand Dealer _):rest) = do
-    printLnCenter $ (show hand)
-    printDealers rest
-  printDealers (_:rest) = printDealers rest
+  printDealers :: GameState -> IO ()
+  printDealers gameState =
+    let
+      printDealers' :: [GamePlayer] -> String
+      printDealers' _ = undefined
+  -- putStrLn $ repeatCharacter '\n' 5
+  -- printDealers ((Player hand Dealer _):rest) = do
+  --   printLnCenter $ (show hand)
+  --   printDealers rest
+  -- printDealers (_:rest) = printDealers rest
+    in
+      undefined
 
 
   {-

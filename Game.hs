@@ -47,20 +47,17 @@ module Game where
   everyGame = [BJ ..] --thanks to deriving(Enum) we can do this.
 
   {-
-    PURPOSE: return players in provided gamestate.
+    PURPOSE: filter players by role
   -}
-  playersInGameState :: GameState -> [GamePlayer]
-  playersInGameState (GState [] _) = []
-  playersInGameState (GState ((Player _ Dealer _):rest) deck) = (playersInGameState (GState rest deck))
-  playersInGameState (GState (player@(Player _ Shark _):rest) deck) = player : (playersInGameState (GState rest deck))
+  playersWithRoleInGameState :: GameState -> PlayerRole -> [GamePlayer]
+  playersWithRoleInGameState (GState players deck) needle =
+    filter (\(Player _ role _) -> role == needle) players
 
   {-
-    PURPOSE: return dealers in provided gamestate.
+    PURPOSE: return deck from gamestate
   -}
-  dealersInGameState :: GameState -> [GamePlayer]
-  dealersInGameState (GState [] _) = []
-  dealersInGameState (GState ((Player _ Shark _):rest) deck) = (dealersInGameState (GState rest deck))
-  dealersInGameState (GState (player@(Player _ Dealer _):rest) deck) = player : (dealersInGameState (GState rest deck))
+  deckInGameState :: GameState -> PlayingDeck
+  deckInGameState (GState _ deck) = deck
 
   {-
     gameCount

@@ -57,6 +57,7 @@ module Hand where
       numberOfValuesInHand' (Hand ((Card _ value):rest)) needleValue acc
         | (value == needleValue) = numberOfValuesInHand' (Hand rest) needleValue (acc+1)
         | otherwise = numberOfValuesInHand' (Hand rest) needleValue acc
+      numberOfValuesInHand' (Hand (InvisibleCard:rest)) needleValue acc = numberOfValuesInHand' (Hand rest) needleValue acc
     in
       numberOfValuesInHand' hand needle 0
 
