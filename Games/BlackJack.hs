@@ -2,7 +2,7 @@ module Games.BlackJack where
 
   import qualified Test.HUnit as T
   import Control.Monad
-  import System.Console.ANSI
+  import qualified System.Console.ANSI as ANSI
   import Data.Char
   import Interface
   import Game
@@ -53,48 +53,62 @@ module Games.BlackJack where
       deal cards, etc etc.
   -}
   gamePhase :: GameState -> IO GameState
-  gamePhase gameState@(GState _ deck) =
+  gamePhase gameState@(GState _ deck status) =
     do
-    printGameState gameState
-    dGameState <- dealerPhase gameState
-    printGameState gameState
-    pGameState <- playerPhase dGameState
-    printGameState pGameState
-    cGameState <- checkPhase pGameState
-    -- if (True) then do
-    --   undefined
-    -- else do
-    --   undefined
-    -- do
-    gamePhase cGameState
+    if status == (Yellow "QUIT") then do
+      putStrLn "Main screen"
+      return FuckYouState
+    else do
+      printGameState gameState
+      dGameState <- dealerPhase gameState
+      printGameState gameState
+      pGameState <- playerPhase dGameState
+      printGameState pGameState
+      cGameState@(GState players deck status) <- checkPhase pGameState
+      if status == Red then do
+        askPhase cGameState
+      else do
+        gamePhase cGameState
+
+  askPhase :: GameState -> IO GameState
+  askPhase gamestate@(GState players deck status) =
+    do
+    putStr "Do you want to play again? [Y/N] "
+    line <- getLine
+    let upperLine = map (\char -> toUpper char) line
+    if upperLine == "Y" then do
+      return (GState [createShark, createDealer] deck Green)
+    else
+      return FuckYouState
+
+
 
   checkPhase :: GameState -> IO GameState
-  checkPhase gamestate@(GState (player:dealer:rest) deck) =
+  checkPhase gamestate@(GState players@(player:dealer:rest) deck status) =
     do
     let playerHand = handForPlayer player
     let dealerHand = handForPlayer dealer
     let dealerState = stateForPlayer dealer
     let playerState = stateForPlayer player
     if dealerState == (State "STAND") && playerState == (State "STAND") then do
-      putStrLn "BALLE"
-      return gamestate
+      return (GState players deck Red)
     else
       if isTwentyOne playerHand then do
         putStrLn "You've got 21"
         getLine
-        return gamestate
+        return (GState players deck Red)
       else if hasBlackJack playerHand then do
         putStrLn "You've got Black Jack."
         getLine
-        return gamestate
+        return (GState players deck Red)
       else if isFat playerHand then do
         putStrLn "You lost"
         getLine
-        return gamestate
+        return (GState players deck Red)
       else if isFat dealerHand && not(isFat playerHand) then do
         putStrLn "You won, dealer got fat."
         getLine
-        return gamestate
+        return (GState players deck Red)
       else do
         return gamestate
 
@@ -122,7 +136,7 @@ module Games.BlackJack where
     PURPOSE: wait for user input.
   -}
   playerPhase :: GameState -> IO GameState
-  playerPhase gameState@(GState players deck) =
+  playerPhase gameState@(GState players deck status) =
     let
 
       player = head (playersWithRoleInGameState gameState Shark)
@@ -135,13 +149,13 @@ module Games.BlackJack where
         let
           (pPlayer, pDeck) = (performMove (editStateForPlayer player state) deck)
         in do
-          return (GState pPlayer pDeck)
+          return (GState pPlayer pDeck status)
       --(performMove (editStateForPlayer player state) deck)
     in
     do
       state <- readMove player
-      (GState players deck) <- playerPhase' player state
-      return (GState (players ++ dealers) deck)
+      (GState players deck status) <- playerPhase' player state
+      return (GState (players ++ dealers) deck status)
 
 
   {-
@@ -149,7 +163,7 @@ module Games.BlackJack where
     PURPOSE: dealer draws card and adds it to hand if less than 17
   -}
   dealerPhase :: GameState -> IO GameState
-  dealerPhase gameState =
+  dealerPhase gameState@(GState _ _ status) =
     do
     let dealer = (head (playersWithRoleInGameState gameState Dealer))
     let deck = deckInGameState gameState
@@ -158,11 +172,11 @@ module Games.BlackJack where
     if isAbove16 dealerHand then do
       let dealer2 = editStateForPlayer dealer (State "STAND")
       let (dealers, deck2) = performMove dealer2 deck
-      return (GState (players ++ dealers) deck2)
+      return (GState (players ++ dealers) deck2 status)
     else do
       let dealer2 = editStateForPlayer dealer (State "HIT")
       let (dealers, deck2) = performMove dealer2 deck
-      return (GState (players ++ dealers) deck2)
+      return (GState (players ++ dealers) deck2 status)
 
   {-
     PURPOSE:
@@ -187,7 +201,7 @@ module Games.BlackJack where
   -}
   printGameState :: GameState -> IO ()
   printGameState gameState = do
-    clearScreen
+    ANSI.clearScreen
     printLnCenter (BJ)
     printDivider
     printPlayersWithRole gameState Dealer
@@ -306,11 +320,11 @@ module Games.BlackJack where
       Card Diamonds (Other 5),Card Diamonds (Other 6),
       Card Diamonds (Other 7),Card Diamonds (Other 8),
       Card Diamonds (Other 9),Card Diamonds (Other 10),Card Diamonds J,
-      Card Diamonds Q,Card Diamonds K])))
+      Card Diamonds Q,Card Diamonds K])) Green)
 
 
   dealStartingCards :: GameState -> IO GameState
-  dealStartingCards (GState ((Player hand role state):(Player handB roleB stateB):rest) deck) =
+  dealStartingCards (GState ((Player hand role state):(Player handB roleB stateB):rest) deck status) =
     do
     let (dCard, dDeck) = drawAndRemoveCardFromDeck deck
     let (pCard, pDeck) = drawAndRemoveCardFromDeck dDeck
@@ -321,7 +335,7 @@ module Games.BlackJack where
     let dealer = (Player dealerHand roleB stateB)
     let player = (Player playerHand role state)
     do
-    return (GState [player, dealer] pDeck2)
+    return (GState [player, dealer] pDeck2 status)
 
   {-
     PURPOSE: print a players hand

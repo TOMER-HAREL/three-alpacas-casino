@@ -18,7 +18,12 @@ module Game where
             | BJ
             | P5 deriving(Enum, Eq)
 
-  data GameState = GState [GamePlayer] PlayingDeck
+  data GameStatus = Green
+                  | Yellow String
+                  | Red
+
+  data GameState = GState [GamePlayer] PlayingDeck GameStatus
+                 | FuckYouState
 
   instance Show Game where
     show BJ = "Black Jack"
@@ -26,9 +31,15 @@ module Game where
     show None = "Undefined Game"
 
   instance Show GameState where
-    show (GState [] deck) = "deck consists of " ++ show(deck)
-    show (GState (dealer@(Player _ Dealer _):rest) deck) = "Dealer: " ++ show(dealer) ++ ", " ++ show(GState rest deck)
-    show (GState (player:rest) deck) = "Player: " ++ show(player) ++ ", " ++ show(GState rest deck)
+    show (GState [] deck _) = "deck consists of " ++ show(deck)
+    show (GState (dealer@(Player _ Dealer _):rest) deck status) = "Dealer: " ++ show(dealer) ++ ", " ++ show(GState rest deck status)
+    show (GState (player:rest) deck status) = "Player: " ++ show(player) ++ ", " ++ show(GState rest deck status)
+
+  instance Eq GameStatus where
+    (==) Red Red = True
+    (==) Green Green = True
+    (==) (Yellow valueA) (Yellow valueB) = valueA == valueB
+    (==) _ _ = False
 
   {-
     everygame
@@ -55,7 +66,7 @@ module Game where
 
   -}
   playersWithRoleInGameState :: GameState -> PlayerRole -> [GamePlayer]
-  playersWithRoleInGameState (GState players deck) needle =
+  playersWithRoleInGameState (GState players _ _) needle =
     filter (\(Player _ role _) -> role == needle) players
 
   {-
@@ -63,7 +74,7 @@ module Game where
     PURPOSE: return deck from gamestate
   -}
   deckInGameState :: GameState -> PlayingDeck
-  deckInGameState (GState _ deck) = deck
+  deckInGameState (GState _ deck _) = deck
 
   {-
     gameCount
