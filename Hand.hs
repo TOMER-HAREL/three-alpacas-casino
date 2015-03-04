@@ -154,12 +154,22 @@ module Hand where
   testHand :: PlayingHand
   testHand = (Hand [(Card Diamonds A), (Card Spades (Other 5)), (Card Clubs K), (Card Diamonds (Other 2))])
 
+  testemptyHand = TestCase $ assertBool "emptyHand" (emptyHand == (Hand []))
+  testcardsFromHand = TestCase $ assertBool "cardsFromHand" (cardsFromHand testHand == [(Card Diamonds A),(Card Spades (Other 5)),(Card Clubs K),(Card Diamonds (Other 2))])
+  testsortHand = TestCase $ assertBool "sortHand" (sortHand testHand == (Hand [(Card Spades (Other 5)),(Card Clubs K),(Card Diamonds A),(Card Diamonds (Other 2))]))
+  testnumberOfValuesInHand = TestCase $ assertBool "numberOfValuesInHand" (numberOfValuesInHand testHand K == 1)
+  testcardsInHand = TestCase $ assertBool "cardsInHand" (cardsInHand testHand == 4)
   testHandContainsCard = TestCase $ assertBool "HandContainsCard" (handContainsCard testHand (Card Diamonds A) == True)
   testCardAtPosition = TestCase $ assertBool "CardAtPosition" ((cardAtPosition testHand 1) == (Card Spades (Other 5)))
   testRemoveCardAtPosition = TestCase $ assertBool "RemoveCardAtPosition" ((removeCardAtPosition testHand 1) == (Hand [(Card Diamonds A), (Card Clubs K), (Card Diamonds (Other 2))]))
   testAddCardToHand = TestCase $ assertBool "addCardToHand" ((addCardToHand testHand (Card Diamonds J)) == (Hand [(Card Diamonds J), (Card Diamonds A), (Card Spades (Other 5)), (Card Clubs K), (Card Diamonds (Other 2))]))
 
-  testListHand = TestList [testCardAtPosition,
+  testListHand = TestList [testemptyHand,
+                          testcardsFromHand,
+                          testsortHand,
+                          testnumberOfValuesInHand,
+                          testcardsInHand,
+                          testCardAtPosition,
                           testRemoveCardAtPosition,
                           testAddCardToHand,
                           testHandContainsCard]

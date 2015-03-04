@@ -1,8 +1,9 @@
 module Player where
 
+  import Card
   import Deck
   import Hand
-
+  import qualified Test.HUnit as T
 
   data PlayerRole = Dealer
                   | Shark deriving (Eq)
@@ -105,3 +106,23 @@ module Player where
 
   createDealer :: GamePlayer
   createDealer = (Player EmptyHand Dealer UndefinedState)
+
+  {- TESTS -}
+
+  teststateForPlayerShark = T.TestCase $ T.assertBool "stateForPlayerShark" (stateForPlayer (Player testHand Shark (State "HIT")) == (State "HIT"))
+  teststateForPlayerDealer = T.TestCase $ T.assertBool "stateForPlayerDealer" (stateForPlayer (Player testHand Dealer (State "STAND")) == (State "STAND"))
+  testhandForPlayer = T.TestCase $ T.assertBool "handForPlayer" (handForPlayer (Player testHand Dealer (State "STAND")) == (Hand [(Card Diamonds A),(Card Spades (Other 5)),(Card Clubs K),(Card Diamonds (Other 2))]))
+  testeditStateForPlayer = T.TestCase $ T.assertBool "editStateForPlayer" (editStateForPlayer (Player testHand Shark (State "HIT")) (State "STAND") == (Player testHand Shark (State "STAND")))
+  testisDealer1 =  T.TestCase $ T.assertBool "isDealer1" (isDealer (Player testHand Dealer (State "HIT")) == True)
+  testisDealer2 =  T.TestCase $ T.assertBool "isDealer2" (isDealer (Player testHand Shark (State "HIT")) == False)
+  testcreateShark =  T.TestCase $ T.assertBool "createShark" (createShark == (Player EmptyHand Shark UndefinedState))
+  testcreateDealer = T.TestCase $ T.assertBool "createDealer" (createDealer == (Player EmptyHand Dealer UndefinedState))
+
+  testlistPlayer = T.TestList [teststateForPlayerShark,
+                                teststateForPlayerDealer,
+                                testhandForPlayer,
+                                testeditStateForPlayer,
+                                testisDealer1,
+                                testisDealer2,
+                                testcreateShark,
+                                testcreateDealer]
