@@ -16,16 +16,12 @@ module Game where
 
   data Game = None
             | BJ
-            | TX
-            | P5
-            | GF deriving(Enum, Eq)
+            | P5 deriving(Enum, Eq)
 
   data GameState = GState [GamePlayer] PlayingDeck
 
   instance Show Game where
     show BJ = "Black Jack"
-    show GF = "Go Fish"
-    show TX = "Texas Hold'Em"
     show P5 =  "Poker"
     show None = "Undefined Game"
 
@@ -101,20 +97,3 @@ module Game where
     SIDE EFFECTS: TODO
     EXAMPLES:  TODO
   -}
-
-
-  printGameTable :: [Game] -> IO ()
-  printGameTable [] = putStrLn "Playboy Casino is out of poison."
-  printGameTable games =
-    let
-      printGameTable' :: [Game] -> Int -> IO ()
-      printGameTable' [] _ = return ()
-      printGameTable' (game:rest) acc = do
-        putStrLn ("[" ++ show(acc) ++ "] " ++ show(game))
-        printGameTable' rest (acc + 1)
-    in
-      do
-        putStrLn("[n] GAME")
-        putStrLn("-------------------------------")
-        printGameTable' games 1
-        putStr("Please pick your poison [1 - " ++ show(gameCount) ++ "]")

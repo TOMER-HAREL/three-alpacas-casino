@@ -1,14 +1,15 @@
 import qualified Test.HUnit as T
 import Data.Char
 import qualified Games.BlackJack as BJ
-import qualified Games.GoFish as GF
 import qualified Games.Poker as P5
+import System.Console.ANSI
 
 import Card
 import Hand
 import Game
 import Deck
 import Player
+import Interface
 
 main :: IO ()
 main = do
@@ -16,7 +17,8 @@ main = do
 
 home :: IO ()
 home = do
-  putStrLn "Welcome to Playboy Casino."
+  clearScreen
+  printLnCenter "Welcome to Playboy Casino."
   printGameTable everyGame
   putStr " [q to quit]: "
   rawLine <- getLine
@@ -45,6 +47,21 @@ gameDoesntExist :: IO ()
 gameDoesntExist = do
   putStrLn "Game doesn't exist"
   home
+
+printGameTable :: [Game] -> IO ()
+printGameTable [] = putStrLn "Playboy Casino is out of poison."
+printGameTable games =
+  let
+    printGameTable' :: [Game] -> Int -> IO ()
+    printGameTable' [] _ = return ()
+    printGameTable' (game:rest) acc = do
+      putStrLn ("[" ++ show(acc) ++ "] " ++ show(game))
+      printGameTable' rest (acc + 1)
+  in
+    do
+      printDivider
+      printGameTable' games 1
+      putStr("Please pick your poison [1 - " ++ show(gameCount) ++ "]")
 
 {-
   TODO: add actions that are valid

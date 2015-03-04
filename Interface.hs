@@ -1,7 +1,7 @@
 module Interface where
 
   _WIN_WIDTH :: Int
-  _WIN_WIDTH = 96
+  _WIN_WIDTH = 128
 
   _WIN_HEIGHT :: Int
   _WIN_HEIGHT = 32
@@ -15,6 +15,9 @@ module Interface where
 
   printDivider :: IO ()
   printDivider = putStrLn $ repeatCharacter '-' _WIN_WIDTH
+
+  printSpace :: Int -> IO ()
+  printSpace n = putStr (repeatCharacter '\n' n)
 
   repeatCharacter :: Char -> Int -> String
   repeatCharacter character n = map (\_ -> character) [1 .. n]

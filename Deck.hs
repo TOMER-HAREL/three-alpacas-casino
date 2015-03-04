@@ -16,6 +16,7 @@ module Deck where
     PURPOSE: convert every card in a deck into a string and show i nicely.
   -}
   instance Show PlayingDeck where
+    show EmptyDeck = "Empty Deck"
     show (Deck []) = ""
     show (Deck (card:rest)) = show card ++ show (Deck rest)
 
@@ -53,7 +54,7 @@ module Deck where
     PURPOSE: Shuffle supplied list
     CREDITS: http://stackoverflow.com/questions/9877969/haskell-functions-to-randomly-order-a-list-not-working-properly-homework-begin
 
-    -}
+  -}
 
   shuffleList :: StdGen -> [a] -> [a]
   shuffleList _ []   = []
@@ -93,6 +94,9 @@ module Deck where
   drawCardFromDeck EmptyDeck = InvisibleCard
   drawCardFromDeck (Deck []) = InvisibleCard
   drawCardFromDeck (Deck (card:_)) = card
+
+  drawNumberOfCardsFromDeck :: Int -> PlayingDeck -> [PlayingCard]
+  drawNumberOfCardsFromDeck n deck = (map (\_ -> drawCardFromDeck deck) [1 .. n])
 
   {-
     TODO cc

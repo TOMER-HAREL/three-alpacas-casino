@@ -14,6 +14,7 @@ module Hand where
 
   instance Show PlayingHand where
     show (Hand []) = ""
+    show (Hand (card:[])) = show(card) ++ show(Hand [])
     show (Hand (card:rest)) = show(card) ++ " " ++ show(Hand rest)
     show EmptyHand = "Empty Hand"
 
@@ -115,6 +116,14 @@ module Hand where
   addCardToHand :: PlayingHand -> PlayingCard -> PlayingHand
   addCardToHand EmptyHand card = (Hand [card])
   addCardToHand (Hand cards) card = (Hand (card:cards))
+
+
+  {-
+    PURPOSE: add multiple cards to a hand
+  -}
+  addCardsToHand :: PlayingHand -> [PlayingCard] -> PlayingHand
+  addCardsToHand EmptyHand cardsToAdd = (Hand (cardsToAdd))
+  addCardsToHand (Hand cards) cardsToAdd = (Hand (cardsToAdd ++ cards))
 
   {-
     cardAtPosition hand position

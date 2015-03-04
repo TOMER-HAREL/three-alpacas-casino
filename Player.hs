@@ -41,6 +41,7 @@ module Player where
   -}
 
   stateForPlayer :: GamePlayer -> PlayerState
+  stateForPlayer (Player _ _ UndefinedState) = UndefinedState
   stateForPlayer (Player _ _ (State state)) = (State state)
 
   {-
