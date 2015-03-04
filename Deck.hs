@@ -145,6 +145,51 @@ module Deck where
 
   testCreateEmptyDeck = TestCase $ assertBool "createEmptyDeck" ((createEmptyDeck) == testDeck)
   testDrawCardFromDeck = TestCase $ assertBool "drawCardFromDeck" ((drawCardFromDeck testDeck) == (Card Spades A))
+  testcardsFromDeck = TestCase $ assertBool "cardsFromDeck" ((cardsFromDeck testDeck) == [Card Spades A,Card Spades (Other 2),Card Spades (Other 3),
+   Card Spades (Other 4),Card Spades (Other 5),Card Spades (Other 6),
+   Card Spades (Other 7),Card Spades (Other 8),Card Spades (Other 9),
+   Card Spades (Other 10),Card Spades J,Card Spades Q,Card Spades K,
+   Card Clubs A,Card Clubs (Other 2),Card Clubs (Other 3),
+   Card Clubs (Other 4),Card Clubs (Other 5),Card Clubs (Other 6),
+   Card Clubs (Other 7),Card Clubs (Other 8),Card Clubs (Other 9),
+   Card Clubs (Other 10),Card Clubs J,Card Clubs Q,Card Clubs K,
+   Card Diamonds A,Card Diamonds (Other 2),Card Diamonds (Other 3),
+   Card Diamonds (Other 4),Card Diamonds (Other 5),
+   Card Diamonds (Other 6),Card Diamonds (Other 7),
+   Card Diamonds (Other 8),Card Diamonds (Other 9),
+   Card Diamonds (Other 10),Card Diamonds J,Card Diamonds Q,
+   Card Diamonds K,Card Hearts A,Card Hearts (Other 2),
+   Card Hearts (Other 3),Card Hearts (Other 4),Card Hearts (Other 5),
+   Card Hearts (Other 6),Card Hearts (Other 7),Card Hearts (Other 8),
+   Card Hearts (Other 9),Card Hearts (Other 10),Card Hearts J,
+   Card Hearts Q,Card Hearts K])
+  testsortDeck = TestCase $ assertBool "sortDeck" ((sortDeck testDeck) == (Deck [Card Spades A,Card Spades (Other 2),Card Spades (Other 3),
+    Card Spades (Other 4),Card Spades (Other 5),Card Spades (Other 6),
+    Card Spades (Other 7),Card Spades (Other 8),Card Spades (Other 9),
+    Card Spades (Other 10),Card Spades J,Card Spades Q,Card Spades K,
+    Card Clubs A,Card Clubs (Other 2),Card Clubs (Other 3),
+    Card Clubs (Other 4),Card Clubs (Other 5),Card Clubs (Other 6),
+    Card Clubs (Other 7),Card Clubs (Other 8),Card Clubs (Other 9),
+    Card Clubs (Other 10),Card Clubs J,Card Clubs Q,Card Clubs K,
+    Card Diamonds A,Card Diamonds (Other 2),Card Diamonds (Other 3),
+    Card Diamonds (Other 4),Card Diamonds (Other 5),
+    Card Diamonds (Other 6),Card Diamonds (Other 7),
+    Card Diamonds (Other 8),Card Diamonds (Other 9),
+    Card Diamonds (Other 10),Card Diamonds J,Card Diamonds Q,
+    Card Diamonds K,Card Hearts A,Card Hearts (Other 2),
+    Card Hearts (Other 3),Card Hearts (Other 4),Card Hearts (Other 5),
+    Card Hearts (Other 6),Card Hearts (Other 7),Card Hearts (Other 8),
+    Card Hearts (Other 9),Card Hearts (Other 10),Card Hearts J,
+    Card Hearts Q,Card Hearts K]))
+  testdrawNumberOfCardsFromDeck = TestCase $ assertBool "drawNumberOfCardsFromDeck" ((drawNumberOfCardsFromDeck 2 testDeck) == [(Card Spades A),(Card Spades (Other 2))])
+  testremoveTopCardFromDeck = TestCase $ assertBool "removeTopCardFromDeck" (removeTopCardFromDeck (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]) == (Deck [(Card Spades (Other 2)),(Card Spades (Other 3))]))
+  testdrawAndRemoveCardFromDeck = TestCase $ assertBool "drawAndRemoveCardFromDeck" (drawAndRemoveCardFromDeck (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]) == ((Card Spades A), (Deck [(Card Spades (Other 2)),(Card Spades (Other 3))])))
 
 
-  testListDeck = TestList [testCreateEmptyDeck, testDrawCardFromDeck]
+  testListDeck = TestList [testCreateEmptyDeck,
+                            testDrawCardFromDeck,
+                            testcardsFromDeck,
+                            testsortDeck,
+                            testdrawNumberOfCardsFromDeck,
+                            testremoveTopCardFromDeck,
+                            testdrawAndRemoveCardFromDeck]

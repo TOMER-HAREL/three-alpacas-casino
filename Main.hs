@@ -10,7 +10,7 @@ module Main where
   import Hand
   import Game
   import Deck
-  import Player
+  import qualified Player as P
   import Interface
 
   main :: IO ()
@@ -90,4 +90,14 @@ module Main where
   filterUserInput input = filter (\character -> elem character validUserInput) input
 
   {- TESTS -}
-  runtests = T.runTestTT $ T.TestList [testListHand, testListDeck, testListCard, BJ.testListBJ, P5.testListP5]
+  testfilterUserInput1 = T.TestCase $ T.assertBool "filterUserInput1" ( filterUserInput "lmafsmlfas" == "")
+  testfilterUserInput2 = T.TestCase $ T.assertBool "filterUserInput2" ( filterUserInput "Quit" == "Q")
+
+  runtests = T.runTestTT $ T.TestList [testfilterUserInput1,
+                                        testfilterUserInput2,
+                                        testListHand,
+                                        testListDeck,
+                                        testListCard,
+                                        P.testlistPlayer,
+                                        BJ.testListBJ,
+                                        P5.testListP5]
