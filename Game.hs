@@ -6,7 +6,7 @@ module Game where
   import Hand
   import qualified Test.HUnit as T
 
-  
+  {- DATA -}
 
   class GameValue a where
     valueOf :: a -> Int
@@ -43,31 +43,42 @@ module Game where
     (==) (Yellow valueA) (Yellow valueB) = valueA == valueB
     (==) _ _ = False
 
+  {- FUNCTIONS-}
+  
   {-
     everygame
-    PURPOSE: Return every game that we're adding, may use it in a list
-      at the Three Alpacas homescreen.
+    PURPOSE: Return every game that we're adding
     PRE: true
     POST: a list with all games
     SIDE EFFECTS: none
     EXAMPLES: everyGame = [Black Jack, Poker]
   -}
   everyGame :: [Game]
-  everyGame = [BJ ..] --thanks to deriving(Enum) we can do this.
+  everyGame = [BJ ..]
 
   {-
-
-  TODO CC
-
+    playersWithRoleInGameState gamestate needle
+    PURPOSE: find all players in a game with the same playerole
+    PRE: true
+    POST: a list with players containing given playerrole
+    SIDE EFFECTS: none
+    EXAMPLES: (playersWithRoleInGameState (GState [(Player testHand Dealer UndefinedState),
+                                            (Player testHand Shark UndefinedState)] testDeck Green) Shark
+                                            == [(Player testHand Shark UndefinedState)])
   -}
   playersWithRoleInGameState :: GameState -> PlayerRole -> [GamePlayer]
   playersWithRoleInGameState (GState players _ _) needle =
     filter (\(Player _ role _) -> role == needle) players
 
   {-
-
+    deckInGameState gamestate
     PURPOSE: return deck from gamestate
-    TODO
+    PRE: true
+    POST: deck from given gamestate
+    SIDE EFFECTS: none
+    EXAMPLES: deckInGameState (GState [(Player testHand Shark UndefinedState)] (Deck [(Card Spades A),
+                                        (Card Spades (Other 2)),(Card Spades (Other 3))]) Green)
+                                          == (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]))
   -}
   deckInGameState :: GameState -> PlayingDeck
   deckInGameState (GState _ deck _) = deck
@@ -80,7 +91,6 @@ module Game where
     SIDE EFFECTS: none
     EXAMPLES: gameCount = 2
   -}
-
   gameCount :: Int
   gameCount = length everyGame
 
@@ -92,18 +102,10 @@ module Game where
     SIDE EFFECTS: none
     EXAMPLES:  validGameEnum 1 = True
   -}
-
   validGameEnum :: Int -> Bool
   validGameEnum enum = (enum <= gameCount) && (enum > 0)
 
-  {-
-    printGameTable games
-    PURPOSE: Provide the player with a list of all the games available.
-    PRE: true
-    POST: TODO
-    SIDE EFFECTS: TODO
-    EXAMPLES:  TODO
-  -}
+
 
   {- TESTS -}
 

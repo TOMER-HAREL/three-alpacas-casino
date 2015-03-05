@@ -50,6 +50,14 @@ module Main where
     putStrLn "Game doesn't exist"
     home
 
+  {-
+    printGameTable games
+    PURPOSE: Provide the player with a list of all the games available.
+    PRE: true
+    POST: TODO
+    SIDE EFFECTS: TODO
+    EXAMPLES:  TODO
+  -}
   printGameTable :: [Game] -> IO ()
   printGameTable [] = putStrLn "Playboy Casino is out of poison."
   printGameTable games =
