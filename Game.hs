@@ -6,6 +6,7 @@ module Game where
   import Hand
   import qualified Test.HUnit as T
 
+  
 
   class GameValue a where
     valueOf :: a -> Int
