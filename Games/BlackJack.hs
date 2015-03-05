@@ -55,8 +55,7 @@ module Games.BlackJack where
 
   {-
     gamePhase
-    PURPOSE: infinite loop until game is done, loop through players and ask for actions,
-      deal cards, etc etc.
+    PURPOSE: infinite loop until game is done, loop through players and ask for actions, deal cards, etc etc.
     PRE: True
     POST: ()
     SIDE EFFECTS:???????????????????????????????????????????????
@@ -111,7 +110,12 @@ module Games.BlackJack where
       return gameState
 
 
-
+  {-checkPhase
+    PURPOSE: Evaluate each hand and show the winner.
+    PRE: True
+    POST: Returns the winner and the value of both hands.
+    SIDE EFFECTS:???????????????????????????????????????????????
+  -}
   checkPhase :: GameState -> IO GameState
   checkPhase gamestate@(GState players@(player:dealer:rest) deck status) =
     do
@@ -152,7 +156,11 @@ module Games.BlackJack where
 
 
   {-
-    PURPOSE: read move of player
+    PURPOSE: Read move of player
+    PRE: True
+    POST: Get back a PlayerState of the next move for the player.
+    SIDE EFFECTS:???????????????????????????????????????????????
+  -}
   -}
   readMove :: GamePlayer -> IO PlayerState
   readMove player =
@@ -171,6 +179,10 @@ module Games.BlackJack where
 
   {-
     PURPOSE: wait for user input.
+    PRE: True
+    POST: Returns a GameState with the move the player want to do next
+    SIDE EFFECTS:???????????????????????????????????????????????
+  -}
   -}
   playerPhase :: GameState -> IO GameState
   playerPhase gameState@(GState players deck status) =
@@ -200,8 +212,11 @@ module Games.BlackJack where
 
 
   {-
-    TODO
     PURPOSE: dealer draws card and adds it to hand if less than 17
+    PRE: True
+    POST: Returns a GameState for the dealers next move
+          based on the preconditions for the dealer in blackjack.
+    SIDE EFFECTS:???????????????????????????????????????????????
   -}
   dealerPhase :: GameState -> IO GameState
   dealerPhase gameState@(GState _ _ status) =
@@ -220,13 +235,12 @@ module Games.BlackJack where
       return (GState (players ++ dealers) deck2 status)
 
   {-
-    PURPOSE:
-  -}
+      PURPOSE: the phase where a is generated.
+      PRE: True
+      POST: Returns a GameState based on the paricipating placers.
+      SIDE EFFECTS:???????????????????????????????????????????????
+    -}
 
-  {-
-    PURPOSE: the phase where the user defines the number of players and generates
-      a matching gamestate for it.
-  -}
   setupPhase :: IO GameState
   setupPhase = do
     -- putStr ("How many players are participating? [1 - 7]: ")
@@ -236,9 +250,10 @@ module Games.BlackJack where
     dealStartingCards gamestate
 
   {-
-    TODO
-    PURPOSE: print gameState as a userInterface.
-    SIDE-EFFECTS: output to the terminal.
+    PURPOSE: Print blackjack table to the userInterface.
+    PRE: True
+    POST: print the GameState into the userInterface
+    SIDE EFFECTS:output to the terminal.
   -}
   printGameState :: GameState -> IO ()
   printGameState gameState = do
@@ -253,6 +268,9 @@ module Games.BlackJack where
 
   {-
     PURPOSE: print player cards in a nice way, not the dealers card.
+    PRE: true
+    POST: Print the hand of PlayerRole shark and dont show the
+          Dealer hand into the terminal.
     SIDE-EFFECTS: output to the terminal
   -}
   printPlayersWithRole :: GameState -> PlayerRole -> IO ()
@@ -321,6 +339,13 @@ module Games.BlackJack where
   {-
     valueOfPlayerHand player
     PURPOSE: calculate value of hand, with Ace having two values, 1 or 11.
+    PRE: True
+    POST: Returns a bool of hand, if the value of the players hand is 21 has 2 cards in hand or not.
+    SIDE EFFECTS: None
+    EXAMPLES:
+        isAbove16 (Hand [(Card Diamonds A), (Card Clubs k)]) = True
+        isAbove16 (Hand [(Card Diamonds A), (Card Clubs 5)]) = False
+        isAbove16 (Hand [(Card Diamonds A), (Card Clubs 5), (Card Hearts (Other 5))]) = False
   -}
   valueOfPlayerHand :: PlayingHand -> Int
   valueOfPlayerHand hand =
@@ -346,7 +371,7 @@ module Games.BlackJack where
       valueOfPlayerHand' hand 0
 
   {-
-    PURPOSE: generate a gamestate for n players and a dealer.
+    PURPOSE: generate a gamestate for one players and a dealer.
   -}
   generateGameStateForPlayers :: Int -> IO GameState
   generateGameStateForPlayers number =
