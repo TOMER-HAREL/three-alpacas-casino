@@ -170,7 +170,7 @@ module Hand where
   testHandContainsCard = TestCase $ assertBool "HandContainsCard" (handContainsCard testHand (Card Diamonds A) == True)
   testCardAtPosition = TestCase $ assertBool "CardAtPosition" ((cardAtPosition testHand 1) == (Card Spades (Other 5)))
   testRemoveCardAtPosition = TestCase $ assertBool "RemoveCardAtPosition" ((removeCardAtPosition testHand 1) == (Hand [(Card Diamonds A), (Card Clubs K), (Card Diamonds (Other 2))]))
-  testAddCardToHand = TestCase $ assertBool "addCardToHand" ((addCardToHand testHand (Card Diamonds J)) == (Hand [(Card Diamonds J), (Card Diamonds A), (Card Spades (Other 5)), (Card Clubs K), (Card Diamonds (Other 2))]))
+  testAddCardToHand = TestCase $ assertBool "addCardToHand" ((addCardToHand testHand (Card Diamonds J)) == (Hand [(Card Diamonds A), (Card Spades (Other 5)), (Card Clubs K), (Card Diamonds (Other 2)),(Card Diamonds J)]))
   testaddCardsToHand = TestCase $ assertBool "addCardsToHand" (addCardsToHand (Hand [(Card Diamonds A), (Card Spades (Other 5))]) [(Card Clubs K),(Card Diamonds (Other 2))] == (Hand [(Card Clubs K),(Card Diamonds (Other 2)),(Card Diamonds A), (Card Spades (Other 5))]))
 
   testListHand = TestList [testemptyHand,
