@@ -101,12 +101,12 @@ module Games.Poker where
     isFlush _ = False
 
     {-
-    isStraight hand
-    PURPOSE: check if the card in in numerical order.
-    PRE:  true
-    POST: Returns a bool that tells you if the hand contains isStraight
-    SIDE EFFECTS: none
-    EXAMPLES: (isStraight (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])) == True)
+      isStraight hand
+      PURPOSE: check if the card in in numerical order.
+      PRE:  true
+      POST: Returns a bool that tells you if the hand contains isStraight
+      SIDE EFFECTS: none
+      EXAMPLES: (isStraight (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])) == True)
     -}
     isStraight :: PlayingHand -> Bool
     isStraight hand = let
