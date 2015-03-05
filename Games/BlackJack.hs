@@ -60,20 +60,22 @@ module Games.BlackJack where
 
   gamePhase gameState@(GState _ deck status) =
     do
-    if status /= Green then do
-      undefined
+    printGameState gameState
+    gameState <- playerPhase gameState
+    printGameState gameState
+    let gamestatus = statusForGameState gameState
+    if gamestatus /= (Yellow "DEALER") then do
+      gameState <- checkPhase gameState
+      gamePhase gameState
     else do
+      gameState <- dealerPhase gameState
       printGameState gameState
-      dGameState <- dealerPhase gameState
-      printGameState gameState
-      pGameState <- playerPhase dGameState
-      printGameState pGameState
-      cGameState@(GState players deck status) <- checkPhase pGameState
+      gameState@(GState players deck status) <- checkPhase gameState
       if status == Red then do
-        aGameState <- (askPhase cGameState)
-        gamePhase aGameState
+        gameState <- (askPhase gameState)
+        gamePhase gameState
       else do
-        gamePhase cGameState
+        gamePhase gameState
 
   askPhase :: GameState -> IO GameState
   askPhase gamestate@(GState players deck status) =
@@ -81,8 +83,9 @@ module Games.BlackJack where
     putStr "Do you want to play again? [Y/N] "
     line <- getLine
     let upperLine = map (\char -> toUpper char) line
-    if upperLine == "Y" then do
-      return (GState [createShark, createDealer] deck Green)
+    if (head upperLine) == 'Y' then do
+      newGameState <- setupPhase
+      return newGameState
     else
       return FuckYouState
 
@@ -93,9 +96,17 @@ module Games.BlackJack where
     do
     let playerHand = handForPlayer player
     let dealerHand = handForPlayer dealer
+    let dealerValue = valueOfPlayerHand dealerHand
+    let playerValue = valueOfPlayerHand playerHand
     let dealerState = stateForPlayer dealer
     let playerState = stateForPlayer player
     if dealerState == (State "STAND") && playerState == (State "STAND") then do
+      if dealerValue > playerValue then
+        printFancyLn ("You lost, the dealer has " ++ show(dealerValue) ++ " and you've got " ++ show(playerValue))
+      else if playerValue > dealerValue then
+        printFancyLn ("You won, the dealer has " ++ show(dealerValue) ++ " and you've got " ++ show(playerValue))
+      else
+        printFancyLn ("Both of you has " ++ show(playerValue) ++ ", it's a tie!")
       return (GState players deck Red)
     else
       if isTwentyOne playerHand then do
@@ -145,6 +156,7 @@ module Games.BlackJack where
     let
 
       player = head (playersWithRoleInGameState gameState Shark)
+      currentState = stateForPlayer player
 
       dealers :: [GamePlayer]
       dealers = playersWithRoleInGameState gameState Dealer
@@ -158,9 +170,12 @@ module Games.BlackJack where
       --(performMove (editStateForPlayer player state) deck)
     in
     do
-      state <- readMove player
-      (GState players deck status) <- playerPhase' player state
-      return (GState (players ++ dealers) deck status)
+      if currentState /= (State "STAND") then do
+        state <- readMove player
+        (GState players deck status) <- playerPhase' player state
+        return (GState (players ++ dealers) deck status)
+      else do
+        return (GState players deck (Yellow "DEALER"))
 
 
   {-

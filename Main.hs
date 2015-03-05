@@ -20,13 +20,13 @@ module Main where
   home :: IO ()
   home = do
     clearScreen
-    printLnCenter "Welcome to Playboy Casino."
+    printLnCenter "Welcome to Three Alpacas Casino."
     printGameTable everyGame
     putStr " [q to quit]: "
     rawLine <- getLine
     let userAction = filterUserInput (map toUpper rawLine)
     if userAction == "Q" then do --quit casino
-      putStrLn "Exiting Playboy Casino.."
+      putStrLn "Exiting Three Alpacas.."
     else if userAction == "" then do --if the string is empty, handle crash
       gameDoesntExist
     else do -- if it's not a user action but a game choice
