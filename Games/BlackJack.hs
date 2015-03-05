@@ -3,6 +3,8 @@ module Games.BlackJack where
   import qualified Test.HUnit as T
   import Control.Monad
   import qualified System.Console.ANSI as ANSI
+  import System.Random
+  import Data.Time.Clock.POSIX
   import Data.Char
   import Interface
   import Game
@@ -61,10 +63,13 @@ module Games.BlackJack where
   gamePhase gameState@(GState _ deck status) =
     do
     printGameState gameState
-    gameState <- playerPhase gameState
-    printGameState gameState
     let gamestatus = statusForGameState gameState
-    if gamestatus /= (Yellow "DEALER") then do
+    if gamestatus == Red then do
+      gameState <- askPhase gameState
+      gamePhase gameState
+    else if gamestatus /= (Yellow "DEALER") then do
+      gameState <- playerPhase gameState
+      printGameState gameState
       gameState <- checkPhase gameState
       gamePhase gameState
     else do
@@ -78,7 +83,7 @@ module Games.BlackJack where
         gamePhase gameState
 
   askPhase :: GameState -> IO GameState
-  askPhase gamestate@(GState players deck status) =
+  askPhase gameState@(GState players deck status) =
     do
     putStr "Do you want to play again? [Y/N] "
     line <- getLine
@@ -86,8 +91,10 @@ module Games.BlackJack where
     if (head upperLine) == 'Y' then do
       newGameState <- setupPhase
       return newGameState
-    else
+    else if (head upperLine) == 'N' then do
       return FuckYouState
+    else
+      return gameState
 
 
 
@@ -102,7 +109,7 @@ module Games.BlackJack where
     let playerState = stateForPlayer player
     if dealerState == (State "STAND") && playerState == (State "STAND") then do
       if dealerValue > playerValue then
-        printFancyLn ("You lost, the dealer has " ++ show(dealerValue) ++ " and you've got " ++ show(playerValue))
+        putStrLn ("You lost, the dealer has " ++ show(dealerValue) ++ " and you've got " ++ show(playerValue))
       else if playerValue > dealerValue then
         printFancyLn ("You won, the dealer has " ++ show(dealerValue) ++ " and you've got " ++ show(playerValue))
       else
@@ -110,19 +117,19 @@ module Games.BlackJack where
       return (GState players deck Red)
     else
       if isTwentyOne playerHand then do
-        putStrLn "You've got 21"
+        printFancyLn "You've got 21"
         getLine
         return (GState players deck Red)
       else if hasBlackJack playerHand then do
-        putStrLn "You've got Black Jack."
+        printFancyLn "You've got Black Jack."
         getLine
         return (GState players deck Red)
       else if isFat playerHand then do
-        putStrLn "You lost"
+        putStrLn ("You got fat with a hand of " ++ show(playerValue))
         getLine
         return (GState players deck Red)
       else if isFat dealerHand && not(isFat playerHand) then do
-        putStrLn "You won, dealer got fat."
+        printFancyLn ("You won with a hand of " ++ show(playerValue) ++ ", dealer got fat at " ++ show(dealerHand))
         getLine
         return (GState players deck Red)
       else do
@@ -228,7 +235,7 @@ module Games.BlackJack where
     printSpace 5
     printPlayersWithRole gameState Shark
     printDivider
-    putStrLn ("DEBUG: " ++ show(gameState))
+    -- putStrLn ("DEBUG: " ++ show(gameState))
 
   {-
     PURPOSE: print player cards in a nice way, not the dealers card.
@@ -335,12 +342,11 @@ module Games.BlackJack where
       generateGameStateForPlayers' number = createShark : (generateGameStateForPlayers' (number - 1))
     in
       -- return (GState (createDealer : (generateGameStateForPlayers' number)) (shuffleDeck createEmptyDeck))
-      return (GState (createDealer : (generateGameStateForPlayers' number)) ((Deck [Card Diamonds A,Card Diamonds (Other 2),
-      Card Diamonds (Other 3),Card Diamonds (Other 4),
-      Card Diamonds (Other 5),Card Diamonds (Other 6),
-      Card Diamonds (Other 7),Card Diamonds (Other 8),
-      Card Diamonds (Other 9),Card Diamonds (Other 10),Card Diamonds J,
-      Card Diamonds Q,Card Diamonds K])) Green)
+      do
+      posixTime <- (round `fmap` getPOSIXTime)
+      let seconds = fromIntegral posixTime :: Int
+
+      return (GState (createDealer : (generateGameStateForPlayers' number)) (shuffleDeck (mkStdGen seconds) createEmptyDeck) Green)
 
 
   dealStartingCards :: GameState -> IO GameState
@@ -378,12 +384,6 @@ module Games.BlackJack where
   dealCard :: PlayingDeck -> GamePlayer -> IO GamePlayer
   dealCard EmptyDeck player = return player
   dealCard deck (Player hand role state) = return (Player (addCardToHand hand (drawCardFromDeck deck)) role state)
-
-  {-
-    PURPOSE: create a blackjack deck, consists of one deck.
-  -}
-  createDeck :: IO PlayingDeck
-  createDeck = return (shuffleDeck (createEmptyDeck))
 
   {-
     PURPOSE: return every playable

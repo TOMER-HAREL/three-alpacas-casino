@@ -69,9 +69,9 @@ module Deck where
     PURPOSE: Shuffle supplied deck
     TODO: Make it random for every shuffle, unix-timestamp?
   -}
-  shuffleDeck :: PlayingDeck -> PlayingDeck
-  shuffleDeck EmptyDeck = EmptyDeck
-  shuffleDeck (Deck cards) = (Deck (shuffleList (mkStdGen 18234891023849012) cards))
+  shuffleDeck :: StdGen -> PlayingDeck -> PlayingDeck
+  shuffleDeck gen EmptyDeck = EmptyDeck
+  shuffleDeck gen (Deck cards) = (Deck (shuffleList gen cards))
 
   {-
     PURPOSE: sort a deck

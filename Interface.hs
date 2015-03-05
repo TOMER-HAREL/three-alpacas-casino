@@ -17,13 +17,13 @@ module Interface where
 
   printFancyLn :: (Show a) => a -> IO ()
   printFancyLn line = do
-    printDivider
+    -- printDivider
     -- printLnCenter $ repeatCharacter '~' _WIN_WIDTH
     printSpace 2
     printLnCenter $ map toUpper (show line)
     printSpace 2
     -- printLnCenter $ repeatCharacter '~' _WIN_WIDTH
-    printDivider
+    -- printDivider
 
   printDivider :: IO ()
   printDivider = putStrLn $ repeatCharacter '-' _WIN_WIDTH
