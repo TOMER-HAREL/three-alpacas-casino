@@ -2,6 +2,8 @@ module Card where
 
   import Test.HUnit
 
+  {- DATA -}
+
   {-
     REPRESENTATION CONVENTION: Suit Spades Clubs Diamonds Hearts represent the suit of each playingcard.
     REPRESENTATION INVARIANT: True
@@ -112,9 +114,7 @@ module Card where
   instance Ord PlayingCard where
     (<=) cardA cardB = fromEnum cardA <= fromEnum cardB
 
-  {-
-    TESTS
-  -}
+  {- TESTS -}
   testfromEnum1 = TestCase $ assertBool "testfromEnum" ((fromEnum (Card Spades A)) == 1)
   testfromEnum2 = TestCase $ assertBool "testfromEnum" ((fromEnum (Card Hearts K)) == 52)
   testtoEnum = TestCase $ assertBool "testtoEnum" ((toEnum 1) == (Card Spades A))

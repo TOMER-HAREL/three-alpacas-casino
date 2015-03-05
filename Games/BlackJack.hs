@@ -40,7 +40,11 @@ module Games.BlackJack where
     (===) _ _ = False
 
   {-
+    main
     PURPOSE: main function to fire it all up.
+    PRE: True
+    POST: ()
+    SIDE EFFECTS:???????????????????????????????????????????????
   -}
   main :: IO ()
   main = do
@@ -50,9 +54,12 @@ module Games.BlackJack where
     return ()
 
   {-
-    TODO
+    gamePhase
     PURPOSE: infinite loop until game is done, loop through players and ask for actions,
       deal cards, etc etc.
+    PRE: True
+    POST: ()
+    SIDE EFFECTS:???????????????????????????????????????????????
   -}
   gamePhase :: GameState -> IO GameState
   gamePhase FuckYouState =
@@ -82,6 +89,13 @@ module Games.BlackJack where
       else do
         gamePhase gameState
 
+    {-
+        askPhase
+        PURPOSE: Ask the players if they want to play a new game.
+        PRE: True
+        POST: returns a FuckYouState if the the user wants to quit, else it returns a new gamestate.
+        SIDE EFFECTS:???????????????????????????????????????????????
+    -}
   askPhase :: GameState -> IO GameState
   askPhase gameState@(GState players deck status) =
     do
@@ -453,12 +467,12 @@ module Games.BlackJack where
                           testFuckedUpHand,
                           testCalculateAceHand,
                           testCalculateAce21,
+                          testValuesInHand,
+                          testValuesInHand2
                           --teststatesAvailable,
                           --teststatesAvailable2,
                           --teststatesAvailable3,
                           --teststatesAvailable4,
-                          testValuesInHand,
-                          testValuesInHand2
                           -- testBJperformMoveSplit,
                           -- testBJperformMoveHit,
                           -- testBJperformMoveDouble,
