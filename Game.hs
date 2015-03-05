@@ -23,7 +23,7 @@ module Game where
                   | Red
 
   data GameState = GState [GamePlayer] PlayingDeck GameStatus
-                 | FuckYouState
+                 | DeadGameState
 
   instance Show Game where
     show BJ = "Black Jack"
@@ -44,7 +44,12 @@ module Game where
   {- FUNCTIONS-}
 
   {-
+    statusForGameState gamestate
     PURPOSE: return status of a gamestate
+    PRE: true
+    POST: the status of the gamestate.
+    SIDE EFFECTS: none
+    EXAMPLES:
   -}
   statusForGameState :: GameState -> GameStatus
   statusForGameState (GState _ _ status) = status
@@ -113,13 +118,15 @@ module Game where
 
   {- TESTS -}
 
+  teststatusForGameState = T.TestCase $ T.assertBool "statusForGameState" (statusForGameState (GState [Player testHand Shark UndefinedState] testDeck Green) == Green)
   testeveryGame = T.TestCase $ T.assertBool "everyGame" (everyGame == [BJ, P5])
   testplayersWithRoleInGameState = T.TestCase $ T.assertBool "playersWithRoleInGameState" (playersWithRoleInGameState (GState [(Player testHand Dealer UndefinedState),(Player testHand Shark UndefinedState)] testDeck Green) Shark == [(Player testHand Shark UndefinedState)])
   testdeckInGameState = T.TestCase $ T.assertBool "deckInGameState" (deckInGameState (GState [(Player testHand Shark UndefinedState)] (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]) Green) == (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]))
   testgameCount = T.TestCase $ T.assertBool "gameCount" (gameCount == 2)
   testvalidGameEnum = T.TestCase $ T.assertBool "validGameEnum" (validGameEnum 2 == True)
 
-  testlistGame = T.TestList [testeveryGame,
+  testlistGame = T.TestList [teststatusForGameState,
+                              testeveryGame,
                               testdeckInGameState,
                               testplayersWithRoleInGameState,
                               testgameCount,
