@@ -42,6 +42,12 @@ module Game where
     (==) _ _ = False
 
   {-
+    PURPOSE: return status of a gamestate
+  -}
+  statusForGameState :: GameState -> GameStatus
+  statusForGameState (GState _ _ status) = status
+
+  {-
     everygame
     PURPOSE: Return every game that we're adding, may use it in a list
       at the Three Alpacas homescreen.
