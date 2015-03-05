@@ -100,4 +100,5 @@ module Main where
                                         testListCard,
                                         P.testlistPlayer,
                                         BJ.testListBJ,
-                                        P5.testListP5]
+                                        P5.testListP5,
+                                        testlistGame]

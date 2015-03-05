@@ -4,6 +4,7 @@ module Game where
   import Card
   import Deck
   import Hand
+  import qualified Test.HUnit as T
 
 
   class GameValue a where
@@ -55,14 +56,7 @@ module Game where
 
   {-
 
-    playersInGameState gamestate
-    PURPOSE: return players in provided gamestate.
-    PRE: true
-    POST: a list with all Sharks in game
-    SIDE EFFECTS: none
-    EXAMPLES: TODO
-
-    PURPOSE: filter players by role
+  TODO CC
 
   -}
   playersWithRoleInGameState :: GameState -> PlayerRole -> [GamePlayer]
@@ -72,6 +66,7 @@ module Game where
   {-
 
     PURPOSE: return deck from gamestate
+    TODO
   -}
   deckInGameState :: GameState -> PlayingDeck
   deckInGameState (GState _ deck _) = deck
@@ -108,3 +103,17 @@ module Game where
     SIDE EFFECTS: TODO
     EXAMPLES:  TODO
   -}
+
+  {- TESTS -}
+
+  testeveryGame = T.TestCase $ T.assertBool "everyGame" (everyGame == [BJ, P5])
+  testplayersWithRoleInGameState = T.TestCase $ T.assertBool "playersWithRoleInGameState" (playersWithRoleInGameState (GState [(Player testHand Dealer UndefinedState),(Player testHand Shark UndefinedState)] testDeck Green) Shark == [(Player testHand Shark UndefinedState)])
+  testdeckInGameState = T.TestCase $ T.assertBool "deckInGameState" (deckInGameState (GState [(Player testHand Shark UndefinedState)] (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]) Green) == (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]))
+  testgameCount = T.TestCase $ T.assertBool "gameCount" (gameCount == 2)
+  testvalidGameEnum = T.TestCase $ T.assertBool "validGameEnum" (validGameEnum 2 == True)
+
+  testlistGame = T.TestList [testeveryGame,
+                              testdeckInGameState,
+                              testplayersWithRoleInGameState,
+                              testgameCount,
+                              testvalidGameEnum]
