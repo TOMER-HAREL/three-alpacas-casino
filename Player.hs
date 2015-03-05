@@ -5,6 +5,8 @@ module Player where
   import Hand
   import qualified Test.HUnit as T
 
+  {- DATA -}
+
   data PlayerRole = Dealer
                   | Shark deriving (Eq)
 
@@ -31,6 +33,8 @@ module Player where
 
   instance Eq GamePlayer where
     (==) (Player handa rolea statea) (Player handb roleb stateb) = handa == handb && rolea == roleb && statea == stateb
+
+  {- FUNCTIONS-}
 
   {-
     stateForPlayer player

@@ -5,6 +5,8 @@ module Hand where
 
   import Card
 
+  {- DATA -}
+
   {-
     REPRESENTATION CONVENTION: Hand represents a hand of playing cards. EmptyHand represents a hand with no playing cards.
     REPRESENTATION INVARIANT: A hand cannot contain only invisible cards.
@@ -22,6 +24,7 @@ module Hand where
     (==) (Hand cardsA) (Hand cardsB) = cardsA == cardsB
     (==) EmptyHand EmptyHand = True
     (==) _ _ = False
+  {- FUNCTIONS -}
 
   {-
     emptyHand
@@ -119,7 +122,12 @@ module Hand where
 
 
   {-
+    addCardsToHand han cards
     PURPOSE: add multiple cards to a hand
+    PRE: true
+    POST: a hand with mulitple cards added
+    SIDE EFFECTS: none
+    EXAMPLES:
   -}
   addCardsToHand :: PlayingHand -> [PlayingCard] -> PlayingHand
   addCardsToHand EmptyHand cardsToAdd = (Hand (cardsToAdd))
@@ -163,6 +171,7 @@ module Hand where
   testCardAtPosition = TestCase $ assertBool "CardAtPosition" ((cardAtPosition testHand 1) == (Card Spades (Other 5)))
   testRemoveCardAtPosition = TestCase $ assertBool "RemoveCardAtPosition" ((removeCardAtPosition testHand 1) == (Hand [(Card Diamonds A), (Card Clubs K), (Card Diamonds (Other 2))]))
   testAddCardToHand = TestCase $ assertBool "addCardToHand" ((addCardToHand testHand (Card Diamonds J)) == (Hand [(Card Diamonds J), (Card Diamonds A), (Card Spades (Other 5)), (Card Clubs K), (Card Diamonds (Other 2))]))
+  testaddCardsToHand = TestCase $ assertBool "addCardsToHand" (addCardsToHand (Hand [(Card Diamonds A), (Card Spades (Other 5))]) [(Card Clubs K),(Card Diamonds (Other 2))] == (Hand [(Card Clubs K),(Card Diamonds (Other 2)),(Card Diamonds A), (Card Spades (Other 5))]))
 
   testListHand = TestList [testemptyHand,
                           testcardsFromHand,
@@ -172,4 +181,5 @@ module Hand where
                           testCardAtPosition,
                           testRemoveCardAtPosition,
                           testAddCardToHand,
-                          testHandContainsCard]
+                          testHandContainsCard,
+                          testaddCardsToHand]
