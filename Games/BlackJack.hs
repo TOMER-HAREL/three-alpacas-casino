@@ -88,6 +88,7 @@ module Games.BlackJack where
     PRE: True
     POST: ()
     SIDE EFFECTS: print data to the terminal
+    EXAMPLES: TODO
   -}
   main :: IO ()
   main = do
@@ -100,10 +101,11 @@ module Games.BlackJack where
     gamePhase
     PURPOSE: infinite loop until game is done, loop through players and ask for actions, deal cards, etc etc.
     PRE: True
-    POST: ()
+    POST: A gamestate defined by multiple phases.
     SIDE EFFECTS:
       - input from user
       - output to the terminal
+    EXAMPLES: TODO
   -}
   gamePhase :: GameState -> IO GameState
   gamePhase DeadGameState =
@@ -141,6 +143,7 @@ module Games.BlackJack where
       SIDE EFFECTS:
         - input from the user
         - output to the terminal
+      EXAMPLES: TODO
   -}
   askPhase :: GameState -> IO GameState
   askPhase gameState@(GState players deck status) =
@@ -158,9 +161,9 @@ module Games.BlackJack where
 
 
   {-checkPhase
-    PURPOSE: Evaluate each hand and show the winner.
+    PURPOSE: Evaluate each hand and show the winner, if there's any.
     PRE: True
-    POST: Returns the winner and the value of both hands.
+    POST: Returns a gamestate with a set status of either Red or same status as before.
     SIDE EFFECTS:
       - input from the user, though not handled.
       - output to the terminal
@@ -212,6 +215,7 @@ module Games.BlackJack where
     SIDE EFFECTS:
       - input from the user
       - output to the screen
+    EXAMPLES: TODO
   -}
   readMove :: GamePlayer -> IO PlayerState
   readMove player =
@@ -230,11 +234,12 @@ module Games.BlackJack where
 
   {-
     playerPhase gameState
-    PURPOSE: wait for user input.
+    PURPOSE: let the player decide what move to perform.
     PRE: True
     POST: Returns a GameState with the move the player want to do next
     SIDE EFFECTS:
       - input from the user, via the function readMove
+    EXAMPLES: TODO
   -}
   playerPhase :: GameState -> IO GameState
   playerPhase gameState@(GState players deck status) =
@@ -264,11 +269,12 @@ module Games.BlackJack where
 
   {-
     dealerPhase gameState
-    PURPOSE: dealer draws card and adds it to hand if less than 17
+    PURPOSE: dealer draws card and adds it to hand if less than 17 otherwise stands.
     PRE: True
     POST: Returns a GameState for the dealers next move
           based on the preconditions for the dealer in blackjack.
     SIDE EFFECTS: none
+    EXAMPLES: TODO
   -}
   dealerPhase :: GameState -> IO GameState
   dealerPhase gameState@(GState _ _ status) =
@@ -288,10 +294,12 @@ module Games.BlackJack where
 
   {-
     setupPhase gameState
-    PURPOSE: the phase where a is generated.
+    PURPOSE: Generate a new complete gamestate
     PRE: True
-    POST: Returns a GameState based on the paricipating placers.
+    POST: Returns a new gamestate with one player and a dealer with starting cards
+      as well as a shuffled deck.
     SIDE EFFECTS: none
+    EXAMPLES: TODO
   -}
   setupPhase :: IO GameState
   setupPhase = do
@@ -306,6 +314,7 @@ module Games.BlackJack where
     SIDE EFFECTS:
       - output to the terminal.
       - clear the terminal screen
+    EXAMPLES: TODO
   -}
   printGameState :: GameState -> IO ()
   printGameState gameState = do
@@ -321,10 +330,10 @@ module Games.BlackJack where
     printPlayersWithRole gameState role
     PURPOSE: print player cards in a nice way, not the dealers card.
     PRE: true
-    POST: Print the hand of PlayerRole shark and dont show the
-          Dealer hand into the terminal.
+    POST: Print the hand of players with role
     SIDE-EFFECTS:
       - output to the terminal
+    EXAMPLES: TODO
   -}
   printPlayersWithRole :: GameState -> PlayerRole -> IO ()
   printPlayersWithRole gameState needle =
@@ -419,11 +428,13 @@ module Games.BlackJack where
       valueOfPlayerHand' hand 0
 
   {-
-    TODO
     generateGameStateForPlayers n
     PURPOSE: generate a gamestate for one players and a dealer.
+    PRE: n doesn't matter at the moment.
+    POST: an IO GameState with two players and a full deck shuffled based on the UNIX-timestamp as seed.
     SIDE-EFFECTS:
       - grabbing time from the system clock
+    EXAMPLES: omitted to avoid spam TODO
     CREDITS: to generate the Unix Timestamp we had to find a function to help us out, and we found it at
       http://stackoverflow.com/questions/17909770/get-time-as-int
   -}
@@ -441,10 +452,15 @@ module Games.BlackJack where
 
 
   {-
-    TODO
     dealStartingCards gameState
     PURPOSE: deal 2 cards for the player and dealer
+    PRE:
+      - gamestate with exactly two players, one dealer and a shark.
+      - dealer must be at index 1 in the list of players and the shark at index 0
+      - a deck with at least 4 cards
+    POST: a full gamestate with a dealer and a shark, both with two cards each.
     SIDE-EFFECTS: None
+    EXAMPLES: TODO
   -}
   dealStartingCards :: GameState -> IO GameState
   dealStartingCards (GState ((Player hand role state):(Player handB roleB stateB):rest) deck status) =
@@ -463,19 +479,25 @@ module Games.BlackJack where
   {-
     TODO
     states
-    PURPOSE: list every possible state a blackjack player could have
+    PURPOSE: list every possible state a blackjack player could perform
+    PRE: true
+    POST: a list of playerstates available
+    EXAMPLES: omitted, straight forward.
   -}
   states :: [PlayerState]
-  -- states = [(State "HIT"), (State "UNKNOWN"), (State "SPLIT"), (State "STAND"), (State "DOUBLE")]
-  states = [(State "HIT"), (State "UNKNOWN"), (State "STAND"), (State "DOUBLE")]
+  states = [(State "HIT"), (State "UNKNOWN"), (State "STAND")]
 
   {-
     TODO
     dealCard deck player
-    PURPOSE: deal a card to one player from a provided deck
+    PURPOSE: deal a card to one player from deck
+    PRE: true
+    POST: a gamestate where player has been dealt a card.
+    EXAMPLES: omitted to avoid spam. TODO
   -}
   dealCard :: PlayingDeck -> GamePlayer -> IO GamePlayer
   dealCard EmptyDeck player = return player
+  dealCard (Deck []) player = return player
   dealCard deck (Player hand role state) = return (Player (addCardToHand hand (drawCardFromDeck deck)) role state)
 
   {-

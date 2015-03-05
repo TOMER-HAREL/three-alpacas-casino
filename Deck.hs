@@ -5,32 +5,46 @@ module Deck where
   import Test.HUnit
   import Data.List
 
-  {- DATA -}
-
   {-
-    REPRESENTATION CONVENTION: Deck represents a card deck containing 52 playing cards. EmptyDeck represents a card deck with no cards.
-    REPRESENTATION INVARIANT: a deck with playing cards must contain at least 1 card and at most 52 cards.
+    REPRESENTATION CONVENTION: Deck represents a card deck containing a number of cards.
+      EmptyDeck represents a card deck with no cards.
+    REPRESENTATION INVARIANT: a deck with playing cards must contain at least 1 card.
   -}
   data PlayingDeck = Deck [PlayingCard]
                    | EmptyDeck
 
   {-
-    PURPOSE: convert every card in a deck into a string and show i nicely.
-  -}
+   show deck
+   PURPOSE: override show for the datatype PlayingDeck, show cards inline.
+   PRE: True
+   POST: a string that shows all the cards in a deck, if EmptyDeck a message.
+   EXAMPLES:
+     show (Deck [Card Spades A,Card Spades (Other 2),Card Spades (Other 3)]) == "[AS][2S][3S]"
+     show EmptyDeck == "Empty Deck"
+     show (Deck []) == ""
+ -}
   instance Show PlayingDeck where
     show EmptyDeck = "Empty Deck"
     show (Deck []) = ""
     show (Deck (card:rest)) = show card ++ show (Deck rest)
 
   {-
-    PURPOSE: check if decks are equal
+    deckA == deckB
+    PURPOSE: compare two decks and check if equal (or not) based on (==) for playingCard
+      matches by suit and value that would be
+    PRE: true
+    POST: a boolean value that denotes if deckA is equal to deckB
+    EXAMPLES:
+      (deckA == deckB) == False
+      (deckA /= deckB) == True
+        deckA = (Deck [Card Spades A,Card Spades (Other 2),Card Spades (Other 3)])
+        deckB = (Deck [Card Spades K,Card Spades (Other 2),Card Spades (Other 3)])
   -}
   instance Eq PlayingDeck where
     (==) (Deck []) (Deck []) = True
+    (==) (EmptyDeck) (EmptyDeck) = True
     (==) (Deck (card:deck)) (Deck (cardb:deckb)) = card == cardb && (Deck deck) == (Deck deckb)
     (==) _ _ = False
-
-  {- FUNCTIONS -}
 
   {-
     createEmptyDeck game
@@ -38,7 +52,7 @@ module Deck where
     PRE:  true
     POST: a deck with 52 playing cards.
     SIDE EFFECTS: none
-    EXAMPLES: createEmptyDeck = [AS][2S][3S][4S][5S][6S][7S][8S][9S][10S][JS][QS][KS][AC][2C][3C][4C]
+    EXAMPLES: createEmptyDeck == [AS][2S][3S][4S][5S][6S][7S][8S][9S][10S][JS][QS][KS][AC][2C][3C][4C]
     [5C][6C][7C][8C][9C][10C][JC][QC][KC][AD][2D][3D][4D][5D][6D][7D][8D][9D][10D][JD][QD][KD][AH][2H]
     [3H][4H][5H][6H][7H][8H][9H][10H][JH][QH][KH]
   -}
@@ -104,10 +118,10 @@ module Deck where
     PURPOSE: Draw one card from the top of the deck, if there's no more cards
       return InvisibleCard
     PRE: true
-    POST: The card that is on the top of the deck. If there is no cards the function returns the InvisibleCard.
+    POST: A card that is on the top of the deck. If there is no cards the function returns the InvisibleCard.
     SIDE EFFECTS: none
-    EXAMPLES: drawCardFromDeck (Deck [(Card Diamonds A), (Card Spades (Other 10))]) = [AD]
-              drawCardFromDeck EmptyDeck = []
+    EXAMPLES: drawCardFromDeck (Deck [(Card Diamonds A), (Card Spades (Other 10))]) == [AD]
+              drawCardFromDeck EmptyDeck == []
   -}
   drawCardFromDeck :: PlayingDeck -> PlayingCard
   drawCardFromDeck EmptyDeck = InvisibleCard
@@ -115,33 +129,35 @@ module Deck where
   drawCardFromDeck (Deck (card:_)) = card
 
   {-
-    TODO maybe remove function
     drawNumberOfCardsFromDeck n deck
     PURPOSE: draw n number of cards from deck
     PRE: true
-    POST: a sorted deck
-    SIDE EFFECTS: none
-    EXAMPLES: sortDeck (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]  == [AS][2S][3S]
+    POST: a list of n cards drawn from the top of deck
+    EXAMPLES:
+      TODO
   -}
   drawNumberOfCardsFromDeck :: Int -> PlayingDeck -> [PlayingCard]
   drawNumberOfCardsFromDeck n deck = (map (\_ -> drawCardFromDeck deck) [1 .. n])
 
   {-
-    TODO cc
+    drawAndRemoveCardFromDeck deck
     PURPOSE: Draw and remove a card from a deck
+    PRE: deck has to contain at least one card
     POST: a card and the new deck inside of a tuple.
+    EXAMPLES:
+      TODO
   -}
   drawAndRemoveCardFromDeck :: PlayingDeck -> (PlayingCard, PlayingDeck)
   drawAndRemoveCardFromDeck deck = (drawCardFromDeck deck, removeTopCardFromDeck deck)
 
   {-
     removeTopCardFromDeck deck
-    PURPOSE: Remove drawn card from deck
-    PRE:  true
+    PURPOSE: Remove top card from deck
+    PRE: true
     POST: a deck with the top card removed
     SIDE EFFECTS: none
-    EXAMPLES:removeTopCardFromDeck (Deck [(Card Spades A),(Card Spades (Other 2)),
-    (Card Spades (Other 3)),(Card Spades (Other 4))]) = [2S][3S][4S]
+    EXAMPLES:
+      removeTopCardFromDeck (Deck [(Card Spades A),(Card Spades (Other 2)), (Card Spades (Other 3)),(Card Spades (Other 4))]) = [2S][3S][4S]
   -}
   removeTopCardFromDeck :: PlayingDeck -> PlayingDeck
   removeTopCardFromDeck EmptyDeck = EmptyDeck
@@ -149,7 +165,6 @@ module Deck where
   removeTopCardFromDeck (Deck (topcard:deck)) = (Deck deck)
 
   {- TESTS -}
-
   testDeck :: PlayingDeck
   testDeck = (Deck
       [Card Spades A,Card Spades (Other 2),Card Spades (Other 3),
@@ -209,7 +224,6 @@ module Deck where
     Card Hearts (Other 6),Card Hearts (Other 7),Card Hearts (Other 8),
     Card Hearts (Other 9),Card Hearts (Other 10),Card Hearts J,
     Card Hearts Q,Card Hearts K]))
-  -- testdrawNumberOfCardsFromDeck = TestCase $ assertBool "drawNumberOfCardsFromDeck" ((drawNumberOfCardsFromDeck 2 testDeck) == [(Card Spades A),(Card Spades (Other 2))])
   testremoveTopCardFromDeck = TestCase $ assertBool "removeTopCardFromDeck" (removeTopCardFromDeck (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]) == (Deck [(Card Spades (Other 2)),(Card Spades (Other 3))]))
   testdrawAndRemoveCardFromDeck = TestCase $ assertBool "drawAndRemoveCardFromDeck" (drawAndRemoveCardFromDeck (Deck [(Card Spades A),(Card Spades (Other 2)),(Card Spades (Other 3))]) == ((Card Spades A), (Deck [(Card Spades (Other 2)),(Card Spades (Other 3))])))
 
@@ -220,4 +234,4 @@ module Deck where
                             testsortDeck,
                             testremoveTopCardFromDeck,
                             testdrawAndRemoveCardFromDeck
-                            {-testdrawNumberOfCardsFromDeck-}]
+                            ]

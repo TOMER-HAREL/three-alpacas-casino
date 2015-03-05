@@ -71,7 +71,7 @@ module Card where
 
   {-
     show card
-    PURPOSE: override show for the datatype Playing, show it as a card in ASCII
+    PURPOSE: override show for the datatype PlayingCard, show it as a card in ASCII
       when printed
     PRE: the Value and Suit for the card has to be defined in their own instances.
     POST: a string that denotes the card, value first and suit last
