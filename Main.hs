@@ -13,10 +13,29 @@ module Main where
   import qualified Player as P
   import Interface
 
+  {- FUNCTIONS -}
+
+  {-
+    main
+    PURPOSE: to setup the program 
+    PRE: true
+    POST: IO ()
+    SIDE EFFECTS: writes lines to the terminal
+    EXAMPLES:
+  -}
   main :: IO ()
   main = do
     home
 
+
+  {-
+    home
+    PURPOSE: starts interface for the program
+    PRE: true
+    POST: IO ()
+    SIDE EFFECTS: writes lines to the terminal
+    EXAMPLES:
+  -}
   home :: IO ()
   home = do
     clearScreen
@@ -45,6 +64,15 @@ module Main where
       else --if the number isn't mapped to a game
         gameDoesntExist
 
+
+  {-
+    gameDoesntExist
+    PURPOSE: to tell the user that no game exists for the input
+    PRE: true
+    POST: IO ()
+    SIDE EFFECTS: writes lines to the terminal
+    EXAMPLES:
+  -}
   gameDoesntExist :: IO ()
   gameDoesntExist = do
     putStrLn "Game doesn't exist"
@@ -52,11 +80,11 @@ module Main where
 
   {-
     printGameTable games
-    PURPOSE: Provide the player with a list of all the games available.
+    PURPOSE: to print the game table for the user.
     PRE: true
-    POST: TODO
-    SIDE EFFECTS: TODO
-    EXAMPLES:  TODO
+    POST: IO ()
+    SIDE EFFECTS: writes lines to the terminal
+    EXAMPLES:
   -}
   printGameTable :: [Game] -> IO ()
   printGameTable [] = putStrLn "Playboy Casino is out of poison."
@@ -74,30 +102,52 @@ module Main where
         putStr("Please pick your poison [1 - " ++ show(gameCount) ++ "]")
 
   {-
-    TODO: add actions that are valid
+    userActions
+    PURPOSE: return a string with every valid number that are mapped to a game.
+    PRE: true
+    POST: string with valid user inputs
+    SIDE EFFECTS: none
+    EXAMPLES:  userActions == "Q"
   -}
   userActions :: String
-  userActions = ['Q'] -- TODO map to a datatype instead
+  userActions = ['Q']
 
   {-
+    userGames
     PURPOSE: return a string with every valid number that are mapped to a game.
+    PRE: true
+    POST: string containing valid game numbers
+    SIDE EFFECTS: none
+    EXAMPLES:  userGames == "12"
   -}
   userGames :: String
   userGames = map (head . show) [1 .. gameCount]
 
   {-
+    validUserInput
     PURPOSE: combine actions and valid games into one string.
+    PRE: true
+    POST: string containg valid user inputs
+    SIDE EFFECTS: none
+    EXAMPLES: validUserInput = "Q12"
   -}
   validUserInput :: String
   validUserInput = userActions ++ userGames
 
   {-
+    filterUserInput
     PURPOSE: remove elements that doesn't match valid user input.
+    PRE: true
+    POST: string with only valid user inputs
+    SIDE EFFECTS: none
+    EXAMPLES: filterUserInput "Quit" == "Q"
+              filterUserInput "lmafsmlfas" == ""
   -}
   filterUserInput :: String -> String
   filterUserInput input = filter (\character -> elem character validUserInput) input
 
   {- TESTS -}
+
   testfilterUserInput1 = T.TestCase $ T.assertBool "filterUserInput1" ( filterUserInput "lmafsmlfas" == "")
   testfilterUserInput2 = T.TestCase $ T.assertBool "filterUserInput2" ( filterUserInput "Quit" == "Q")
 
