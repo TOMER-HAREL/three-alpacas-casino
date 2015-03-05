@@ -88,7 +88,6 @@ module Games.BlackJack where
     PRE: True
     POST: ()
     SIDE EFFECTS: print data to the terminal
-    EXAMPLES: TODO
   -}
   main :: IO ()
   main = do
@@ -105,7 +104,6 @@ module Games.BlackJack where
     SIDE EFFECTS:
       - input from user
       - output to the terminal
-    EXAMPLES: TODO
   -}
   gamePhase :: GameState -> IO GameState
   gamePhase DeadGameState =
@@ -143,7 +141,6 @@ module Games.BlackJack where
       SIDE EFFECTS:
         - input from the user
         - output to the terminal
-      EXAMPLES: TODO
   -}
   askPhase :: GameState -> IO GameState
   askPhase gameState@(GState players deck status) =
@@ -205,8 +202,6 @@ module Games.BlackJack where
       else do
         return gamestate
 
-
-
   {-
     readMove player
     PURPOSE: Read move of player
@@ -215,7 +210,6 @@ module Games.BlackJack where
     SIDE EFFECTS:
       - input from the user
       - output to the screen
-    EXAMPLES: TODO
   -}
   readMove :: GamePlayer -> IO PlayerState
   readMove player =
@@ -239,7 +233,6 @@ module Games.BlackJack where
     POST: Returns a GameState with the move the player want to do next
     SIDE EFFECTS:
       - input from the user, via the function readMove
-    EXAMPLES: TODO
   -}
   playerPhase :: GameState -> IO GameState
   playerPhase gameState@(GState players deck status) =
@@ -274,7 +267,6 @@ module Games.BlackJack where
     POST: Returns a GameState for the dealers next move
           based on the preconditions for the dealer in blackjack.
     SIDE EFFECTS: none
-    EXAMPLES: TODO
   -}
   dealerPhase :: GameState -> IO GameState
   dealerPhase gameState@(GState _ _ status) =
@@ -299,7 +291,6 @@ module Games.BlackJack where
     POST: Returns a new gamestate with one player and a dealer with starting cards
       as well as a shuffled deck.
     SIDE EFFECTS: none
-    EXAMPLES: TODO
   -}
   setupPhase :: IO GameState
   setupPhase = do
@@ -314,7 +305,6 @@ module Games.BlackJack where
     SIDE EFFECTS:
       - output to the terminal.
       - clear the terminal screen
-    EXAMPLES: TODO
   -}
   printGameState :: GameState -> IO ()
   printGameState gameState = do
@@ -333,7 +323,6 @@ module Games.BlackJack where
     POST: Print the hand of players with role
     SIDE-EFFECTS:
       - output to the terminal
-    EXAMPLES: TODO
   -}
   printPlayersWithRole :: GameState -> PlayerRole -> IO ()
   printPlayersWithRole gameState needle =
@@ -434,7 +423,6 @@ module Games.BlackJack where
     POST: an IO GameState with two players and a full deck shuffled based on the UNIX-timestamp as seed.
     SIDE-EFFECTS:
       - grabbing time from the system clock
-    EXAMPLES: omitted to avoid spam TODO
     CREDITS: to generate the Unix Timestamp we had to find a function to help us out, and we found it at
       http://stackoverflow.com/questions/17909770/get-time-as-int
   -}
@@ -477,7 +465,6 @@ module Games.BlackJack where
     return (GState [player, dealer] pDeck2 status)
 
   {-
-    TODO
     states
     PURPOSE: list every possible state a blackjack player could perform
     PRE: true
@@ -488,7 +475,6 @@ module Games.BlackJack where
   states = [(State "HIT"), (State "UNKNOWN"), (State "STAND")]
 
   {-
-    TODO
     dealCard deck player
     PURPOSE: deal a card to one player from deck
     PRE: true
@@ -501,22 +487,24 @@ module Games.BlackJack where
   dealCard deck (Player hand role state) = return (Player (addCardToHand hand (drawCardFromDeck deck)) role state)
 
   {-
-    TODO
     statesAvailable hand
     PURPOSE: return every playable state for hand
+    PRE: true
+    POST: a list of states available for hand
+    EXAMPLES:
+      statesAvailable (Hand EmptyHand) == [(State "HIT"), (State "STAND")]
   -}
   statesAvailable :: PlayingHand -> [PlayerState]
-  statesAvailable hand@(Hand cards)
-    | otherwise = [(State "HIT"), (State "STAND")]
-  statesAvailable EmptyHand = [(State "HIT"), (State "STAND")]
+  statesAvailable _ = [(State "HIT"), (State "STAND")]
 
   {-
-    TODO
     performMove player deck
     PURPOSE: perform a move for one player.
+    PRE: True
+    POST: a tuple with a list of players and the new deck.
+    EXAMPLES: TODO
   -}
   performMove :: GamePlayer -> PlayingDeck -> PlayersAndDeck
-  -- performMove (Player (Hand (card:cards)) roles (State "SPLIT")) deck = ([(Player (Hand [card]) roles (State "SPLIT")), (Player (Hand cards) roles (State "SPLIT"))], deck)
   performMove (Player hand role (State "HIT")) deck =
     let
       (card, newDeck) = drawAndRemoveCardFromDeck deck
@@ -527,9 +515,8 @@ module Games.BlackJack where
       (card, newDeck) = drawAndRemoveCardFromDeck deck
     in
       ([(Player (addCardToHand hand card) role (State "DOUBLE"))], newDeck)
-
   performMove (Player hand role (State "STAND")) deck = ([(Player hand role (State "STAND"))], deck)
-  performMove _ deck = undefined
+  performMove player deck = ([player], deck)
 
   {- TESTS -}
   testisTwentyOne = T.TestCase $ T.assertBool "testisTwentyOne" ((isTwentyOne (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))])) == True)

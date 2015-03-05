@@ -2,10 +2,7 @@ module Hand where
 
   import Test.HUnit
   import Data.List
-
   import Card
-
-  {- DATA -}
 
   {-
     REPRESENTATION CONVENTION: Hand represents a hand of playing cards. EmptyHand represents a hand with no playing cards.
@@ -14,17 +11,38 @@ module Hand where
   data PlayingHand = Hand [PlayingCard]
                    | EmptyHand
 
+   {-
+    show hand
+    PURPOSE: override show for the datatype PlayingHand, show cards inline.
+    PRE: True
+    POST: a string that shows all the cards in a hand, if EmptyHand a message.
+    EXAMPLES:
+      show (Hand [Card Spades A,Card Spades (Other 2),Card Spades (Other 3)]) == "[AS][2S][3S]"
+      show EmptyHand == "Empty Hand"
+      show (Hand []) == ""
+  -}
   instance Show PlayingHand where
     show (Hand []) = ""
     show (Hand (card:[])) = show(card) ++ show(Hand [])
     show (Hand (card:rest)) = show(card) ++ " " ++ show(Hand rest)
     show EmptyHand = "Empty Hand"
 
+  {-
+    handA == handB
+    PURPOSE: compare two hands and check if equal (or not) based on (==) for playingCard
+      matches by suit and value that would be
+    PRE: true
+    POST: a boolean value that denotes if handA is equal to handB
+    EXAMPLES:
+      (handA == handB) == False
+      (handA /= handB) == True
+        handA = (Hand [Card Spades A,Card Spades (Other 2),Card Spades (Other 3)])
+        handB = (Hand [Card Spades K,Card Spades (Other 2),Card Spades (Other 3)])
+  -}
   instance Eq PlayingHand where
     (==) (Hand cardsA) (Hand cardsB) = cardsA == cardsB
     (==) EmptyHand EmptyHand = True
     (==) _ _ = False
-  {- FUNCTIONS -}
 
   {-
     emptyHand
@@ -36,7 +54,6 @@ module Hand where
   -}
   emptyHand :: PlayingHand
   emptyHand = (Hand [])
-
 
   {-
     cardsFromHand hand
@@ -90,7 +107,6 @@ module Hand where
     EXAMPLES: cardsInHand (Hand [(Card Diamonds A), (Card Spades Q), (Card Clubs (Other 5))]) = 3
 
   -}
-
   cardsInHand :: PlayingHand -> Int
   cardsInHand (Hand cards) = length cards
 
@@ -102,7 +118,6 @@ module Hand where
     SIDE EFFECTS: none
     EXAMPLES: handContainsCard  (Hand [(Card Diamonds A), (Card Spades Q), (Card Clubs (Other 5))]) (Card Spades Q) = True
   -}
-
   handContainsCard :: PlayingHand -> PlayingCard -> Bool
   handContainsCard (Hand cards) card = elem card cards
 
@@ -115,11 +130,9 @@ module Hand where
     SIDE EFFECTS: none
     EXAMPLES: addCardToHand (Hand [(Card Diamonds A)]) (Card Clubs K) == [KC] [AD]
   -}
-
   addCardToHand :: PlayingHand -> PlayingCard -> PlayingHand
   addCardToHand EmptyHand card = (Hand [card])
   addCardToHand (Hand cards) card = (Hand (cards ++ [card]))
-
 
   {-
     addCardsToHand han cards
@@ -141,7 +154,6 @@ module Hand where
     SIDE EFFECTS: none
     EXAMPLES: cardAtPosition (Hand [(Card Diamonds A), (Card Spades (Other 10))]) 1 == [10S]
   -}
-
   cardAtPosition :: PlayingHand -> Int -> PlayingCard
   cardAtPosition (Hand cards) position = cards !! position
 
@@ -153,12 +165,10 @@ module Hand where
     SIDE EFFECTS: index
     EXAMPLES: removeCardAtPosition  (Hand [(Card Diamonds A), (Card Spades (Other 10))]) 1 == [AD]
   -}
-
   removeCardAtPosition :: PlayingHand -> Int -> PlayingHand
   removeCardAtPosition hand@(Hand cards) position  = (Hand (delete (cardAtPosition hand position) cards))
 
   {- TESTS -}
-
   testHand :: PlayingHand
   testHand = (Hand [(Card Diamonds A), (Card Spades (Other 5)), (Card Clubs K), (Card Diamonds (Other 2))])
 

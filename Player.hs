@@ -5,8 +5,6 @@ module Player where
   import Hand
   import qualified Test.HUnit as T
 
-  {- DATA -}
-
   data PlayerRole = Dealer
                   | Shark deriving (Eq)
 
@@ -34,8 +32,6 @@ module Player where
   instance Eq GamePlayer where
     (==) (Player handa rolea statea) (Player handb roleb stateb) = handa == handb && rolea == roleb && statea == stateb
 
-  {- FUNCTIONS-}
-
   {-
     stateForPlayer player
     PURPOSE: return state of player
@@ -44,7 +40,6 @@ module Player where
     SIDE EFFECTS: none
     EXAMPLES: stateForPlayer (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Shark (State "HIT")) = "HIT"
   -}
-
   stateForPlayer :: GamePlayer -> PlayerState
   stateForPlayer (Player _ _ UndefinedState) = UndefinedState
   stateForPlayer (Player _ _ (State state)) = (State state)
@@ -57,7 +52,6 @@ module Player where
     SIDE EFFECTS: none
     EXAMPLES: handForPlayer (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Shark (State "STAND")) = [KD] [KC]
   -}
-
   handForPlayer :: GamePlayer -> PlayingHand
   handForPlayer (Player hand _ _) = hand
 
@@ -69,7 +63,6 @@ module Player where
     SIDE EFFECTS: none
     EXAMPLES: editStateForPlayer (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Shark (State "HIT")) (State "STAND") = [Shark, STAND] [KD] [KC]
   -}
-
   editStateForPlayer :: GamePlayer -> PlayerState -> GamePlayer
   editStateForPlayer (Player hand role UndefinedState) state  = (Player hand role state)
   editStateForPlayer (Player hand role _) state = (Player hand role state)
@@ -82,7 +75,6 @@ module Player where
     SIDE EFFECTS: none
     EXAMPLES: isDealer (Player (Hand [(Card Diamonds K), (Card Clubs K)]) Dealer (State "HIT")) = True
   -}
-
   isDealer :: GamePlayer -> Bool
   isDealer (Player _ Dealer _) = True
   isDealer (Player _ _ _) = False
@@ -107,12 +99,10 @@ module Player where
     SIDE EFFECTS: none
     EXAMPLES: createDealer = [Dealer, Undefined Status] Empty Hand
   -}
-
   createDealer :: GamePlayer
   createDealer = (Player EmptyHand Dealer UndefinedState)
 
   {- TESTS -}
-
   teststateForPlayerShark = T.TestCase $ T.assertBool "stateForPlayerShark" (stateForPlayer (Player testHand Shark (State "HIT")) == (State "HIT"))
   teststateForPlayerDealer = T.TestCase $ T.assertBool "stateForPlayerDealer" (stateForPlayer (Player testHand Dealer (State "STAND")) == (State "STAND"))
   testhandForPlayer = T.TestCase $ T.assertBool "handForPlayer" (handForPlayer (Player testHand Dealer (State "STAND")) == (Hand [(Card Diamonds A),(Card Spades (Other 5)),(Card Clubs K),(Card Diamonds (Other 2))]))

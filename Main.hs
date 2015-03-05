@@ -5,7 +5,6 @@ module Main where
   import qualified Games.BlackJack as BJ
   import qualified Games.Poker as P5
   import System.Console.ANSI
-
   import Card
   import Hand
   import Game
@@ -13,11 +12,9 @@ module Main where
   import qualified Player as P
   import Interface
 
-  {- FUNCTIONS -}
-
   {-
     main
-    PURPOSE: to setup the program 
+    PURPOSE: to setup the program
     PRE: true
     POST: IO ()
     SIDE EFFECTS: writes lines to the terminal
@@ -26,7 +23,6 @@ module Main where
   main :: IO ()
   main = do
     home
-
 
   {-
     home
@@ -63,7 +59,6 @@ module Main where
 
       else --if the number isn't mapped to a game
         gameDoesntExist
-
 
   {-
     gameDoesntExist
@@ -147,7 +142,6 @@ module Main where
   filterUserInput input = filter (\character -> elem character validUserInput) input
 
   {- TESTS -}
-
   testfilterUserInput1 = T.TestCase $ T.assertBool "filterUserInput1" ( filterUserInput "lmafsmlfas" == "")
   testfilterUserInput2 = T.TestCase $ T.assertBool "filterUserInput2" ( filterUserInput "Quit" == "Q")
 

@@ -1,13 +1,26 @@
 module Games.Poker where
 
     import qualified Test.HUnit as T
+    import System.Console.ANSI as ANSI
     import Game
     import Card
     import Hand
     import Player
     import Deck
     import Data.List
+    import Interface
 
+    {-
+      valueOf card
+      PURPOSE: extend the class GameValue to provide Poker with specific values
+        of each card. This is based on the rules of Poker.
+      PRE: If card contains (Other value) in the Value block it has to be between 2 and 10, check CC for Value
+      POST: An integer of the correct value for a card
+      EXAMPLES:
+        valueOf (Card Diamonds A) == 14
+        valueOf (Card Diamonds K) == 13
+        valueOf (Card Diamonds (Other 5)) == 5
+    -}
     instance GameValue PlayingCard where
       valueOf (Card _ (Other value)) = value
       valueOf (Card _ J) = 11
@@ -15,11 +28,31 @@ module Games.Poker where
       valueOf (Card _ K) = 13
       valueOf (Card _ A) = 14
 
+    {-
+      valueOf hand
+      PURPOSE: get the complete value of playerHand based on the valueOf Card.
+      PRE: true
+      POST: An Int that is the sum of the cards in hand.
+      EXAMPLES:
+        valueOf (Hand [Card Diamonds A,Card Spades (Other 5),Card Clubs K, Card Diamonds (Other 2)]) == 32
+        valueOf EmptyHand == 0
+    -}
     instance GameValue PlayingHand where
+        valueOf EmptyHand = 0
         valueOf (Hand []) = 0
         valueOf (Hand (card:rest)) = (valueOf card) + (valueOf (Hand rest))
 
+    {-
+      valueOf deck
+      PURPOSE: get the complete value of deck based on the valueOf Card.
+      PRE: true
+      POST: An Int that is the sum of the cards in deck.
+      EXAMPLES:
+        valueOf (Deck [Card Diamonds A,Card Spades (Other 5),Card Clubs K, Card Diamonds (Other 2)]) == 32
+        valueOf EmptyDeck == 0
+    -}
     instance GameValue PlayingDeck where
+        valueOf EmptyDeck = 0
         valueOf (Deck []) = 0
         valueOf (Deck (card:rest)) = (valueOf card) + (valueOf (Deck rest))
 
@@ -28,10 +61,97 @@ module Games.Poker where
     -}
     main :: IO ()
     main = do
-      putStrLn ("Welcome to " ++ show(P5))
-      -- setupGameState <- setupPhase
-      -- gamePhase setupGameState
+      ANSI.clearScreen
+      putStrLn ""
+      putStrLn ""
+      putStrLn $ ("This is a proof of concept that we can implement Poker as well\nBut we didn't have enough time to execute a fully playable game,\nevery time you press enter there will be hands showing as well as state of the hand.")
+      putStrLn ""
+      putStrLn ""
+
+      let pairHand = (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])
+      putStrLn $ show pairHand
+      printCardPosibilities pairHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let twoPairHand = (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 3))])
+      putStrLn $ show twoPairHand
+      printCardPosibilities twoPairHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let threeOfAKindHand = (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])
+      putStrLn $ show threeOfAKindHand
+      printCardPosibilities threeOfAKindHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let straightHand = (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])
+      putStrLn $ show straightHand
+      printCardPosibilities straightHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let flushHand = (Hand [(Card Clubs (Other 6)), (Card Clubs (Other 7)), (Card Clubs (Other 9)), (Card Clubs (Other 8)), (Card Clubs (Other 5))])
+      putStrLn $ show flushHand
+      printCardPosibilities flushHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let fullHouseHand = (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 6)), (Card Hearts K), (Card Diamonds (Other 6)), (Card Spades K )])
+      putStrLn $ show fullHouseHand
+      printCardPosibilities fullHouseHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let fullHouseHand = (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 6)), (Card Hearts K), (Card Diamonds (Other 6)), (Card Spades K )])
+      putStrLn $ show fullHouseHand
+      printCardPosibilities fullHouseHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let fourOfAKindHand = (Hand [(Card Clubs (Other 10)), (Card Diamonds (Other 7)), (Card Hearts (Other 10)), (Card Diamonds (Other 10)), (Card Spades (Other 10))])
+      putStrLn $ show fourOfAKindHand
+      printCardPosibilities fourOfAKindHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let straightFlushHand = (Hand [(Card Diamonds (Other 4)), (Card Diamonds (Other 7)), (Card Diamonds (Other 6)), (Card Diamonds (Other 3)), (Card Diamonds (Other 5))])
+      putStrLn $ show straightFlushHand
+      printCardPosibilities straightFlushHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+      let royalStraightFlushHand = (Hand [(Card Diamonds K), (Card Diamonds Q), (Card Diamonds A), (Card Diamonds J), (Card Diamonds (Other 10))])
+      putStrLn $ show royalStraightFlushHand
+      printCardPosibilities royalStraightFlushHand
+      putStr "Press enter"
+      getLine
+      putStrLn ""
+
+
       return ()
+
+    printCardPosibilities :: PlayingHand -> IO ()
+    printCardPosibilities hand = do
+      putStrLn ("Contains pair: " ++ show(isPair hand))
+      putStrLn ("Contains three of a kind: " ++ show(isThreeOfAKind hand))
+      putStrLn ("Contains straight: " ++ show(isStraight hand))
+      putStrLn ("Contains flush: " ++ show(isFlush hand))
+      putStrLn ("Contains straight flush: " ++ show(isStraightFlush hand))
+      putStrLn ("Contains royal straight flush: " ++ show(isRoyalStraightFlush hand))
+      putStrLn ("Contains four of a kind: " ++ show(isFourOfAKind hand))
+      putStrLn ("Contains full house: " ++ show(isFullHouse hand))
+
 
 
     {-
@@ -44,10 +164,11 @@ module Games.Poker where
                 isRoyalStraightFlush (Hand [(Card Diamonds K), (Card Diamonds Q), (Card Diamonds A), (Card Diamonds J), (Card Diamonds (Other 10))])) == True
     -}
     isRoyalStraightFlush:: PlayingHand -> Bool
-    isRoyalStraightFlush hand = let
-                                numbers = handValues hand
-                                in
-                                  elem 14 numbers && (isStraightFlush hand)
+    isRoyalStraightFlush hand =
+      let
+        numbers = handValues hand
+      in
+        elem 14 numbers && (isStraightFlush hand)
 
     {-
       isStraightFlush hand
@@ -69,10 +190,11 @@ module Games.Poker where
       EXAMPLES: isFourOfAKind (Hand [(Card Clubs (Other 10)), (Card Diamonds (Other 7)), (Card Hearts (Other 10)), (Card Diamonds (Other 10)), (Card Spades (Other 10))])) == True
     -}
     isFourOfAKind :: PlayingHand -> Bool
-    isFourOfAKind hand = let
-                          numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
-                          in
-                            elem 4 numbers
+    isFourOfAKind hand =
+      let
+        numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+      in
+        elem 4 numbers
     {-
       isFullHouse hand
       PURPOSE: see if hand is a full house
@@ -93,11 +215,11 @@ module Games.Poker where
       EXAMPLES: isFlush (Hand [(Card Clubs (Other 6)), (Card Clubs (Other 7)), (Card Clubs (Other 9)), (Card Clubs (Other 8)), (Card Clubs (Other 5))])) == True
     -}
     isFlush :: PlayingHand -> Bool
-    isFlush (Hand ((Card suitA _):(Card suitB _):(Card suitC _):(Card suitD _):(Card suitE _):rest))
-                                                                                            = suitA == suitB
-                                                                                            && suitA == suitC
-                                                                                            && suitA == suitD
-                                                                                            && suitA == suitE
+    isFlush (Hand ((Card suitA _):(Card suitB _):(Card suitC _):(Card suitD _):(Card suitE _):rest)) =
+      suitA == suitB &&
+      suitA == suitC &&
+      suitA == suitD &&
+      suitA == suitE
     isFlush _ = False
 
     {-
@@ -109,10 +231,14 @@ module Games.Poker where
       EXAMPLES: (isStraight (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])) == True)
     -}
     isStraight :: PlayingHand -> Bool
-    isStraight hand = let
-                    numbers = handValues hand
-                  in
-                    (numbers !! 0 == numbers !! 1 - 1) && (numbers !! 0 == numbers !! 2 - 2) && (numbers !! 0 == numbers !! 3 - 3) && (numbers !! 0 == numbers !! 4 - 4)
+    isStraight hand =
+      let
+        numbers = handValues hand
+      in
+        (numbers !! 0 == numbers !! 1 - 1) &&
+        (numbers !! 0 == numbers !! 2 - 2) &&
+        (numbers !! 0 == numbers !! 3 - 3) &&
+        (numbers !! 0 == numbers !! 4 - 4)
     {-
         handValues hand
         PURPOSE: Calculate the value of each card and sort it from low-to-high.
@@ -134,10 +260,11 @@ module Games.Poker where
         (isThreeOfAKind (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
     -}
     isThreeOfAKind :: PlayingHand -> Bool
-    isThreeOfAKind hand = let
-                            numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
-                            in
-                              elem 3 numbers
+    isThreeOfAKind hand =
+      let
+        numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+      in
+        elem 3 numbers
 
     {-
           isTwoPair hand
@@ -148,11 +275,12 @@ module Games.Poker where
           (isTwoPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 3))])) == True)
      -}
     isTwoPair :: PlayingHand -> Bool
-    isTwoPair hand = let
-                       numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
-                       numbersOfCombos = map (\n -> length n) (group $ sort numbers)
-                       in
-                         numbersOfCombos !! 1 == 2
+    isTwoPair hand =
+      let
+        numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+        numbersOfCombos = map (\n -> length n) (group $ sort numbers)
+      in
+        numbersOfCombos !! 1 == 2
     {-
         isPair hand
         PURPOSE: check if there is any pair in hand
@@ -162,14 +290,14 @@ module Games.Poker where
         EXAMPLES: isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
     -}
     isPair :: PlayingHand -> Bool
-    isPair hand = let
-                numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
-                in
-                  elem 2 numbers
+    isPair hand =
+      let
+        numbers = map (\value -> numberOfValuesInHand hand value) [A .. K]
+      in
+        elem 2 numbers
 
 
-        {- TESTS -}
-
+    {- TESTS -}
     testisPair = T.TestCase $ T.assertBool "testisPair" ((isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])) == True)
     testisPair2 = T.TestCase $ T.assertBool "testisPair2" ((isPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])) == False)
     testisTwoPair1 = T.TestCase $ T.assertBool "testisTwoPair1" ((isTwoPair (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 3))])) == True)
