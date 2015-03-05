@@ -62,10 +62,10 @@ module Games.BlackJack where
     SIDE EFFECTS:???????????????????????????????????????????????
   -}
   gamePhase :: GameState -> IO GameState
-  gamePhase FuckYouState =
+  gamePhase DeadGameState =
     do
     putStrLn "Bye bye"
-    return FuckYouState
+    return DeadGameState
 
   gamePhase gameState@(GState _ deck status) =
     do
@@ -93,7 +93,7 @@ module Games.BlackJack where
         askPhase
         PURPOSE: Ask the players if they want to play a new game.
         PRE: True
-        POST: returns a FuckYouState if the the user wants to quit, else it returns a new gamestate.
+        POST: returns a DeadGameState if the the user wants to quit, else it returns a new gamestate.
         SIDE EFFECTS:???????????????????????????????????????????????
     -}
   askPhase :: GameState -> IO GameState
@@ -106,7 +106,7 @@ module Games.BlackJack where
       newGameState <- setupPhase
       return newGameState
     else if (head upperLine) == 'N' then do
-      return FuckYouState
+      return DeadGameState
     else
       return gameState
 
