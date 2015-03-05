@@ -13,24 +13,67 @@ module Games.BlackJack where
   import Player
   import Deck
 
+  {-
+    REPRESENTATION CONVENTION: PlayersAndDeck represents a tuple of a list with players and one deck
+    REPRESENTATION INVARIANT: list of players may be empty, deck may be an EmptyDeck
+  -}
   type PlayersAndDeck = ([GamePlayer], PlayingDeck)
 
+  {-
+    valueOf card
+    PURPOSE: extend the class GameValue to provide BlackJack with specific values
+      of each card. This is based on the rules of BlackJack.
+    PRE: If card contains (Other value) in the Value block it has to be between 2 and 10, check CC for Value
+    POST: An integer of the correct value for a card
+    EXAMPLES:
+      valueOf (Card Diamonds A) == 11
+      valueOf (Card Diamonds K) == 10
+      valueOf (Card Diamonds (Other 5)) == 5
+  -}
   instance GameValue PlayingCard where
     valueOf (Card _ (Other value)) = value
     valueOf (Card _ A) = 11
     valueOf (Card _ _) = 10
     valueOf _ = 0
 
+  {-
+    valueOf hand
+    PURPOSE: get the complete value of playerHand based on the valueOf Card. Use valueOfPlayerHand to get correct results.
+    PRE: true
+    POST: An Int that is the sum of the cards in hand.
+    EXAMPLES:
+      valueOf (Hand [Card Diamonds A,Card Spades (Other 5),Card Clubs K, Card Diamonds (Other 2)]) == 28
+      valueOf EmptyHand == 0
+  -}
   instance GameValue PlayingHand where
     valueOf (Hand []) = 0
     valueOf (Hand (card:rest)) = (valueOf card) + (valueOf (Hand rest))
     valueOf _ = 0
 
+  {-
+    valueOf deck
+    PURPOSE: get the complete value of deck based on the valueOf Card.
+    PRE: true
+    POST: An Int that is the sum of the cards in deck.
+    EXAMPLES:
+      valueOf (Deck [Card Diamonds A,Card Spades (Other 5),Card Clubs K, Card Diamonds (Other 2)]) == 28
+      valueOf EmptyDeck == 0
+  -}
   instance GameValue PlayingDeck where
     valueOf (Deck []) = 0
     valueOf (Deck (card:rest)) = (valueOf card) + (valueOf (Deck rest))
     valueOf _ = 0
 
+  {-
+    cardA == cardB
+    PURPOSE: compare two PlayingCards by value only
+    PRE: true
+    POST: a boolean value that denotes if the cards are equal based on value
+    EXAMPLES:
+      (InvisibleCard == (Card Diamonds A)) == False
+      ((Card Diamonds A) == (Card Diamonds A)) == True
+      ((Card Diamonds A) == (Card Hearts A)) == True
+  -}
   instance GameEq PlayingCard where
     (===) (Card _ K) (Card _ K) = True
     (===) (Card _ Q) (Card _ Q) = True
@@ -44,7 +87,7 @@ module Games.BlackJack where
     PURPOSE: main function to fire it all up.
     PRE: True
     POST: ()
-    SIDE EFFECTS:???????????????????????????????????????????????
+    SIDE EFFECTS: print data to the terminal
   -}
   main :: IO ()
   main = do
@@ -58,7 +101,9 @@ module Games.BlackJack where
     PURPOSE: infinite loop until game is done, loop through players and ask for actions, deal cards, etc etc.
     PRE: True
     POST: ()
-    SIDE EFFECTS:???????????????????????????????????????????????
+    SIDE EFFECTS:
+      - input from user
+      - output to the terminal
   -}
   gamePhase :: GameState -> IO GameState
   gamePhase DeadGameState =
@@ -93,7 +138,9 @@ module Games.BlackJack where
       PURPOSE: Ask the players if they want to play a new game.
       PRE: True
       POST: returns a DeadGameState if the the user wants to quit, else it returns a new gamestate.
-      SIDE EFFECTS:???????????????????????????????????????????????
+      SIDE EFFECTS:
+        - input from the user
+        - output to the terminal
   -}
   askPhase :: GameState -> IO GameState
   askPhase gameState@(GState players deck status) =
@@ -114,7 +161,9 @@ module Games.BlackJack where
     PURPOSE: Evaluate each hand and show the winner.
     PRE: True
     POST: Returns the winner and the value of both hands.
-    SIDE EFFECTS:???????????????????????????????????????????????
+    SIDE EFFECTS:
+      - input from the user, though not handled.
+      - output to the terminal
   -}
   checkPhase :: GameState -> IO GameState
   checkPhase gamestate@(GState players@(player:dealer:rest) deck status) =
@@ -156,10 +205,13 @@ module Games.BlackJack where
 
 
   {-
+    readMove player
     PURPOSE: Read move of player
     PRE: True
     POST: Get back a PlayerState of the next move for the player.
-    SIDE EFFECTS:???????????????????????????????????????????????
+    SIDE EFFECTS:
+      - input from the user
+      - output to the screen
   -}
   readMove :: GamePlayer -> IO PlayerState
   readMove player =
@@ -177,10 +229,12 @@ module Games.BlackJack where
           readMove player
 
   {-
+    playerPhase gameState
     PURPOSE: wait for user input.
     PRE: True
     POST: Returns a GameState with the move the player want to do next
-    SIDE EFFECTS:???????????????????????????????????????????????
+    SIDE EFFECTS:
+      - input from the user, via the function readMove
   -}
   playerPhase :: GameState -> IO GameState
   playerPhase gameState@(GState players deck status) =
@@ -209,11 +263,12 @@ module Games.BlackJack where
 
 
   {-
+    dealerPhase gameState
     PURPOSE: dealer draws card and adds it to hand if less than 17
     PRE: True
     POST: Returns a GameState for the dealers next move
           based on the preconditions for the dealer in blackjack.
-    SIDE EFFECTS:???????????????????????????????????????????????
+    SIDE EFFECTS: none
   -}
   dealerPhase :: GameState -> IO GameState
   dealerPhase gameState@(GState _ _ status) =
@@ -232,22 +287,25 @@ module Games.BlackJack where
       return (GState (players ++ dealers) deck2 status)
 
   {-
-      PURPOSE: the phase where a is generated.
-      PRE: True
-      POST: Returns a GameState based on the paricipating placers.
-      SIDE EFFECTS:???????????????????????????????????????????????
-    -}
-
+    setupPhase gameState
+    PURPOSE: the phase where a is generated.
+    PRE: True
+    POST: Returns a GameState based on the paricipating placers.
+    SIDE EFFECTS: none
+  -}
   setupPhase :: IO GameState
   setupPhase = do
     gamestate <- generateGameStateForPlayers 1
     dealStartingCards gamestate
 
   {-
+    printGameState gameState
     PURPOSE: Print blackjack table to the userInterface.
     PRE: True
     POST: print the GameState into the userInterface
-    SIDE EFFECTS:output to the terminal.
+    SIDE EFFECTS:
+      - output to the terminal.
+      - clear the terminal screen
   -}
   printGameState :: GameState -> IO ()
   printGameState gameState = do
@@ -260,11 +318,13 @@ module Games.BlackJack where
     printDivider
 
   {-
+    printPlayersWithRole gameState role
     PURPOSE: print player cards in a nice way, not the dealers card.
     PRE: true
     POST: Print the hand of PlayerRole shark and dont show the
           Dealer hand into the terminal.
-    SIDE-EFFECTS: output to the terminal
+    SIDE-EFFECTS:
+      - output to the terminal
   -}
   printPlayersWithRole :: GameState -> PlayerRole -> IO ()
   printPlayersWithRole gameState needle =
@@ -281,7 +341,6 @@ module Games.BlackJack where
     PURPOSE: check if hand is 21 or not
     PRE: True
     POST: Returns a bool if the player have 21 or not
-    SIDE EFFECTS: None
     EXAMPLES:
         isTwentyOne (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))]) = True
         isTwentyOne (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 8))]) = False
@@ -294,7 +353,6 @@ module Games.BlackJack where
     PURPOSE: check if hand is fat (above 21) or not
     PRE: True
     POST: Returns a bool of hand if the player is "fat" (hand value over 21) or not.
-    SIDE EFFECTS: None
     EXAMPLES:
         isFat (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other K))]) = True
         isFat (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 4))]) = False
@@ -307,7 +365,6 @@ module Games.BlackJack where
     PURPOSE: check if hand is 17 or above, for the dealer.
     PRE: True
     POST: Returns a bool of hand if the value of the players hand is eq or above 17.
-    SIDE EFFECTS: None
     EXAMPLES:
         isAbove16 (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 5))]) = True
         isAbove16 (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 2))]) = False
@@ -320,7 +377,6 @@ module Games.BlackJack where
     PURPOSE: check if the hand has Black Jack or not
     PRE: True
     POST: Returns a bool of hand, if the value of the players hand is 21 has 2 cards in hand or not.
-    SIDE EFFECTS: None
     EXAMPLES:
         isAbove16 (Hand [(Card Diamonds A), (Card Clubs k)]) = True
         isAbove16 (Hand [(Card Diamonds A), (Card Clubs 5)]) = False
@@ -334,7 +390,6 @@ module Games.BlackJack where
     PURPOSE: calculate value of hand, with Ace having two values, 1 or 11.
     PRE: True
     POST: Returns a bool of hand, if the value of the players hand is 21 has 2 cards in hand or not.
-    SIDE EFFECTS: None
     EXAMPLES:
         isAbove16 (Hand [(Card Diamonds A), (Card Clubs k)]) = True
         isAbove16 (Hand [(Card Diamonds A), (Card Clubs 5)]) = False
@@ -364,7 +419,11 @@ module Games.BlackJack where
       valueOfPlayerHand' hand 0
 
   {-
+    TODO
+    generateGameStateForPlayers n
     PURPOSE: generate a gamestate for one players and a dealer.
+    SIDE-EFFECTS:
+      - grabbing time from the system clock
     CREDITS: to generate the Unix Timestamp we had to find a function to help us out, and we found it at
       http://stackoverflow.com/questions/17909770/get-time-as-int
   -}
@@ -378,10 +437,15 @@ module Games.BlackJack where
       do
       posixTime <- (round `fmap` getPOSIXTime)
       let seconds = fromIntegral posixTime :: Int
-
       return (GState (createDealer : (generateGameStateForPlayers' number)) (shuffleDeck (mkStdGen seconds) createEmptyDeck) Green)
 
 
+  {-
+    TODO
+    dealStartingCards gameState
+    PURPOSE: deal 2 cards for the player and dealer
+    SIDE-EFFECTS: None
+  -}
   dealStartingCards :: GameState -> IO GameState
   dealStartingCards (GState ((Player hand role state):(Player handB roleB stateB):rest) deck status) =
     do
@@ -397,14 +461,8 @@ module Games.BlackJack where
     return (GState [player, dealer] pDeck2 status)
 
   {-
-    PURPOSE: print a players hand
-  -}
-  printHand :: PlayingHand -> IO ()
-  printHand hand = do
-    putStrLn $ "Your hand: " ++ (show hand) ++ "."
-    putStrLn $ "Hand value " ++ (show (valueOf hand::Int)) ++ "."
-
-  {-
+    TODO
+    states
     PURPOSE: list every possible state a blackjack player could have
   -}
   states :: [PlayerState]
@@ -412,6 +470,8 @@ module Games.BlackJack where
   states = [(State "HIT"), (State "UNKNOWN"), (State "STAND"), (State "DOUBLE")]
 
   {-
+    TODO
+    dealCard deck player
     PURPOSE: deal a card to one player from a provided deck
   -}
   dealCard :: PlayingDeck -> GamePlayer -> IO GamePlayer
@@ -419,7 +479,9 @@ module Games.BlackJack where
   dealCard deck (Player hand role state) = return (Player (addCardToHand hand (drawCardFromDeck deck)) role state)
 
   {-
-    PURPOSE: return every playable
+    TODO
+    statesAvailable hand
+    PURPOSE: return every playable state for hand
   -}
   statesAvailable :: PlayingHand -> [PlayerState]
   statesAvailable hand@(Hand cards)
@@ -427,6 +489,8 @@ module Games.BlackJack where
   statesAvailable EmptyHand = [(State "HIT"), (State "STAND")]
 
   {-
+    TODO
+    performMove player deck
     PURPOSE: perform a move for one player.
   -}
   performMove :: GamePlayer -> PlayingDeck -> PlayersAndDeck
@@ -445,9 +509,7 @@ module Games.BlackJack where
   performMove (Player hand role (State "STAND")) deck = ([(Player hand role (State "STAND"))], deck)
   performMove _ deck = undefined
 
-  {-
-    TODO: Test cases
-  -}
+  {- TESTS -}
   testisTwentyOne = T.TestCase $ T.assertBool "testisTwentyOne" ((isTwentyOne (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))])) == True)
   testisFat = T.TestCase $ T.assertBool "testisFat" ((isFat (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 4))]) == False))
   testisAbove16 = T.TestCase $ T.assertBool "testisAbove16" (isAbove16 (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 5))]) == True)
