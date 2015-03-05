@@ -372,6 +372,8 @@ module Games.BlackJack where
 
   {-
     PURPOSE: generate a gamestate for one players and a dealer.
+    CREDITS: to generate the Unix Timestamp we had to find a function to help us out, and we found it at
+      http://stackoverflow.com/questions/17909770/get-time-as-int
   -}
   generateGameStateForPlayers :: Int -> IO GameState
   generateGameStateForPlayers number =
