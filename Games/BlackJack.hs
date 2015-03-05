@@ -3,6 +3,8 @@ module Games.BlackJack where
   import qualified Test.HUnit as T
   import Control.Monad
   import qualified System.Console.ANSI as ANSI
+  import System.Random
+  import Data.Time.Clock.POSIX
   import Data.Char
   import Interface
   import Game
@@ -61,10 +63,13 @@ module Games.BlackJack where
   gamePhase gameState@(GState _ deck status) =
     do
     printGameState gameState
-    gameState <- playerPhase gameState
-    printGameState gameState
     let gamestatus = statusForGameState gameState
-    if gamestatus /= (Yellow "DEALER") then do
+    if gamestatus == Red then do
+      gameState <- askPhase gameState
+      gamePhase gameState
+    else if gamestatus /= (Yellow "DEALER") then do
+      gameState <- playerPhase gameState
+      printGameState gameState
       gameState <- checkPhase gameState
       gamePhase gameState
     else do
@@ -78,7 +83,7 @@ module Games.BlackJack where
         gamePhase gameState
 
   askPhase :: GameState -> IO GameState
-  askPhase gamestate@(GState players deck status) =
+  askPhase gameState@(GState players deck status) =
     do
     putStr "Do you want to play again? [Y/N] "
     line <- getLine
@@ -86,8 +91,10 @@ module Games.BlackJack where
     if (head upperLine) == 'Y' then do
       newGameState <- setupPhase
       return newGameState
-    else
+    else if (head upperLine) == 'N' then do
       return FuckYouState
+    else
+      return gameState
 
 
 
@@ -102,7 +109,7 @@ module Games.BlackJack where
     let playerState = stateForPlayer player
     if dealerState == (State "STAND") && playerState == (State "STAND") then do
       if dealerValue > playerValue then
-        printFancyLn ("You lost, the dealer has " ++ show(dealerValue) ++ " and you've got " ++ show(playerValue))
+        putStrLn ("You lost, the dealer has " ++ show(dealerValue) ++ " and you've got " ++ show(playerValue))
       else if playerValue > dealerValue then
         printFancyLn ("You won, the dealer has " ++ show(dealerValue) ++ " and you've got " ++ show(playerValue))
       else
@@ -110,19 +117,19 @@ module Games.BlackJack where
       return (GState players deck Red)
     else
       if isTwentyOne playerHand then do
-        putStrLn "You've got 21"
+        printFancyLn "You've got 21"
         getLine
         return (GState players deck Red)
       else if hasBlackJack playerHand then do
-        putStrLn "You've got Black Jack."
+        printFancyLn "You've got Black Jack."
         getLine
         return (GState players deck Red)
       else if isFat playerHand then do
-        putStrLn "You lost"
+        putStrLn ("You got fat with a hand of " ++ show(playerValue))
         getLine
         return (GState players deck Red)
       else if isFat dealerHand && not(isFat playerHand) then do
-        putStrLn "You won, dealer got fat."
+        printFancyLn ("You won with a hand of " ++ show(playerValue) ++ ", dealer got fat at " ++ show(dealerHand))
         getLine
         return (GState players deck Red)
       else do
@@ -228,7 +235,7 @@ module Games.BlackJack where
     printSpace 5
     printPlayersWithRole gameState Shark
     printDivider
-    putStrLn ("DEBUG: " ++ show(gameState))
+    -- putStrLn ("DEBUG: " ++ show(gameState))
 
   {-
     PURPOSE: print player cards in a nice way, not the dealers card.
@@ -335,12 +342,11 @@ module Games.BlackJack where
       generateGameStateForPlayers' number = createShark : (generateGameStateForPlayers' (number - 1))
     in
       -- return (GState (createDealer : (generateGameStateForPlayers' number)) (shuffleDeck createEmptyDeck))
-      return (GState (createDealer : (generateGameStateForPlayers' number)) ((Deck [Card Diamonds A,Card Diamonds (Other 2),
-      Card Diamonds (Other 3),Card Diamonds (Other 4),
-      Card Diamonds (Other 5),Card Diamonds (Other 6),
-      Card Diamonds (Other 7),Card Diamonds (Other 8),
-      Card Diamonds (Other 9),Card Diamonds (Other 10),Card Diamonds J,
-      Card Diamonds Q,Card Diamonds K])) Green)
+      do
+      posixTime <- (round `fmap` getPOSIXTime)
+      let seconds = fromIntegral posixTime :: Int
+
+      return (GState (createDealer : (generateGameStateForPlayers' number)) (shuffleDeck (mkStdGen seconds) createEmptyDeck) Green)
 
 
   dealStartingCards :: GameState -> IO GameState
@@ -380,12 +386,6 @@ module Games.BlackJack where
   dealCard deck (Player hand role state) = return (Player (addCardToHand hand (drawCardFromDeck deck)) role state)
 
   {-
-    PURPOSE: create a blackjack deck, consists of one deck.
-  -}
-  createDeck :: IO PlayingDeck
-  createDeck = return (shuffleDeck (createEmptyDeck))
-
-  {-
     PURPOSE: return every playable
   -}
   statesAvailable :: PlayingHand -> [PlayerState]
@@ -418,38 +418,43 @@ module Games.BlackJack where
   {-
     TODO: Test cases
   -}
+  testisTwentyOne = T.TestCase $ T.assertBool "testisTwentyOne" ((isTwentyOne (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))])) == True)
+  testisFat = T.TestCase $ T.assertBool "testisFat" ((isFat (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 4))]) == False))
+  testisAbove16 = T.TestCase $ T.assertBool "testisAbove16" (isAbove16 (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 5))]) == True)
+  testvalueOfPlayerHand = T.TestCase $ T.assertBool "testvalueOfPlayerHand" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 5))]) == 17)
   testValuesInHand = T.TestCase $ T.assertBool "testValuesInHand" (numberOfValuesInHand (Hand [(Card Diamonds A), (Card Spades A), (Card Clubs (Other 5))]) A == 2)
   testValuesInHand2 = T.TestCase $ T.assertBool "testValuesInHand2" (numberOfValuesInHand (Hand [(Card Diamonds A), (Card Spades Q), (Card Clubs (Other 5))]) K == 0)
-  testBJHasBlackJack = T.TestCase $ T.assertBool "testBJHasBlackJack" (hasBlackJack (Hand [(Card Diamonds A), (Card Spades K)]) == True)
-  testBJHasBlackJack2 = T.TestCase $ T.assertBool "testBJHasBlackJack2" (hasBlackJack (Hand [(Card Diamonds A), (Card Spades (Other 2))]) == False)
-  testBJHasBlackJack3 = T.TestCase $ T.assertBool "testBJHasBlackJack3" (hasBlackJack (Hand [(Card Diamonds (Other 7)), (Card Clubs (Other 7)), (Card Spades (Other 7))]) == False)
-  testBJCalculateFatHand = T.TestCase $ T.assertBool "testFatHand" (valueOfPlayerHand (Hand [(Card Diamonds K), (Card Clubs Q), (Card Spades (Other 3))]) == 23)
-  testBJFuckedUpHand = T.TestCase $ T.assertBool "testFuckedUpHand" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts A), (Card Spades A), (Card Spades (Other 7))]) == 21)
-  testBJCalculateAceHand = T.TestCase $ T.assertBool "testAceHand" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A)]) == 12)
-  testBJCalculateAce21 = T.TestCase $ T.assertBool "testAce21" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))]) == 21)
-  testBJDrawCardFromDeck = T.TestCase $ T.assertBool "testBJDrawCardFromDeck" ((createEmptyDeck) == testDeck)
-  testBJstatesAvailable = T.TestCase $ T.assertBool "testBJstatesAvailable" (statesAvailable (Hand [(Card Diamonds (Other 3)), (Card Clubs (Other 5))]) == ([(State "DOUBLE"), (State "HIT"),(State "STAND")]))
-  testBJstatesAvailable2 = T.TestCase $ T.assertBool "testBJstatesAvailable2" (statesAvailable (Hand [(Card Diamonds K), (Card Clubs K)]) == ([(State "SPLIT"), (State "DOUBLE"), (State "HIT"),(State "STAND")]))
-  testBJstatesAvailable3 = T.TestCase $ T.assertBool "testBJstatesAvailable3" (statesAvailable (Hand [(Card Diamonds (Other 4)), (Card Clubs (Other 3)), (Card Hearts (Other 3))]) == ([(State "DOUBLE"), (State "HIT"),(State "STAND")]))
-  testBJstatesAvailable4 = T.TestCase $ T.assertBool "testBJstatesAvailable4" (statesAvailable (Hand [(Card Diamonds (Other 7)), (Card Clubs (Other 3)), (Card Hearts (Other 3))]) == ([(State "HIT"),(State "STAND")]))
+  testHasBlackJack = T.TestCase $ T.assertBool "testHasBlackJack" (hasBlackJack (Hand [(Card Diamonds A), (Card Spades K)]) == True)
+  testHasBlackJack2 = T.TestCase $ T.assertBool "testHasBlackJack2" (hasBlackJack (Hand [(Card Diamonds A), (Card Spades (Other 2))]) == False)
+  testHasBlackJack3 = T.TestCase $ T.assertBool "testHasBlackJack3" (hasBlackJack (Hand [(Card Diamonds (Other 7)), (Card Clubs (Other 7)), (Card Spades (Other 7))]) == False)
+  testCalculateFatHand = T.TestCase $ T.assertBool "testFatHand" (valueOfPlayerHand (Hand [(Card Diamonds K), (Card Clubs Q), (Card Spades (Other 3))]) == 23)
+  testFuckedUpHand = T.TestCase $ T.assertBool "testFuckedUpHand" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts A), (Card Spades A), (Card Spades (Other 7))]) == 21)
+  testCalculateAceHand = T.TestCase $ T.assertBool "testAceHand" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A)]) == 12)
+  testCalculateAce21 = T.TestCase $ T.assertBool "testAce21" (valueOfPlayerHand (Hand [(Card Diamonds A), (Card Clubs A), (Card Hearts (Other 9))]) == 21)
+  --teststatesAvailable = T.TestCase $ T.assertBool "teststatesAvailable" (statesAvailable (Hand [(Card Diamonds (Other 3)), (Card Clubs (Other 5))]) == ([(State "DOUBLE"), (State "HIT"),(State "STAND")]))
+  --teststatesAvailable2 = T.TestCase $ T.assertBool "teststatesAvailable2" (statesAvailable (Hand [(Card Diamonds K), (Card Clubs K)]) == ([(State "SPLIT"), (State "DOUBLE"), (State "HIT"),(State "STAND")]))
+  --teststatesAvailable3 = T.TestCase $ T.assertBool "teststatesAvailable3" (statesAvailable (Hand [(Card Diamonds (Other 4)), (Card Clubs (Other 3)), (Card Hearts (Other 3))]) == ([(State "DOUBLE"), (State "HIT"),(State "STAND")]))
+  --teststatesAvailable4 = T.TestCase $ T.assertBool "teststatesAvailable4" (statesAvailable (Hand [(Card Diamonds (Other 7)), (Card Clubs (Other 3)), (Card Hearts (Other 3))]) == ([(State "HIT"),(State "STAND")]))
   -- testBJperformMoveSplit = T.TestCase $ T.assertBool "testBJperformMoveSplit" (((performMove (Player (Hand [(Card Clubs K),(Card Diamonds K)]) Shark (State "SPLIT")) testDeck)) == [(Player (Hand [(Card Clubs K)]) Shark (State "SPLIT")), (Player (Hand [(Card Diamonds K)]) Shark (State "SPLIT"))])
   -- testBJperformMoveHit = T.TestCase $ T.assertBool "testBJperformMoveHit" ((performMove (Player testHand Shark (State "HIT")) testDeck) == [(Player (Hand [(Card Spades A), (Card Diamonds A),(Card Spades (Other 5)),(Card Clubs K), (Card Diamonds (Other 2))]) Shark UndefinedState)])
   -- testBJperformMoveDouble = T.TestCase $ T.assertBool "testBJperformMoveDouble" ((performMove (Player testHand Shark (State "DOUBLE")) testDeck) == [(Player (Hand [(Card Spades A), (Card Diamonds A),(Card Spades (Other 5)),(Card Clubs K), (Card Diamonds (Other 2))]) Shark (State "DOUBLE"))])
   -- testBJperformMoveStand = T.TestCase $ T.assertBool "testBJperformMoveStand" ((performMove (Player (Hand [(Card Clubs K),(Card Diamonds K)]) Shark (State "STAND")) testDeck) == [(Player (Hand [(Card Clubs K),(Card Diamonds K)]) Shark (UndefinedState))])
 
-  testListBJ = T.TestList [testCreateEmptyDeck,
-                          testDrawCardFromDeck,
-                          testBJstatesAvailable,
-                          testBJstatesAvailable2,
-                          testBJstatesAvailable3,
-                          testBJstatesAvailable4,
-                          testBJCalculateFatHand,
-                          testBJCalculateAceHand,
-                          testBJCalculateAce21,
-                          testBJFuckedUpHand,
-                          testBJHasBlackJack,
-                          testBJHasBlackJack2,
-                          testBJHasBlackJack3,
+  testListBJ = T.TestList [testisTwentyOne,
+                          testisFat,
+                          testisAbove16,
+                          testvalueOfPlayerHand,
+                          testHasBlackJack,
+                          testHasBlackJack2,
+                          testHasBlackJack3,
+                          testCalculateFatHand,
+                          testFuckedUpHand,
+                          testCalculateAceHand,
+                          testCalculateAce21,
+                          --teststatesAvailable,
+                          --teststatesAvailable2,
+                          --teststatesAvailable3,
+                          --teststatesAvailable4,
                           testValuesInHand,
                           testValuesInHand2
                           -- testBJperformMoveSplit,

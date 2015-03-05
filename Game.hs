@@ -6,8 +6,6 @@ module Game where
   import Hand
   import qualified Test.HUnit as T
 
-  {- DATA -}
-
   class GameValue a where
     valueOf :: a -> Int
 
@@ -44,7 +42,7 @@ module Game where
     (==) _ _ = False
 
   {- FUNCTIONS-}
-  
+
   {-
     PURPOSE: return status of a gamestate
   -}

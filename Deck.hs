@@ -83,9 +83,9 @@ module Deck where
     SIDE EFFECTS: none
     EXAMPLES: TODO
   -}
-  shuffleDeck :: PlayingDeck -> PlayingDeck
-  shuffleDeck EmptyDeck = EmptyDeck
-  shuffleDeck (Deck cards) = (Deck (shuffleList (mkStdGen 18234891023849012) cards))
+  shuffleDeck :: StdGen -> PlayingDeck -> PlayingDeck
+  shuffleDeck gen EmptyDeck = EmptyDeck
+  shuffleDeck gen (Deck cards) = (Deck (shuffleList gen cards))
 
   {-
     sortDeck deck

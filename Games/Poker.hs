@@ -23,11 +23,15 @@ module Games.Poker where
         valueOf (Deck []) = 0
         valueOf (Deck (card:rest)) = (valueOf card) + (valueOf (Deck rest))
 
-    {- FUNCTIONS -}
-
+    {-
+      PURPOSE: main function to fire it all up.
+    -}
     main :: IO ()
     main = do
-        putStrLn "vääääälkommen till oss"
+      putStrLn ("Welcome to " ++ show(P5))
+      -- setupGameState <- setupPhase
+      -- gamePhase setupGameState
+      return ()
 
 
     {-
