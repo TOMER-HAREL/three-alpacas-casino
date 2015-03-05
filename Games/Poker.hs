@@ -58,6 +58,11 @@ module Games.Poker where
 
     {-
       PURPOSE: main function to fire it all up.
+      PRE: true
+      POST: -
+      SIDE-EFFECTS:
+        - output to the terminal
+        - input from the user, unhandled though.
     -}
     main :: IO ()
     main = do
@@ -69,80 +74,79 @@ module Games.Poker where
       putStrLn ""
 
       let pairHand = (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 7))])
-      putStrLn $ show pairHand
       printCardPosibilities pairHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let twoPairHand = (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 3)), (Card Spades K), (Card Diamonds (Other 3))])
-      putStrLn $ show twoPairHand
       printCardPosibilities twoPairHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let threeOfAKindHand = (Hand [(Card Diamonds (Other 5)), (Card Hearts (Other 5)), (Card Clubs (Other 5)), (Card Spades K), (Card Diamonds (Other 7))])
-      putStrLn $ show threeOfAKindHand
       printCardPosibilities threeOfAKindHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let straightHand = (Hand [(Card Diamonds (Other 3)), (Card Hearts (Other 4)), (Card Clubs (Other 5)), (Card Spades (Other 6)), (Card Diamonds (Other 7))])
-      putStrLn $ show straightHand
       printCardPosibilities straightHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let flushHand = (Hand [(Card Clubs (Other 6)), (Card Clubs (Other 7)), (Card Clubs (Other 9)), (Card Clubs (Other 8)), (Card Clubs (Other 5))])
-      putStrLn $ show flushHand
       printCardPosibilities flushHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let fullHouseHand = (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 6)), (Card Hearts K), (Card Diamonds (Other 6)), (Card Spades K )])
-      putStrLn $ show fullHouseHand
       printCardPosibilities fullHouseHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let fullHouseHand = (Hand [(Card Clubs (Other 6)), (Card Diamonds (Other 6)), (Card Hearts K), (Card Diamonds (Other 6)), (Card Spades K )])
-      putStrLn $ show fullHouseHand
       printCardPosibilities fullHouseHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let fourOfAKindHand = (Hand [(Card Clubs (Other 10)), (Card Diamonds (Other 7)), (Card Hearts (Other 10)), (Card Diamonds (Other 10)), (Card Spades (Other 10))])
-      putStrLn $ show fourOfAKindHand
       printCardPosibilities fourOfAKindHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let straightFlushHand = (Hand [(Card Diamonds (Other 4)), (Card Diamonds (Other 7)), (Card Diamonds (Other 6)), (Card Diamonds (Other 3)), (Card Diamonds (Other 5))])
-      putStrLn $ show straightFlushHand
       printCardPosibilities straightFlushHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
       let royalStraightFlushHand = (Hand [(Card Diamonds K), (Card Diamonds Q), (Card Diamonds A), (Card Diamonds J), (Card Diamonds (Other 10))])
-      putStrLn $ show royalStraightFlushHand
       printCardPosibilities royalStraightFlushHand
       putStr "Press enter"
       getLine
       putStrLn ""
 
+      putStrLn "Thank you. /Group 37"
 
       return ()
 
+    {-
+      printCardPosibilities hand
+      PURPOSE: print hand and it's states available
+      PRE: cannot be EmptyHand
+      POST: -
+      SIDE-EFFECTS: output to the terminal
+    -}
     printCardPosibilities :: PlayingHand -> IO ()
     printCardPosibilities hand = do
+      putStrLn $ show hand
       putStrLn ("Contains pair: " ++ show(isPair hand))
       putStrLn ("Contains three of a kind: " ++ show(isThreeOfAKind hand))
       putStrLn ("Contains straight: " ++ show(isStraight hand))
